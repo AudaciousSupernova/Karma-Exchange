@@ -1,2 +1,14 @@
+# Logs
+logs
+*.log
+
+.DS_Store
+
+# Runtime data
+pids
+*.pid
+*.seed
+
 node_modules/
 bower_components/
+front-end/libs/
