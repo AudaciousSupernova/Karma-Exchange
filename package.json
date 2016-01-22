@@ -1,0 +1,19 @@
+{
+  "name": "nova",
+  "version": "1.0.0",
+  "description": "Thesis project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AudaciousSupernova/thesis.git"
+  },
+  "author": "Kartik Vempati, Kyle Morehead, Neeraj Kohirkar, Ranjit Rao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AudaciousSupernova/thesis/issues"
+  },
+  "homepage": "https://github.com/AudaciousSupernova/thesis#readme"
+}
