@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/AudaciousSupernova/thesis/issues"
   },
-  "homepage": "https://github.com/AudaciousSupernova/thesis#readme"
+  "homepage": "https://github.com/AudaciousSupernova/thesis#readme", 
+  "dependencies": {
+    "body-parser": "~1.4.2",
+    "express": "~4.5.1"
+  }
 }
