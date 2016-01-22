@@ -1,12 +1,26 @@
 <!DOCTYPE HTML>
 
-<html>
+<html ng-app="app">
   <head>
     <title> </title>
   </head>
 
   <body>
-    <nav> Main Page for the thesis project! </nav>
+    <div> This is my main page </div>
+    
+    <div ui-view> </div>
+
+    <script src="libs/angular/angular.min.js"> </script>
+    <script src="libs/angular-route/angular-route.min.js"> </script>
+    <script src="libs/angular-ui-router/release/angular-ui-router.min.js"> </script>
+    <script src="app.js"> </script>
+    <script src="controllers/profile.js"> </script>
+    <script src="controllers/portfolio.js"> </script>
+    <script src="controllers/newsfeed.js"> </script>
+    <script src="controllers/buy.js"> </script>
+    <script src="controllers/sell.js"> </script>
+    <script src="controllers/auth.js"> </script>
+
   </body>
 
 </html>
