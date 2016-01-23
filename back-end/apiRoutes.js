@@ -1,4 +1,4 @@
-var passport = require('./auth/passport.facebook');
+var passport = require('./Auth/passport.facebook');
 
 
 module.exports = function (app, express) {
