@@ -1,7 +1,8 @@
 angular.module('app.profile', [])
 
 .controller('ProfileController', function($scope, $location) {
-  $scope.test = "hello testing";
+  $scope.name = 'Neeraj Kohirkar';
+  $scope.leaders;
 
   
 

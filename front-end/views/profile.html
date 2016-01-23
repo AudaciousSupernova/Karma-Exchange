@@ -1,5 +1,29 @@
 <div ng-module="app.profile">
 
-  <div> This is my PROFILE page </div>
+  <section>
+
+    <div>
+      <img src="">
+      <span ng-model="name"> {{name}} </span>
+    </div>
+
+  </section>
+
+  <section>
+    <div> This is where the user graph will go. </div>
+  </section>
+
+  <section>
+    Network Leaders
+  </section>
+
+  <section>
+    Recommendations
+    <ul ng-repeat="leader in leaders">
+      <li> </li>
+    </ul>
+  </section>
+
+
 
 </div>

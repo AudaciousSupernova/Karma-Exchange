@@ -13,5 +13,5 @@ app.listen(port);
 
 console.log('We are now listening at ' + port);
 
-console.log(__dirname + '../frontend');
+console.log(__dirname + '../front-end');
 exports = module.exports = app;
