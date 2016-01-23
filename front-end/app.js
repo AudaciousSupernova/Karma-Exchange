@@ -6,7 +6,8 @@ angular.module('app', [
   'app.portfolio',
   'app.auth',
   'ngRoute', 
-  'ui.router'
+  'ui.router', 
+  'app.services'
   ])
 
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {

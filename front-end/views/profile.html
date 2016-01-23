@@ -4,7 +4,13 @@
 
     <div>
       <img src="">
-      <span ng-model="name"> {{name}} </span>
+      <div>
+        HERE IT IS {{testing.data}}
+
+        SECOND TEST {{leaderTesting.data}}
+      </div>
+      <span> {{user.name}} </span>
+      <span> My current score is {{user.currentScore}} </span>
     </div>
 
   </section>
@@ -20,7 +26,8 @@
   <section>
     Recommendations
     <ul ng-repeat="leader in leaders">
-      <li> </li>
+      <li> {{leader.name}}</li>
+      <li> {{leader.score}} </li>
     </ul>
   </section>
 
