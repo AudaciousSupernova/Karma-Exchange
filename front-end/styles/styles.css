@@ -7,6 +7,7 @@ div.navbar{
 	background-color: blue;
 	position: fixed;
 	border-radius: 5px;
+	z-index: 10;
 }
 
 /*this is directly behind the nav bar to ensure that other
@@ -18,4 +19,7 @@ div.spaceHolder{
 	padding-top:1%;
 	margin-bottom: 1%;
 	opacity:0;
+}
+a{
+	color: white;
 }
