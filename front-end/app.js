@@ -42,5 +42,17 @@ angular.module('app', [
       templateUrl: 'views/portfolio.html', 
       controller: 'PortfolioController'
     })
+    .state('privacy',{
+      url: '/privacy',
+      templateUrl: 'privacy.html'
+    })
+    .state('termsOfService',{
+      url: '/tos',
+      templateUrl: 'termsOfService.html'
+    })
+    .state('userSupport',{
+      url: '/usersupport',
+      templateUrl: 'userSupport.html'
+    })
   $urlRouterProvider.otherwise('/')
 });
