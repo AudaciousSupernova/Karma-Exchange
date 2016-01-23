@@ -11,7 +11,6 @@ angular.module('app', [
 
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {
 
-  $urlRouterProvider.otherwise('/')
   $stateProvider
     .state('home', {
       url: '/', 
@@ -43,4 +42,5 @@ angular.module('app', [
       templateUrl: 'views/portfolio.html', 
       controller: 'PortfolioController'
     })
+  $urlRouterProvider.otherwise('/')
 });

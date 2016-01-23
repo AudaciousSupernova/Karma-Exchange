@@ -10,7 +10,7 @@ module.exports = function (app, express) {
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { failureRedirect: '/#/' }),
 	  function(req, res) {
-	    res.redirect('/#/home');
+	    res.redirect('/#/newsfeed');
 	  });
 };
 

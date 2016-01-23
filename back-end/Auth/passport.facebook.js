@@ -23,6 +23,7 @@ passport.use(new FacebookStrategy({
     process.nextTick(function () {
       console.log('Facebook Profile',profile.id);
       console.log('Access Token', accessToken);
+      return done(null, profile);
     });
   }
 ));
