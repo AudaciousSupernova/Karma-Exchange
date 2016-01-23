@@ -21,6 +21,9 @@
   "dependencies": {
     "body-parser": "~1.4.2",
     "express": "~4.5.1",
-    "nodemon": "^1.8.1"
+    "express-session": "^1.13.0",
+    "nodemon": "^1.8.1",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.0.0"
   }
 }
