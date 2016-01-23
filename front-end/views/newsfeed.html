@@ -1,5 +1,22 @@
 <div ng-module="app.newsfeed">
 
-  <div> This is my NEWSFEED page </div>
+  <h3> Newsfeed </h3>
+    <table>
+      <tr>
+        <th class='user-header'> Trending Name </th>
+        <th class='user-header'> Current Score </th>
+        <th class='user-header'> Graph </th>
+      </tr>
+      <tr ng-repeat="trend in trending">
+        <td> {{trend.name}} </td>
+        <td> {{trend.currentScore}} </td>
+        <td> Scores include {{trend.scores[0].score}} </td>
+        <td>
+          <form> 
+            <input type="submit" value="Buy Shares"/> 
+          </form>
+        </td>
+      </tr>
+    </table>
 
 </div>

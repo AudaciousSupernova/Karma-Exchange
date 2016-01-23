@@ -1,6 +1,6 @@
 angular.module('app.portfolio', [])
 
-.controller('PortfolioController', function($scope, $location) {
+.controller('PortfolioController', function($scope, $location, Portfolio) {
   $scope.investments = [
     {
       currentUser: 'Neeraj Kohirkar', 
@@ -50,7 +50,18 @@ angular.module('app.portfolio', [])
       buyingPrice: 1180, 
       profit: 5
     }
-  ]
+  ];
+
+  $scope.getInvestments = function() {
+    //grab user id
+    Portfolio.getInvestments()
+      .then(function(results) {
+        console.log('I made it back!');
+        $scope.investments = results.data;
+      })
+  }
+
+  $scope.getInvestments();
 
   
 

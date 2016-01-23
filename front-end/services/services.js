@@ -29,4 +29,38 @@ angular.module('app.services', [])
       })
     }
   }
+})
+
+.factory('Portfolio', function($http, $location) {
+  return {
+    // add a question from ask
+    getInvestments: function() {
+
+      return $http({
+        method: 'GET',
+        url: '/portfolio',
+      })
+      .then(function(res) {
+        console.log(res.data)
+        return res.data;
+      })
+    }
+  }
+})
+
+.factory('Newsfeed', function($http, $location) {
+  return {
+    // add a question from ask
+    getTrending: function() {
+
+      return $http({
+        method: 'GET',
+        url: '/trending',
+      })
+      .then(function(res) {
+        console.log(res.data)
+        return res.data;
+      })
+    }
+  }
 });
