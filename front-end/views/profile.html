@@ -2,21 +2,21 @@
 
   <section>
 
-    <div>
-      <img src="">
-      <div>
-        HERE IT IS {{testing.data}}
+    <div class = "user info">
+      <img src="" alt = "{{user.name}}'s photo">
+      <span> {{user.name}}'s</span>
+      <span> current score is {{user.currentScore}} </span>
+      <br/>
+      <br/>
 
-        SECOND TEST {{leaderTesting.data}}
-      </div>
-      <span> {{user.name}} </span>
-      <span> My current score is {{user.currentScore}} </span>
     </div>
 
   </section>
 
   <section>
-    <div> This is where the user graph will go. </div>
+    <div> This is where the user graph will go.
+      <span ng-repeat = 'score in user.scores'>{{score.score}} </span>
+     </div>
   </section>
 
   <section>

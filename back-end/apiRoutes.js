@@ -15,17 +15,46 @@ module.exports = function (app, express) {
 
   app.get('/profile', function(req, res) {
     console.log('this route worked!');
-    var test = {
-      data: 'hello'
-    }
-    res.send(test);
+    var data = {
+      name: 'Neeraj Kohirkar', 
+      scores: [
+        {
+          name: 'Neeraj Kohirkar', 
+          score: 98, 
+          date: 'January 1 2013'
+        }, 
+        {
+          name: 'Neeraj Kohirkar', 
+          score: 99, 
+          date: 'February 22, 2014'
+        }, 
+        {
+          name: 'Neeraj Kohirkar', 
+          score: 22, 
+          date: 'June 2, 2010'
+        }
+      ], 
+      currentScore: 99
+  };
+    res.send(data);
   })
 
   app.get('/leaders', function(req, res) {
     console.log("leader route worked too");
-    var test = {
-      data: 'hello here are my leaders'
+    var test = [
+    {
+      name: 'Kyle Morehead', 
+      score: 95
+    }, 
+    {
+      name: 'Ranjit Rao', 
+      score: 99
+    }, 
+    {
+      name: 'Karthik Vempathy', 
+      score: 99
     }
+  ];
     res.send(test);
   })
 };
