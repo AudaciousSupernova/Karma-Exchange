@@ -1,13 +1,12 @@
 angular.module('app.profile', [])
 
-.controller('ProfileController', function($scope, $location, Profile) {
-<<<<<<< HEAD
 	//<h3>checks wheter this is the logged in user</h3>
-	$scope.isUser = true;
+
+.controller('ProfileController', function($scope, $location, User) {
+
+  $scope.isUser = true;
   $scope.user;
   $scope.leaders;
-
-
   //This function should be called on load of the profile view
 
   /*
@@ -30,14 +29,14 @@ angular.module('app.profile', [])
 
   $scope.getUserData = function() {
 
-    Profile.getUser()
+    User.getUser()
       .then(function(data) {
         $scope.user = data;
       })
   }
 
   $scope.getLeaders = function() {
-    Profile.getLeaderData()
+    User.getLeaderData()
       .then(function(data) {
         $scope.leaders = data;
       })

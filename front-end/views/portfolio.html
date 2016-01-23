@@ -1,5 +1,28 @@
 <div ng-module="app.portfolio">
 
-  <div> This is my PORTFOLIO page </div>
+
+ <h3> My Portfolio </h3>
+    <table>
+      <tr>
+        <th class='user-header'> User Name </th>
+        <th class='user-header'> Current Score </th>
+        <th class='user-header'> Trend </th>
+        <th class='user-header'> Shares Bought </th>
+        <th class='user-header'> Buying Price </th>
+        <th class='user-header'> Anticipated Net Profit </th>
+      </tr>
+      <tr ng-repeat="investment in investments">
+        <td> {{investment.targetUser}} </td>
+        <td> 99 </td>
+        <td> Scores include {{investment.scores[0].score}} </td>
+        <td> {{investment.shares}} </td>
+        <td> {{investment.buyingPrice}} </td>
+        <td> {{investment.profit}} </td>
+        <td>
+          <form> 
+            <input type="submit" value="Sell Shares"/> 
+          </form>
+        </td>
+      </tr>
 
 </div>
