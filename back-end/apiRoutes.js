@@ -12,6 +12,22 @@ module.exports = function (app, express) {
 	  function(req, res) {
 	    res.redirect('/#/newsfeed');
 	  });
+
+  app.get('/profile', function(req, res) {
+    console.log('this route worked!');
+    var test = {
+      data: 'hello'
+    }
+    res.send(test);
+  })
+
+  app.get('/leaders', function(req, res) {
+    console.log("leader route worked too");
+    var test = {
+      data: 'hello here are my leaders'
+    }
+    res.send(test);
+  })
 };
 
 
