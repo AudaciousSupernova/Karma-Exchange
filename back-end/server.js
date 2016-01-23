@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var passport = require('./Auth/passport.facebook.js');
+var passport = require('./auth/passport.facebook.js');
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
