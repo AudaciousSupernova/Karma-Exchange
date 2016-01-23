@@ -24,7 +24,7 @@ angular.module('app', [
       controller: 'NewsfeedController'
     })
     .state('profile', {
-      url: '/profile', 
+      url: '/profile/:id', 
       templateUrl: 'views/profile.html', 
       controller: 'ProfileController'
     })

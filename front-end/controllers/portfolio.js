@@ -1,7 +1,18 @@
 angular.module('app.portfolio', [])
 
-.controller('PortfolioController', function($scope, $location) {
-  $scope.test = "hello testing portfolio";
+.controller('PortfolioController', function($scope, $location, Portfolio) {
+  $scope.investments; 
+
+  $scope.getInvestments = function() {
+    //grab user id
+    Portfolio.getInvestments()
+      .then(function(results) {
+        console.log('I made it back!');
+        $scope.investments = results.data;
+      })
+  }
+
+  $scope.getInvestments();
 
   
 
