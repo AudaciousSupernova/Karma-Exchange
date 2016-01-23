@@ -6,13 +6,22 @@
   </head>
 
   <body>
-    <div> This will be a navigation bar </div>
-    
+    <div class = "navbar">
+      <span><a href="/#/newsfeed">Home</a></span>
+      <span><a href="/#/profile">Profile</a></span>
+      <span><a href="/#/portfolio">Portfolio</a></span>
+      <span><input></input></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class = "spaceHolder">s</div>
     <div ui-view> </div>
-
+    <!-- dependancies -->
     <script src="libs/angular/angular.min.js"> </script>
     <script src="libs/angular-route/angular-route.min.js"> </script>
     <script src="libs/angular-ui-router/release/angular-ui-router.min.js"> </script>
+
+    <!-- our app js -->
     <script src="app.js"> </script>
     <script src="controllers/profile.js"> </script>
     <script src="controllers/portfolio.js"> </script>
@@ -21,6 +30,9 @@
     <script src="controllers/sell.js"> </script>
     <script src="controllers/auth.js"> </script>
     <script src="services/services.js"> </script>
+
+    <!-- styles -->
+    <link rel="stylesheet" href="styles/styles.css">
 
   </body>
 
