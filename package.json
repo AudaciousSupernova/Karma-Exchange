@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon back-end/server.js",
-    "postinstall": "bower install"
+    "postinstall": "bower install",
+    "buildDb" : "mysql -u root -p < back-end/db/dbSchema/schema.sql"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "body-parser": "~1.4.2",
     "express": "~4.5.1",
     "express-session": "^1.13.0",
+    "mysql": "^2.10.2",
     "nodemon": "^1.8.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.0.0"
