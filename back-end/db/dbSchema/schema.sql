@@ -14,6 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE scoresHist (
 	/* stores the history of scores for all users */
+  user_id int,
   FOREIGN KEY(user_id) REFERENCES users(id),
   type varchar(50),
   ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -32,9 +33,11 @@ SELECT TIME(`ts`) FROM timedate WHERE id =someId
 
 CREATE TABLE transactionHist (
   /* stores the history of transaction for all users */
+  user_id int,
   FOREIGN KEY(user_id) REFERENCES users(id),
+  target_id int,
+  FOREIGN KEY(target_id) REFERENCES users(id),
   type varchar(3),
-  FOREIGN KEY(target) REFERENCES users(id),
   numberShares int,
   credits int,
   id int NOT NULL AUTO_INCREMENT,
