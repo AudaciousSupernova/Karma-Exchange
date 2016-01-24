@@ -4,7 +4,7 @@ var passport = require('./Auth/passport.facebook');
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns. 
-	  passport.authenticate('facebook', { scope: ['public_profile'] }),
+	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_likes', 'user_photos', 'user_posts'] }),
 	  function(req, res){});
 
 	app.get('/auth/facebook/callback',
