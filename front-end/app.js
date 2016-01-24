@@ -7,7 +7,8 @@ angular.module('app', [
   'app.auth',
   'ngRoute', 
   'ui.router', 
-  'app.services'
+  'app.services', 
+  'app.index'
   ])
 
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {
