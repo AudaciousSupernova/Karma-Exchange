@@ -14,7 +14,7 @@ passport.deserializeUser(function(user, done) {
 passport.use(new FacebookStrategy({
     clientID: '767594746706952',
     clientSecret: 'd917065bc815ddf8ab8779c9f0b3c664',
-    callbackURL: "http://127.0.0.1:3000/auth/facebook/callback",
+    callbackURL: "http://karmaexchange.io:3000/auth/facebook/callback",
     enableProof: true,
     //fields from facebook profile that Nova uses; don't need at the moment 
     // profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
