@@ -13,6 +13,23 @@ module.exports = function (app, express) {
 	    res.redirect('/#/newsfeed');
 	  });
 
+  app.get('/api/loggedin', 
+    function (req, res) {
+      auth = req.isAuthenticated();
+      console.log(auth);
+      if (auth) {
+        res.send(req.user);
+      } else {
+        res.redirect('/login');
+      }
+    });
+
+  app.get('/api/logout', 
+    function (req,res) {
+      req.logout();
+      res.redirect('/#/')
+    })
+
   app.get('/profile', function(req, res) {
     console.log('this route worked!');
     var data = {
