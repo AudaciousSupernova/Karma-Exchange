@@ -8,7 +8,10 @@ logs
 pids
 *.pid
 *.seed
+.ssh
+.ssh.pub
 
+docs/
 node_modules/
 bower_components/
 front-end/libs/
