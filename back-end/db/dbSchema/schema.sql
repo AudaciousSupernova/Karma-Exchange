@@ -7,7 +7,7 @@ CREATE TABLE users (
   name varchar(200)  NOT NULL,
   password varchar(200),
   email varchar(200),
-  credits int NOT NULL,
+  karma int NOT NULL,
   facebookKey varchar(200),
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
@@ -40,7 +40,7 @@ CREATE TABLE transactionHist (
   FOREIGN KEY(target_id) REFERENCES users(id),
   type varchar(3),
   numberShares int,
-  credits int,
+  karma int,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );
