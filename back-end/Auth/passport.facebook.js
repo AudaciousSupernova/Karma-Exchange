@@ -5,6 +5,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var callbackURL;
 if(process.env.PORT){
   callbackURL = "http://karmaexchange.io/auth/facebook/callback"
+  console.log("digital ocean changed callbackURL")
 } else {
   callbackURL = "http://127.0.0.1:3000/auth/facebook/callback"
 }
