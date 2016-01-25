@@ -15,12 +15,12 @@ connection.connect(function(err){
 	console.log('Connected to Main Db')
 });
 
-
+//<h3> User database functions </h3>
 //takes a userObj with name, email, karma, facebookKey, id, password
 var addUser = function(userObj){
 	connection.query('INSERT INTO users SET ?', userObj, function(err, res){
 		if(err){
-			console.log("error inserting into users db", err)
+			console.log("error inserting into users", err)
 		} else{
 			console.log("last inserted Id: ", res.insertId);
 			return res.insertId
@@ -76,6 +76,25 @@ var deleteUser = function(userId){
   });
 }
 
+
+//<h3>Transaction History functions</h3>
+//userId and type
+//transaction object = {userId,type,target,shares,karma}
+//type = buy/sell
+//userId and target are foreign keys referencing the user schema
+var addTransaction = function(transactionObj){
+	connection.query('INSERT INTO transactionHist SET ?', transactionObj, function(err, res){
+		if(err){
+			console.log("error inserting into transactionHist", err)
+		} else{
+			console.log("last inserted Id: ", res.insertId);
+			return res.insertId
+		}
+	})
+}
+
+
+//<h3>Score History functions</h3>
 
 module.exports = {
 	connection: connection,
