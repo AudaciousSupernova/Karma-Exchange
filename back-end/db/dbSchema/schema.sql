@@ -5,6 +5,7 @@ USE main;
 CREATE TABLE users (
   /* a user table */
   name varchar(200)  NOT NULL,
+  password varchar(200),
   email varchar(200),
   credits int NOT NULL,
   facebookKey varchar(200),
