@@ -29,39 +29,42 @@ var addUser = function(userObj){
 }
 
 //finds a user based on the name and password inserted
-//usefull for login
+//returns an array of obj's (should only be one) usefull for login
 var findUser = function(name, password){
 	connection.query('SELECT * FROM users where name=? and password=?', [name, password], function(err, rows){
 		if(err){
 			console.log("Error finding user by name :", err)
 		} else{
-			console.log(rows)			
+			console.log(rows)
+			return rows
 		}
 	})
 }
 
 
 //finds the user by id, useful for buy/sell events
+//returns an array of obj's (should only be one)
 var findUserById = function(userId){
 	connection.query('SELECT * FROM users where id=?', userId, function(err, rows){
 		if(err){
 			console.log("Error finding user by id :", err)
 		} else{
 			console.log(rows)			
+			return rows
 		}
 	})
 }
 var updateKarma = function(userId, newKarma){
-	
-	con.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userid], function (err, result) {
+	connection.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userId], function (err, result) {
 	    if (err){
 	    	console.log("Error updating Karma of userId " + userId)
+	    } else{
+		    console.log('Changed user ' + userId + '\'s karma to ' + newKarma);
 	    }
-
-	    console.log('Changed ' + result.changedRows + ' rows');
 	  }
 	);
 }
+
 
 var deleteUser = function(userId){
 	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, result) {
@@ -77,9 +80,10 @@ var deleteUser = function(userId){
 module.exports = {
 	connection: connection,
 	addUser: addUser,
-	deleteUser: deleteUser,
 	findUser: findUser,
-	findUserById: findUserById
+	findUserById: findUserById,
+	updateKarma: updateKarma,
+	deleteUser: deleteUser,
 }
 
 

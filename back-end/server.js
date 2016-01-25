@@ -6,17 +6,18 @@ var port = process.env.PORT || 3000;
 var mainController = require('./db/dbControllers/mainController')
 
 // example user obj
-// var user = {
+// var userObj = {
 // 	name: "Bobo",
-// 	password: "thisIsASaltyHashToo",
+// 	password: "thisIsASaltyHash",
 // 	email: "bob@bob.bobob",
-// 	karma: 80808,
-// 	facebookKey: "bobobobobob"
+// 	karma: 8080,
+// 	facebookKey: "bobobobob"
 // }
 // mainController.addUser(userObj)
 // mainController.findUser(name, saltedAndHashedPassword)
 // mainController.findUserById(userId)
 // mainController.deleteUser(userId)
+// mainController.updateKarma(userId, newKarma)
 
 
 app.use(bodyParser.json());
