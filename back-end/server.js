@@ -19,7 +19,7 @@ var session = require('express-session');
 // mainController.findUserById(userId)
 // mainController.deleteUser(userId)
 // mainController.updateKarma(userId, newKarma)
-app.use(session({secret: 'supernova', cookie:{}, resave: false, saveUninitialized: false }));
+app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

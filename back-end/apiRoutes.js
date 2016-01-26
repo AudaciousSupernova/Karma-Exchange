@@ -20,7 +20,7 @@ module.exports = function (app, express) {
       if (auth) {
         res.send(req.user);
       } else {
-        res.redirect('/login');
+        res.redirect('/');
       }
     });
 
