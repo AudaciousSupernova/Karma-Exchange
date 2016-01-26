@@ -63,4 +63,21 @@ angular.module('app.services', [])
       })
     }
   }
-});
+})
+
+.factory('Auth', function ($http, $location, $rootScope) {
+  return {
+    checkLoggedIn: function () {
+      return $http.get('/api/loggedin').then(function (user) {
+        if (user.data.id) {
+          console.log('recognizes user', user)
+          $rootScope.user = user;
+          return true;
+        } else {
+          console.log("error authenticating user");
+          return false;
+        }
+      });
+    }
+  }
+})

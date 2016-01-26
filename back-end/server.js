@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var passport = require('./Auth/passport.facebook.js');
 var port = process.env.PORT || 3000;
 var mainController = require('./db/dbControllers/mainController')
+var session = require('express-session');
 
 // example user obj
 // var userObj = {
@@ -18,7 +19,7 @@ var mainController = require('./db/dbControllers/mainController')
 // mainController.findUserById(userId)
 // mainController.deleteUser(userId)
 // mainController.updateKarma(userId, newKarma)
-
+app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
