@@ -117,6 +117,19 @@ var getTransactionHist = function(userId){
 
 //<h3>Score History functions</h3>
 
+// var addScore
+
+// var getScores
+
+//<h3>Current Stocks</h3>
+
+// var addStock
+
+// var getStocks
+
+// var updateStock
+
+// var deleteStock
 
 module.exports = {
 	connection: connection,
@@ -128,4 +141,8 @@ module.exports = {
 	//transaction methods
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
+	//score History methods
+	//addScore: addScore,
+	//getScores: getScores,
+	//Current Stock methods
 }
