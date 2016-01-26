@@ -139,10 +139,17 @@ module.exports = {
 	updateKarma: updateKarma,
 	deleteUser: deleteUser,
 	//transaction methods
+
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
+	
 	//score History methods
 	//addScore: addScore,
 	//getScores: getScores,
+	
 	//Current Stock methods
+	// addStock:addStock,
+	// getStocks:getStocks,
+	// updateStock:updateStock,
+	// deleteStock:deleteStock,
 }
