@@ -138,7 +138,6 @@ var addTransaction = function(transactionObj, callback){
 			callback(err, null)
 		} else{
 			console.log("last inserted Id: ", res.insertId);
-			return res.insertId
 			callback(null, res.insertId)
 		}
 	})

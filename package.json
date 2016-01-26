@@ -10,7 +10,8 @@
     "buildDb": "mysql -u root -p < back-end/db/dbSchema/mainSchema.sql",
     "postbuildDb": "mysql -u root -p < back-end/db/dbSchema/transactionQueue.sql",
     "updateDb": "mysql -u root -p < back-end/db/dbSchema/updateSchema.sql",
-    "populateUserTable" : "node back-end/db/dbControllers/populateUserTable.js"
+    "populateUserTable" : "node back-end/db/dbControllers/populateUserTable.js",
+    "populateTransactionHist" : "node back-end/db/dbControllers/populateTransactionHist.js"
   },
   "repository": {
     "type": "git",
