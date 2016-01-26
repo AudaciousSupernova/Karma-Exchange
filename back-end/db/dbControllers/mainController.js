@@ -17,26 +17,29 @@ connection.connect(function(err){
 
 //<h3> User database functions </h3>
 //takes a userObj with name, email, karma, facebookKey, id, password
-var addUser = function(userObj){
+var addUser = function(userObj, callback){
 	connection.query('INSERT INTO users SET ?', userObj, function(err, res){
 		if(err){
 			console.log("error inserting into users", err)
+			callback(err, null)
 		} else{
 			console.log("last inserted Id: ", res.insertId);
-			return res.insertId
+			callback(null, res.insertId)
 		}
 	})
 }
 
 //finds a user based on the name and password inserted
 //returns an array of obj's (should only be one) usefull for login
-var findUser = function(name, password){
+var findUser = function(name, password, callback){
 	connection.query('SELECT * FROM users where name=? and password=?', [name, password], function(err, rows){
+		// just do callback(err, user)
 		if(err){
 			console.log("Error finding user by name :", err)
+			callback(err, null);
 		} else{
 			console.log(rows)
-			return rows
+			callback(null, rows);
 		}
 	})
 }
@@ -44,35 +47,40 @@ var findUser = function(name, password){
 
 //finds the user by id, useful for buy/sell events
 //returns an array of obj's (should only be one)
-var findUserById = function(userId){
-	connection.query('SELECT * FROM users where id=?', userId, function(err, rows){
+var findUserById = function(userId, callback){
+	connection.query('SELECT * FROM users where facebookKey=?', userId, function(err, rows){
 		if(err){
 			console.log("Error finding user by id :", err)
+			callback(err,null);
 		} else{
-			console.log(rows)			
-			return rows
+			console.log(rows)
+			callback(null,rows);
 		}
 	})
 }
 
-var updateKarma = function(userId, newKarma){
+var updateKarma = function(userId, newKarma, callback){
 	connection.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userId], function (err, result) {
 	    if (err){
 	    	console.log("Error updating Karma of userId " + userId)
+	    	callback(err, null)
 	    } else{
 		    console.log('Changed user ' + userId + '\'s karma to ' + newKarma);
+		    callback(null, userId);
 	    }
 	  }
 	);
 }
 
 
-var deleteUser = function(userId){
+var deleteUser = function(userId, callback){
 	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, result) {
     if (err) {
     	console.log("error deleting user " + userId, err)
+    	callback(err, null)
     }else{
-	    console.log('Deleted user number ' + userId);   	
+	    console.log('Deleted user number ' + userId);
+	    callback(null, userId);
     }
   });
 }
@@ -92,25 +100,28 @@ var deleteUser = function(userId){
 // }
 // addTransaction(sampleTransaction)
 
-var addTransaction = function(transactionObj){
+var addTransaction = function(transactionObj, callback){
 	connection.query('INSERT INTO transactionHist SET ?', transactionObj, function(err, res){
 		if(err){
 			console.log("error inserting into transactionHist", err)
+			callback(err, null)
 		} else{
 			console.log("last inserted Id: ", res.insertId);
 			return res.insertId
+			callback(null, res.insertId)
 		}
 	})
 }
 
 //takes a userId and returns a transaction history for that userId
-var getTransactionHist = function(userId){
+var getTransactionHist = function(userId, callback){
 	connection.query('SELECT * FROM transactionHist where user_id=?', userId, function(err, rows){
 		if(err){
 			console.log("Error finding transactionHist of user_id :" + userId, err)
+			callback(err, null);
 		} else{
-			console.log(rows)			
-			return rows
+			console.log(rows)
+			callback(null, rows);
 		}
 	})
 };
@@ -143,11 +154,11 @@ module.exports = {
 
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
-	
+
 	//score History methods
 	//addScore: addScore,
 	//getScores: getScores,
-	
+
 	//Current Stock methods
 	// addStock:addStock,
 	// getStocks:getStocks,

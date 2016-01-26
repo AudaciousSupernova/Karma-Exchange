@@ -1,5 +1,6 @@
 var passport = require('passport');
 // var constants = require('./../../constants'); 
+var mainController = require('../db/dbControllers/mainController')
 var FacebookStrategy = require('passport-facebook').Strategy;
 // var usersController = require('./../components/users/usersController');
 var callbackURL;
@@ -28,8 +29,17 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      console.log('Facebook Profile',profile.id);
+      console.log('Facebook Profile',profile);
       console.log('Access Token', accessToken);
+      mainController.findUserById(profile.id, function(err, rows) {
+        if (err) {
+          mainController.addUser(profile, function(userId) 
+            console.log(userId);
+            return done(null, profile);
+        } else {
+          return done(null, rows[0]);
+        }
+      }
       return done(null, profile);
     });
   }
