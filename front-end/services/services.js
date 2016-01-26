@@ -5,11 +5,11 @@ angular.module('app.services', [])
 .factory('User', function($http, $location) {
   return {
     // add a question from ask
-    getUser: function() {
+    getUser: function(id) {
 
       return $http({
         method: 'GET',
-        url: '/profile',
+        url: '/profile/' + id,
       })
       .then(function(res) {
         console.log(res.data)
@@ -34,11 +34,11 @@ angular.module('app.services', [])
 .factory('Portfolio', function($http, $location) {
   return {
     // add a question from ask
-    getInvestments: function() {
+    getInvestments: function(id) {
 
       return $http({
         method: 'GET',
-        url: '/portfolio',
+        url: '/portfolio/' + id,
       })
       .then(function(res) {
         console.log(res.data)
@@ -81,3 +81,12 @@ angular.module('app.services', [])
     }
   }
 })
+
+.factory('Root', function ($http, $location, $rootScope) {
+  return {
+    addUserInfo: function(info) {
+      this.currentUserInfo = info;
+    }
+  }
+})
+

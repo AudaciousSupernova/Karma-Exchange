@@ -1,16 +1,22 @@
 angular.module('app.profile', [])
 
-	//<h3>checks wheter this is the logged in user</h3>
+	//<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User) {
+.controller('ProfileController', function($scope, $location, User, Auth, Root) {
 
   $scope.isUser = true;
   $scope.user;
   $scope.leaders;
-  //This function should be called on load of the profile view
+  $scope.currentUserInfo = "invalid";
+
+  //Save the user id, included in the location path
+
+  //Pass this userId to $scope.getUserData in order to get all data associated with user
+
+  //if the userId matches the logged in user, then also call getLeaders 
+  //if not, then display only the profile's general information 
 
   /*
-
     When a user clicks on "Profile", pass the logged-in user's id to the new route: /profile/:id
     in this controller file, save the id as user id
     get UserData by passing the id
@@ -22,16 +28,19 @@ angular.module('app.profile', [])
 
     Now route to /profile/:id, save the id as user id, and get UserData
 
-    //only call getLeaders if user id matches logged-in user's id
+    only call getLeaders if user id matches logged-in user's id
 
+*/
 
-  */
+  $scope.getUserById = function(id) {
 
-  $scope.getUserData = function() {
-
-    User.getUser()
+    User.getUser(id)
       .then(function(data) {
         $scope.user = data;
+        //if id matches logged-in id
+          //then call getLeaders
+        //else
+          //display buy shares button
       })
   }
 
@@ -42,8 +51,16 @@ angular.module('app.profile', [])
       })
   }
 
-  $scope.getUserData();
-  $scope.getLeaders();
+  Auth.checkLoggedIn().then(function(boolean) {
+    if (boolean === false) {
+      $location.path('/')
+    } else {
+      $scope.currentUserInfo = Root.currentUserInfo
+     $scope.getUserById($scope.currentUserInfo.id);
+    }
+  })
+
+
 
   
 

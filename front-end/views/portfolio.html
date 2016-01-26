@@ -1,29 +1,30 @@
 <div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
 
- <h3> My Portfolio </h3>
+ <h2> My Current Investments </h2>
     <table>
       <tr>
-        <th class='user-header'> User Name </th>
-        <th class='user-header'> Current Score </th>
-        <th class='user-header'> Trend </th>
-        <th class='user-header'> Shares Bought </th>
-        <th class='user-header'> Buying Price </th>
-        <th class='user-header'> Anticipated Net Profit </th>
+        <th> Name </th>
+        <th> Current Score </th>
+        <th> Trend </th>
+        <th> Shares Bought </th>
+        <th> Buying Price </th>
+        <th> Profit </th>
       </tr>
       <tr ng-repeat="investment in investments">
         <td> {{investment.targetUser}} </td>
         <td> 99 </td>
-        <td> Scores include {{investment.scores[0].score}} </td>
+        <td> <i>Graph of scores</i> </td>
         <td> {{investment.shares}} </td>
         <td> {{investment.buyingPrice}} </td>
         <td> {{investment.profit}} </td>
         <td>
           <div layout="column" ng-cloak>
-  <md-content class="md-padding">
-    <md-button ng-click="test(investment.targetUser, investment.shares, investment.buyingPrice, investment.profit)" class="md-raised">Sell Shares</md-button>
-  </md-content>
-</div>
+            <md-content>
+              <md-button ng-click="clickSell(investment)" class="md-raised">Sell Shares
+              </md-button>
+            </md-content>
+          </div>
         </td>
       </tr>
 
