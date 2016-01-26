@@ -5,6 +5,7 @@ var passport = require('./Auth/passport.facebook.js');
 var port = process.env.PORT || 3000;
 var mainController = require('./db/dbControllers/mainController')
 var session = require('express-session');
+// var transactionQueueController = require('./db/dbControllers/transactionQueue')
 
 // example user obj
 // var userObj = {
@@ -13,13 +14,15 @@ var session = require('express-session');
 // 	email: "bob@bob.bobob",
 // 	karma: 8080,
 // 	facebookKey: "bobobobob"
+//  profile_photo: "https://s3.amazonaws.com/uifaces/faces/twitter/pifagor/128.jpg"
 // }
-// mainController.addUser(userObj)
+// mainController.addUser(userObj, callback)
 // mainController.findUser(name, saltedAndHashedPassword)
 // mainController.findUserById(userId)
 // mainController.deleteUser(userId)
 // mainController.updateKarma(userId, newKarma)
-
+// mainController.countUsers(console.log)
+// mainController.getAllUsers(console.log)
 
 // var sampleTransaction = {
 // 	user_id: 2,

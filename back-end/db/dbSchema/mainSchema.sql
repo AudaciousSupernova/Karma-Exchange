@@ -19,6 +19,7 @@ CREATE TABLE scoresHist (
   user_id int,
   FOREIGN KEY(user_id) REFERENCES users(id),
   type varchar(50),
+  score int NOT NULL,
   ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
@@ -47,7 +48,7 @@ CREATE TABLE transactionHist (
 );
 
 CREATE TABLE currentStocks (
-  /* stores the history of scores for all users */
+  /* stores the current stocks for all users */
   user_id int,
   FOREIGN KEY(user_id) REFERENCES users(id),
   target_id int,
