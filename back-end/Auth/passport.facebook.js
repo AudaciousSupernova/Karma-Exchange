@@ -24,25 +24,16 @@ passport.use(new FacebookStrategy({
     clientSecret: 'd917065bc815ddf8ab8779c9f0b3c664',
     callbackURL: callbackURL,
     enableProof: true,
-    //fields from facebook profile that Nova uses; don't need at the moment 
+    //fields from facebook profile that Nova uses; don't need at the moment
     // profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
       console.log('Facebook Profile',profile);
       console.log('Access Token', accessToken);
-      mainController.findUserById(profile.id, function(err, rows) {
-        if (err) {
-          mainController.addUser(profile, function(userId) 
-            console.log(userId);
-            return done(null, profile);
-        } else {
-          return done(null, rows[0]);
-        }
-      }
       return done(null, profile);
     });
   }
-));
+))
 
 module.exports = passport;
