@@ -54,6 +54,7 @@ var findUserById = function(userId){
 		}
 	})
 }
+
 var updateKarma = function(userId, newKarma){
 	connection.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userId], function (err, result) {
 	    if (err){
@@ -79,9 +80,18 @@ var deleteUser = function(userId){
 
 //<h3>Transaction History functions</h3>
 //userId and type
-//transaction object = {userId,type,target,shares,karma}
+//transaction object = {user_id,target_id,type,numberShares,karma}
 //type = buy/sell
 //userId and target are foreign keys referencing the user schema
+// var sampleTransaction = {
+// 	user_id: 1,
+// 	target_id: 2,
+// 	type: "sell",
+// 	numberShares: 15,
+// 	karma: 44
+// }
+// addTransaction(sampleTransaction)
+
 var addTransaction = function(transactionObj){
 	connection.query('INSERT INTO transactionHist SET ?', transactionObj, function(err, res){
 		if(err){
@@ -93,8 +103,20 @@ var addTransaction = function(transactionObj){
 	})
 }
 
+//takes a userId and returns a transaction history for that userId
+var getTransactionHist = function(userId){
+	connection.query('SELECT * FROM transactionHist where user_id=?', userId, function(err, rows){
+		if(err){
+			console.log("Error finding transactionHist of user_id :" + userId, err)
+		} else{
+			console.log(rows)			
+			return rows
+		}
+	})
+};
 
 //<h3>Score History functions</h3>
+
 
 module.exports = {
 	connection: connection,
@@ -103,49 +125,7 @@ module.exports = {
 	findUserById: findUserById,
 	updateKarma: updateKarma,
 	deleteUser: deleteUser,
+	//transaction methods
+	addTransaction:addTransaction,
+	getTransactionHist:getTransactionHist,
 }
-
-
-//example code
-
-// var db = require('../db');
-
-// module.exports = {
-
-//   messages: {
-//     get: function (callback) {
-//       // fetch all messages
-//       // text, username, roomname, id
-//       var queryStr = "select messages.id, messages.text, messages.roomname, users.username \
-//                       from messages left outer join users on (messages.userid = users.id) \
-//                       order by messages.id desc";
-//       db.query(queryStr, function(err, results) {
-//         callback(err, results);
-//       });
-//     },
-//     post: function (params, callback) {
-//       // create a message for a user id based on the given username
-//       var queryStr = "insert into messages(text, userid, roomname) \
-//                       value (?, (select id from users where username = ? limit 1), ?)";
-//       db.query(queryStr, params, function(err, results) {
-//         callback(err, results);
-//       });
-//     }
-//   },
-//   users: {
-//     get: function (callback) {
-//       // fetch all users
-//       var queryStr = "select * from users";
-//       db.query(queryStr, function(err, results) {
-//         callback(err, results);
-//       });
-//     },
-//     post: function (params, callback) {
-//       // create a user
-//       var queryStr = "insert into users(username) values (?)";
-//       db.query(queryStr, params, function(err, results) {
-//         callback(err, results);
-//       });
-//     }
-//   }
-// };

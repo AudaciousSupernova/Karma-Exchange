@@ -19,8 +19,20 @@ var session = require('express-session');
 // mainController.findUserById(userId)
 // mainController.deleteUser(userId)
 // mainController.updateKarma(userId, newKarma)
-app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 
+
+// var sampleTransaction = {
+// 	user_id: 2,
+// 	target_id: 1,
+// 	type: "sell",
+// 	numberShares: 5,
+// 	karma: 400
+// }
+
+// mainController.addTransaction(sampleTransaction)
+// mainController.getTransactionHist(userId)
+
+app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/../front-end'));

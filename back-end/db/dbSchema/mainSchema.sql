@@ -38,7 +38,7 @@ CREATE TABLE transactionHist (
   FOREIGN KEY(user_id) REFERENCES users(id),
   target_id int,
   FOREIGN KEY(target_id) REFERENCES users(id),
-  type varchar(3),
+  type varchar(4),
   numberShares int,
   karma int,
   id int NOT NULL AUTO_INCREMENT,
