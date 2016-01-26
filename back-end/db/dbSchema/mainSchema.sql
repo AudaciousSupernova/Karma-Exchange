@@ -9,6 +9,7 @@ CREATE TABLE users (
   email varchar(200),
   karma int NOT NULL,
   facebookKey varchar(200),
+  profile_photo varchar(300),
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );

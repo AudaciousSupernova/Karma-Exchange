@@ -121,6 +121,7 @@ var getTransactionHist = function(userId){
 
 // var getScores
 
+
 //<h3>Current Stocks</h3>
 
 // var addStock
