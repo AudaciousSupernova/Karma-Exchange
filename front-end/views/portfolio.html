@@ -1,4 +1,4 @@
-<div ng-module="app.portfolio">
+<div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
 
  <h3> My Portfolio </h3>
@@ -19,10 +19,15 @@
         <td> {{investment.buyingPrice}} </td>
         <td> {{investment.profit}} </td>
         <td>
-          <form> 
-            <input type="submit" value="Sell Shares"/> 
-          </form>
+          <div layout="column" ng-cloak>
+  <md-content class="md-padding">
+    <md-button ng-click="test(investment.targetUser, investment.shares, investment.buyingPrice, investment.profit)" class="md-raised">Sell Shares</md-button>
+  </md-content>
+</div>
         </td>
       </tr>
+
+    </table>
+   
 
 </div>

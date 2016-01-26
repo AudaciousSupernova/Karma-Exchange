@@ -8,7 +8,8 @@ angular.module('app', [
   'ngRoute', 
   'ui.router', 
   'app.services', 
-  'app.index'
+  'app.index', 
+  'ngMaterial'
   ])
 
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {
