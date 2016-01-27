@@ -71,7 +71,7 @@ angular.module('app.profile', [])
       })
   }
 
-  function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist) {
+  function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio) {
 
     $scope.profile = profile;
     $scope.loggedinUserInfo = loggedinUserInfo;
@@ -88,10 +88,20 @@ angular.module('app.profile', [])
         numberShares: $scope.sharesToBuy, 
         karma: 90
       }
+
+      var investment = {
+        user_id: $scope.loggedinUserInfo.id, 
+        target_id: $scope.profile.id, 
+        numberShares: $scope.sharesToBuy
+      }
+
       console.log("transaction", transaction);
       TransactionHist.addTransaction(transaction)
         .then(function(results) {
-          $mdDialog.hide();
+          Portfolio.addInvestment(investment)
+            .then(function(results) {
+              $mdDialog.hide();
+            })
         })
     }
 

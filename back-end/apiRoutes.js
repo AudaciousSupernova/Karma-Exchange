@@ -42,6 +42,17 @@ module.exports = function (app, express) {
     })
   });
 
+  app.post('/profile/buy', function(req, res) {
+    var investment = req.body.investment;
+    mainController.addStock(investment, function(err, results) {
+      if (err) {
+        console.log("could not add investment", err);
+      } else {
+        res.status(201).json(results);
+      }
+    })
+  })
+
   app.get('/leaders', function(req, res) {
     console.log("leader route worked too");
     var test = [
