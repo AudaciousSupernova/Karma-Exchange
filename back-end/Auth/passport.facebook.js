@@ -25,7 +25,7 @@ passport.use(new FacebookStrategy({
     callbackURL: callbackURL,
     enableProof: true,
     //fields from facebook profile that Nova uses; don't need at the moment
-    // profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
+    profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -34,10 +34,12 @@ passport.use(new FacebookStrategy({
       console.log(profile.id)
       var id = profile.id
       var displayName = profile.displayName;
+      var photo = profile.photos[0].value;
+      var email = profile.emails[0].value;
       mainController.findUserByFbKey(profile.id, function(err, profile){
         if (!profile.length) {
-          console.log(displayName, 'displayname');
-          var addObj = {'facebookKey': id, 'name': displayName, 'karma': 0};
+          console.log(profile, 'displayname');
+          var addObj = {'facebookKey': id, 'name': displayName, 'karma': 0, 'profile_photo':photo, 'email': email};
           mainController.addUser(addObj, function (err, userId) {
             if (err){
               console.log('Error');
@@ -48,6 +50,15 @@ passport.use(new FacebookStrategy({
           })
         } else {
           console.log(profile[0], 'profile')
+          if (profile[0].profile_photo !== photo) {
+            mainController.updatePhoto(id, photo, function(err, userId) {
+              if (err) {
+                console.log('Error');
+              } else {
+                console.log('Changed picture');
+              }
+            });
+          }
           return done(null, profile[0]);
         }
       })

@@ -104,7 +104,7 @@ var getAllUsers = function(callback){
 }
 
 
-
+//updates the karma of a specified user
 var updateKarma = function(userId, newKarma, callback){
 	connection.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userId], function (err, result) {
 	    if (err){
@@ -112,6 +112,21 @@ var updateKarma = function(userId, newKarma, callback){
 	    	callback(err, null)
 	    } else{
 		    console.log('Changed user ' + userId + '\'s karma to ' + newKarma);
+		    callback(null, userId);
+	    }
+	  }
+	);
+}
+
+
+//updates the photo of a specified user
+var updatePhoto = function(userId, newPhoto, callback){
+	connection.query('UPDATE users SET karma = ? Where ID = ?',[newPhoto, userId], function (err, result) {
+	    if (err){
+	    	console.log("Error updating Photo of userId " + userId)
+	    	callback(err, null)
+	    } else{
+		    console.log('Changed user ' + userId + '\'s karma to ' + newPhoto);
 		    callback(null, userId);
 	    }
 	  }
