@@ -6,8 +6,6 @@ var transactionQueueController = require('../db/dbControllers/transactionQueue')
 //then, using the number of shares, updates the transaction queue for each
 //open transaction present in the order added to the queue
 
-//it should also 
-
 // var sampleTransaction = {
 // 	user_id: 1,
 // 	target_id: 2,
@@ -17,18 +15,40 @@ var transactionQueueController = require('../db/dbControllers/transactionQueue')
 // }
 var makeTransaction = function(transactionObj, callback){
 	var desiredShares = transactionObj.numberShares
+	var savedDesiredShares = desiredShares
 	checkTransaction(transactionObj.target_id, transactionObj.type, function(err, response){
 		if(err){
-			console.log("error finding transaction ", err)
+			console.log("Error finding transaction ", err)
 		} else {
-			var openTransactions = response[1]
-			for(var i = 0; i < openTransactions; i++){
-
+			//Does error checking to make sure the input is accurate
+			if(desiredShares >  response[0]){
+				var errorMessage ="Error in transaction util.js. Number desired exceeds number available"
+				console.log(errorMessage)
+				callback(errorMessage)
+			} else{
+				var openTransactions = response[1]
+				while(desiredShares > 0){
+					var sharesAvailable = openTransactions[i].numberShares
+					if(desiredShares - sharesAvailable >= 0){
+					}				
+				}
 			}
 		}
 	})
+}
+
+// adds a transaction to the queue
+// example transactionQueue obj
+// var transactionObj = {
+// 	user_id: 1,
+// 	type: "buy",
+// 	target_id: 2,
+// 	numberShares: 3
+// }
+var closeOpenTransaction = function(){
 
 }
+
 
 //turns the buyer into seller and switched the type
 //so that both records are maintained
