@@ -47,7 +47,7 @@ passport.use(new FacebookStrategy({
             }
           })
         } else {
-          console.log(profile , 'profile')
+          console.log(profile[0], 'profile')
           return done(null, profile[0]);
         }
       })
