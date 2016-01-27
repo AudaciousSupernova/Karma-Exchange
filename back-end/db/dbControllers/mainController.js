@@ -38,7 +38,7 @@ var findUser = function(name, password, callback){
 			console.log("Error finding user by name :", err)
 			callback(err, null);
 		} else{
-			console.log(rows)
+			// console.log(rows)
 			callback(null, rows);
 		}
 	})
@@ -53,7 +53,7 @@ var findUserById = function(userId, callback){
 			console.log("Error finding user by id :", err)
 			callback(err,null);
 		} else {
-			console.log(rows);
+			// console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -68,7 +68,7 @@ var findUserByFbKey = function(fbKey, callback){
 			console.log("Error finding user by facebookKey :", err)
 			callback(err,null);
 		} else {
-			console.log(rows);
+			// console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -180,7 +180,7 @@ var getTransactionHist = function(userId, callback){
 			console.log("Error finding transactionHist of user_id :" + userId, err)
 			callback(err, null);
 		} else{
-			console.log(rows)
+			// console.log(rows)
 			callback(null, rows);
 		}
 	})
@@ -193,14 +193,10 @@ var getTransactionHist = function(userId, callback){
 //other types will be available in the future
 //scoreObj example
 
-var scoreObj = {
-	user_id: 243,
-	type: "social",
-	score: 5
-}
+
 
 var addScore = function(scoreObj, callback){
-	connection.query('INSERT INTO scoreHist SET ?', scoreObj, function(err, res){
+	connection.query('INSERT INTO scoresHist SET ?', scoreObj, function(err, res){
 		if(err){
 			console.log("error inserting into scoresHist", err)
 			callback(err, null)
@@ -211,7 +207,18 @@ var addScore = function(scoreObj, callback){
 	})
 }
 
-// var getScores
+//grabs all scores for a target user
+var getScores = function(userId, callback){
+	connection.query('SELECT * FROM scoresHist where user_id=?', userId, function(err, rows){
+		if(err){
+			console.log("Error finding scoresHist of user_id :" + userId, err)
+			callback(err, null);
+		} else{
+			// console.log(rows)
+			callback(null, rows);
+		}
+	})
+}
 
 
 //<h3>Current Stocks</h3>
@@ -255,8 +262,8 @@ module.exports = {
 	getStocks: getStocks
 
 	//score History methods
-	//addScore: addScore,
-	//getScores: getScores,
+	addScore: addScore,
+	getScores: getScores,
 
 	//Current Stock methods
 	// addStock:addStock,

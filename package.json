@@ -7,11 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon back-end/server.js",
     "postinstall": "bower install",
-    "buildDb": "mysql -u root -p < back-end/db/dbSchema/mainSchema.sql",
-    "postbuildDb": "mysql -u root -p < back-end/db/dbSchema/transactionQueue.sql",
+    "buildDb": "npm run buildMainDb && npm run buildTransactionDb",
+    "buidMainDb" : "mysql -u root -p < back-end/db/dbSchema/mainSchema.sql",
+    "buildTransactionDb": "mysql -u root -p < back-end/db/dbSchema/transactionQueue.sql",
     "updateDb": "mysql -u root -p < back-end/db/dbSchema/updateSchema.sql",
     "populateUserTable" : "node back-end/db/dbControllers/populateUserTable.js",
-    "populateTransactionHist" : "node back-end/db/dbControllers/populateTransactionHist.js"
+    "populateTransactionHist" : "node back-end/db/dbControllers/populateTransactionHist.js",
+    "populateScoresHist" : "node back-end/db/dbControllers/populateScoresHist.js"
   },
   "repository": {
     "type": "git",

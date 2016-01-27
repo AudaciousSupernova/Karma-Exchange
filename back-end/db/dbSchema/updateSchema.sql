@@ -1,5 +1,8 @@
 -- current update
 
+-- use transactionQueue;
+-- ALTER TABLE openTransactions DROP COLUMN karma;
+
 -- example update
 -- USE main;
 

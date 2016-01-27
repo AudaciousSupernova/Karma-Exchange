@@ -8,7 +8,6 @@ CREATE TABLE openTransactions (
   type varchar(4) NOT NULL,
   target_id varchar(200) NOT NULL,
   numberShares int NOT NULL,
-  karma int NOT NULL,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );

@@ -38,6 +38,16 @@ var transactionUtil = require('./utils/transactionUtil')
 // mainController.addTransaction(sampleTransaction)
 // mainController.getTransactionHist(5, console.log)
 
+// var sampleScoreObj = {
+// 	user_id: 243,
+// 	type: "social-investment",
+// 	score: 95
+// }
+
+// mainController.addScore(sampleScoreObj, console.log)
+// mainController.getScores(243, console.log)
+
+
 app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
