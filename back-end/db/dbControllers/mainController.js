@@ -192,9 +192,11 @@ var getTransactionHist = function(userId, callback){
 //type can be social or social-investment
 //other types will be available in the future
 //scoreObj example
-
-
-
+// var sampleScoreObj = {
+// 	user_id: 243,
+// 	type: "social-investment",
+// 	score: 95
+// }
 var addScore = function(scoreObj, callback){
 	connection.query('INSERT INTO scoresHist SET ?', scoreObj, function(err, res){
 		if(err){
@@ -255,18 +257,17 @@ module.exports = {
 	getAllUsers:getAllUsers,
 	findUserByFbKey: findUserByFbKey,
 	updatePhoto:updatePhoto,
+	
 	//transaction methods
-
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
-	getStocks: getStocks
 
 	//score History methods
 	addScore: addScore,
 	getScores: getScores,
 
 	//Current Stock methods
-	// addStock:addStock,
+	getStocks: getStocks,
 	// getStocks:getStocks,
 	// updateStock:updateStock,
 	// deleteStock:deleteStock,

@@ -1,6 +1,12 @@
 var mainController = require('../db/dbControllers/mainController')
 var transactionQueueController = require('../db/dbControllers/transactionQueue')
 
+//<h3>Make transaction</h3>
+//this is the big function of the utils. It checks for a transaction
+//then, using the number of shares, updates the transaction queue for each
+//open transaction present in the order added to the queue
+
+//it should also 
 
 // var sampleTransaction = {
 // 	user_id: 1,
@@ -10,14 +16,15 @@ var transactionQueueController = require('../db/dbControllers/transactionQueue')
 // 	karma: 44
 // }
 var makeTransaction = function(transactionObj, callback){
-	callback = callback || function(err, response){
-		if(err){
-			console.log("error making transaction ", err)
-		}
-	}
+	var desiredShares = transactionObj.numberShares
 	checkTransaction(transactionObj.target_id, transactionObj.type, function(err, response){
 		if(err){
 			console.log("error finding transaction ", err)
+		} else {
+			var openTransactions = response[1]
+			for(var i = 0; i < openTransactions; i++){
+
+			}
 		}
 	})
 
