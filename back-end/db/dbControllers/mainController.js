@@ -121,13 +121,13 @@ var updateKarma = function(userId, newKarma, callback){
 
 //updates the photo of a specified user
 var updatePhoto = function (userId, newPhoto, callback){
-	connection.query('UPDATE users SET profile_photo = ? Where facebookKey = ?',[newPhoto, userId], function (err, result) {
+	connection.query('UPDATE users SET profile_photo = ? Where facebookKey = ?',[newPhoto, userId], function (err, response) {
 	    if (err){
 	    	console.log("Error updating Photo of userId " + userId)
 	    	callback(err, null)
 	    } else{
 		    console.log('Changed user ' + userId + '\'s photo to ' + newPhoto);
-		    callback(null, userId);
+		    callback(null, response);
 	    }
 	  }
 	);
@@ -135,13 +135,13 @@ var updatePhoto = function (userId, newPhoto, callback){
 
 
 var deleteUser = function(userId, callback){
-	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, result) {
+	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, response) {
     if (err) {
     	console.log("error deleting user " + userId, err)
     	callback(err, null)
     }else{
 	    console.log('Deleted user number ' + userId);
-	    callback(null, userId);
+	    callback(null, response);
     }
   });
 }

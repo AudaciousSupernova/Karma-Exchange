@@ -8,6 +8,9 @@ var session = require('express-session');
 var transactionUtil = require('./utils/transactionUtil')
 
 // var transactionQueueController = require('./db/dbControllers/transactionQueue')
+//<h3>Main Controller examples</h3>
+//this is just a series of examples for the main controller
+//eventually theses examples should probably be put somewhere other than server.js
 
 // example user obj
 // var userObj = {

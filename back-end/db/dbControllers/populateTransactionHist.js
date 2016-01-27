@@ -23,7 +23,7 @@ mainController.getAllUsers(function(err, users){
 				numberShares: Math.ceil(Math.random() * 50),
 				karma: Math.ceil(Math.random() * 20000),
 			}
-			transactionUtil.makeTransaction(randomTransactionObj, function(err, response){
+			transactionUtil.makePopulateTransaction(randomTransactionObj, function(err, response){
 				console.log("inserting trasaction # " + currentTransaction)
 				if(currentTransaction === totalTransactions){
 					process.exit();
