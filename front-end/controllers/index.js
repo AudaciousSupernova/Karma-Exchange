@@ -1,17 +1,29 @@
 angular.module('app.index', [])
 
-.controller('IndexController', function($scope, $rootScope, $location, Newsfeed, Root, Auth) {
+.controller('IndexController', function($scope, $rootScope, $location, $http, Newsfeed, Root, Auth) {
 
   $scope.currentUserInfo = "invalid";
-  $scope.viewHome = function() {
+  $scope.viewHome = function () {
     $location.path('/newsfeed');
   }
-  $scope.viewProfile = function() {
+  $scope.viewProfile = function () {
     $location.path('/profile/' + $scope.currentUserInfo.id);
   }
 
-  $scope.viewPortfolio = function() {
+  $scope.viewPortfolio = function () {
     $location.path('/portfolio/' + $scope.currentUserInfo.id);
+  }
+
+  $scope.logout = function () {
+    return $http({
+      method: 'GET',
+      url: '/api/logout'
+    }).then(function successCallback(response) {
+      console.log('loggedOut')
+      $location.path('/');
+      }, function errorCallback(response) {
+        console.log('something happened. you aren\'t logged out!')
+      });
   }
 
   Auth.checkLoggedIn().then(function(boolean) {
