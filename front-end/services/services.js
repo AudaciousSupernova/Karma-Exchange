@@ -34,7 +34,6 @@ angular.module('app.services', [])
   return {
     // add a question from ask
     getInvestments: function(id) {
-
       return $http({
         method: 'GET',
         url: '/portfolio/' + id,

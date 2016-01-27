@@ -199,6 +199,19 @@ var getTransactionHist = function(userId, callback){
 
 // var getStocks
 
+var getStocks = function(userId, callback){
+	console.log("am i in HERE NOW", userId);
+  connection.query('SELECT * FROM currentStocks WHERE user_id=?', [userId], function(err, rows){
+    if(err){
+      console.log("Error finding user by id :", err)
+      callback(err,null);
+    } else {
+      console.log(rows);
+      callback(null,rows);
+    }
+  })
+}
+
 // var updateStock
 
 // var deleteStock
@@ -218,6 +231,7 @@ module.exports = {
 
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
+	getStocks: getStocks
 
 	//score History methods
 	//addScore: addScore,

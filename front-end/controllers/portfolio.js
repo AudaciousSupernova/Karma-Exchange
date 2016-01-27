@@ -11,7 +11,8 @@ angular.module('app.portfolio', [])
     Portfolio.getInvestments(id)
       .then(function(results) {
         console.log("I have successfully received current user investments.")
-        $scope.investments = results.data;
+        $scope.investments = results;
+        console.log("and i'm finally here", $scope.investments);
       })
   }
 
@@ -42,8 +43,9 @@ angular.module('app.portfolio', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      $scope.currentUserInfo = Root.currentUserInfo;
-      $scope.getInvestments($scope.currentUserInfo.id); 
+      $scope.loggedinUserInfo = Root.currentUserInfo.data;
+      console.log("Is the id correct", $scope.loggedinUserInfo);
+      $scope.getInvestments($scope.loggedinUserInfo.id); 
     }
   })
 

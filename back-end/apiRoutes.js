@@ -62,10 +62,59 @@ module.exports = function (app, express) {
   })
 
   app.get('/portfolio/:id', function(req, res) {
-    var id = req.user.id;
-    mainController.
-    res.send(test);
+    var id = req.params.id;
+    console.log(id);
+    mainController.getStocks(id, function(err, results) {
+      if (err) {
+        console.log("here is the error", err);
+      } else {
+        var subRoutine = function(counter, results) {
+          if (counter === results.length) {
+            res.send(results);
+          } else {
+            mainController.findUserById(results[counter].target_id, function(err, response) {
+              if (err) {
+                console.log("there was an error", err);
+              } else {
+                results[counter].name = response[0].name;
+                counter++;
+                subRoutine(counter, results);
+              }
+            })
+          }
+        }
+        subRoutine(0, results);
+      }
+    })
+    
   })
+
+  /*
+  var id = req.params.id;
+    var myStocks = [];
+    mainController.getStocks(id, function(error, results) {
+      var counter = 0;
+      results.forEach(function(investment) {
+        if (counter === results.length) {
+
+          res.send(results);
+        } else {
+
+          mainController.findUserById(investment.target_id, function(error, response) {
+              if (error) {
+                console.log("there was an error", error);
+              } else {
+                investment.targetName = response[0].name;
+                myStocks.push(investment);
+                console.log("these are my stocks", myStocks);
+              }
+            })
+          })
+        }
+      // console.log("what are my stocks", results);
+      // res.send(results);
+    })
+  */
 
   app.get('/trending', function(req, res) {
     console.log("trending route worked too");
