@@ -1,8 +1,10 @@
 <md-dialog>
   <md-dialog-content>
-   <div> Are you sure you want to sell {{investment.shares}} shares of {{investment.name}}? </div>
-  <md-button ng-click="hide()" class="md-primary" aria-label="Complete">
-    Confirm
+   <div> I want to buy <input ng-model="sharesToBuy"/> shares of {{investment.name}}? </div>
+
+    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete"> Confirm </md-button>
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete"> Cancel </md-button>
+    
   </md-dialog-content>
 
 </md-dialog>

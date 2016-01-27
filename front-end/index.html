@@ -9,6 +9,8 @@
 
   <body ng-controller="IndexController">
     <div class = "navbar">
+      <span> Welcome {{currentUserInfo.name}}! </span>
+      <span> {{currentUserInfo.karma}} Karma</span>
       <span ng-click="viewHome()">Home</span>
       <span ng-click="viewProfile()">Profile</span>
       <span ng-click="viewPortfolio()">Portfolio</span>
