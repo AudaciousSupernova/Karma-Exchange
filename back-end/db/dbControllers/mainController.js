@@ -59,6 +59,37 @@ var findUserById = function(userId, callback){
 	})
 }
 
+//returns a count of the number of users in the Db
+var countUsers = function(callback){
+	connection.query('select count(*) from users', function(err, count){
+		if(err){
+			console.log("Error counting users :", err)
+			callback(err, null)
+		} else{
+			// the response is an array of objects with the "count(*)" key
+			// since we are actually doing the wildcard count that will be our key
+			callback(null, count[0]['count(*)'])
+		}
+	})
+}
+
+//returns an array of all users, can be used for populating
+var getAllUsers = function(callback){
+	connection.query('select * from users', function(err, users){
+		if(err){
+			console.log("Error collecting users :", err)
+			callback(err, null)
+		} else{
+			// the response is an array of objects with the "count(*)" key
+			// since we are actually doing the wildcard count that will be our key
+			callback(null, users)
+		}
+	})
+
+}
+
+
+
 var updateKarma = function(userId, newKarma, callback){
 	connection.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userId], function (err, result) {
 	    if (err){
@@ -107,7 +138,6 @@ var addTransaction = function(transactionObj, callback){
 			callback(err, null)
 		} else{
 			console.log("last inserted Id: ", res.insertId);
-			return res.insertId
 			callback(null, res.insertId)
 		}
 	})
@@ -150,6 +180,8 @@ module.exports = {
 	findUserById: findUserById,
 	updateKarma: updateKarma,
 	deleteUser: deleteUser,
+	countUsers: countUsers,
+	getAllUsers:getAllUsers,
 	//transaction methods
 
 	addTransaction:addTransaction,

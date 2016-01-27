@@ -5,6 +5,9 @@ var passport = require('./Auth/passport.facebook.js');
 var port = process.env.PORT || 3000;
 var mainController = require('./db/dbControllers/mainController')
 var session = require('express-session');
+var transactionUtil = require('./utils/transactionUtil')
+
+// var transactionQueueController = require('./db/dbControllers/transactionQueue')
 
 // example user obj
 // var userObj = {
@@ -13,24 +16,27 @@ var session = require('express-session');
 // 	email: "bob@bob.bobob",
 // 	karma: 8080,
 // 	facebookKey: "bobobobob"
+//  profile_photo: "https://s3.amazonaws.com/uifaces/faces/twitter/pifagor/128.jpg"
 // }
-// mainController.addUser(userObj)
+// mainController.addUser(userObj, callback)
 // mainController.findUser(name, saltedAndHashedPassword)
-// mainController.findUserById(userId)
+// mainController.findUserById('693c0d7f-f2ec-4bf2-a7a8-d8a0d0913ea9', console.log)
 // mainController.deleteUser(userId)
 // mainController.updateKarma(userId, newKarma)
-
+// mainController.countUsers(console.log)
+// mainController.getAllUsers(console.log)
 
 // var sampleTransaction = {
-// 	user_id: 2,
-// 	target_id: 1,
+// 	user_id: 3,
+// 	target_id: 5,
 // 	type: "sell",
 // 	numberShares: 5,
 // 	karma: 400
 // }
 
+// transactionUtil.makeTransaction(sampleTransaction)
 // mainController.addTransaction(sampleTransaction)
-// mainController.getTransactionHist(userId)
+// mainController.getTransactionHist(5, console.log)
 
 app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
