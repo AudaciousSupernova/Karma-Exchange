@@ -2,7 +2,7 @@ angular.module('app.index', [])
 
 .controller('IndexController', function($scope, $rootScope, $location, $http, Newsfeed, Root, Auth) {
 
-  $scope.currentUserInfo = "invalid";
+  $scope.currentUserInfo = false;
   $scope.viewHome = function () {
     $location.path('/newsfeed');
   }
@@ -19,6 +19,7 @@ angular.module('app.index', [])
       method: 'GET',
       url: '/api/logout'
     }).then(function successCallback(response) {
+      $scope.currentUserInfo = false;
       console.log('loggedOut')
       $location.path('/');
       }, function errorCallback(response) {
@@ -35,10 +36,6 @@ angular.module('app.index', [])
       console.log("check it out", $scope.currentUserInfo);
     }
   })
-
-
-
-
 
 
 
