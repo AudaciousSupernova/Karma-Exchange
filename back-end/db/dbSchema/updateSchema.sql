@@ -1,7 +1,11 @@
 -- current update
 
+-- use transactionQueue;
+-- ALTER TABLE openTransactions DROP COLUMN karma;
+
 -- example update
 -- USE main;
+
 -- ALTER TABLE users ADD profile_photo varchar(300);
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);

@@ -38,7 +38,7 @@ var findUser = function(name, password, callback){
 			console.log("Error finding user by name :", err)
 			callback(err, null);
 		} else{
-			console.log(rows)
+			// console.log(rows)
 			callback(null, rows);
 		}
 	})
@@ -53,7 +53,7 @@ var findUserById = function(userId, callback){
 			console.log("Error finding user by id :", err)
 			callback(err,null);
 		} else {
-			console.log(rows);
+			// console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -68,7 +68,7 @@ var findUserByFbKey = function(fbKey, callback){
 			console.log("Error finding user by facebookKey :", err)
 			callback(err,null);
 		} else {
-			console.log(rows);
+			// console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -121,13 +121,13 @@ var updateKarma = function(userId, newKarma, callback){
 
 //updates the photo of a specified user
 var updatePhoto = function (userId, newPhoto, callback){
-	connection.query('UPDATE users SET profile_photo = ? Where facebookKey = ?',[newPhoto, userId], function (err, result) {
+	connection.query('UPDATE users SET profile_photo = ? Where facebookKey = ?',[newPhoto, userId], function (err, response) {
 	    if (err){
 	    	console.log("Error updating Photo of userId " + userId)
 	    	callback(err, null)
 	    } else{
 		    console.log('Changed user ' + userId + '\'s photo to ' + newPhoto);
-		    callback(null, userId);
+		    callback(null, response);
 	    }
 	  }
 	);
@@ -135,13 +135,13 @@ var updatePhoto = function (userId, newPhoto, callback){
 
 
 var deleteUser = function(userId, callback){
-	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, result) {
+	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, response) {
     if (err) {
     	console.log("error deleting user " + userId, err)
     	callback(err, null)
     }else{
 	    console.log('Deleted user number ' + userId);
-	    callback(null, userId);
+	    callback(null, response);
     }
   });
 }
@@ -180,17 +180,47 @@ var getTransactionHist = function(userId, callback){
 			console.log("Error finding transactionHist of user_id :" + userId, err)
 			callback(err, null);
 		} else{
-			console.log(rows)
+			// console.log(rows)
 			callback(null, rows);
 		}
 	})
 };
 
 //<h3>Score History functions</h3>
+//adds a score to the users history
+//do not pass a timestamp, mysql will do this for you
+//type can be social or social-investment
+//other types will be available in the future
+//scoreObj example
+// var sampleScoreObj = {
+// 	user_id: 243,
+// 	type: "social-investment",
+// 	score: 95
+// }
+var addScore = function(scoreObj, callback){
+	connection.query('INSERT INTO scoresHist SET ?', scoreObj, function(err, res){
+		if(err){
+			console.log("error inserting into scoresHist", err)
+			callback(err, null)
+		} else{
+			console.log("last inserted Id: ", res.insertId);
+			callback(null, res.insertId)
+		}
+	})
+}
 
-// var addScore
-
-// var getScores
+//grabs all scores for a target user
+var getScores = function(userId, callback){
+	connection.query('SELECT * FROM scoresHist where user_id=?', userId, function(err, rows){
+		if(err){
+			console.log("Error finding scoresHist of user_id :" + userId, err)
+			callback(err, null);
+		} else{
+			// console.log(rows)
+			callback(null, rows);
+		}
+	})
+}
 
 
 //<h3>Current Stocks</h3>
@@ -227,18 +257,17 @@ module.exports = {
 	getAllUsers:getAllUsers,
 	findUserByFbKey: findUserByFbKey,
 	updatePhoto:updatePhoto,
+	
 	//transaction methods
-
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
-	getStocks: getStocks
 
 	//score History methods
-	//addScore: addScore,
-	//getScores: getScores,
+	addScore: addScore,
+	getScores: getScores,
 
 	//Current Stock methods
-	// addStock:addStock,
+	getStocks: getStocks,
 	// getStocks:getStocks,
 	// updateStock:updateStock,
 	// deleteStock:deleteStock,
