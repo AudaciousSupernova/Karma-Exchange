@@ -187,8 +187,29 @@ var getTransactionHist = function(userId, callback){
 };
 
 //<h3>Score History functions</h3>
+//adds a score to the users history
+//do not pass a timestamp, mysql will do this for you
+//type can be social or social-investment
+//other types will be available in the future
+//scoreObj example
 
-// var addScore
+var scoreObj = {
+	user_id: 243,
+	type: "social",
+	score: 5
+}
+
+var addScore = function(scoreObj, callback){
+	connection.query('INSERT INTO scoreHist SET ?', scoreObj, function(err, res){
+		if(err){
+			console.log("error inserting into scoresHist", err)
+			callback(err, null)
+		} else{
+			console.log("last inserted Id: ", res.insertId);
+			callback(null, res.insertId)
+		}
+	})
+}
 
 // var getScores
 
