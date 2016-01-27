@@ -32,7 +32,7 @@ module.exports = function (app, express) {
     })
 
   app.get('/profile/:id', function(req, res) {
-    var id = req.user.id;
+    var id = req.params.id;
     mainController.findUserById(id, function(error, response) {
       if (error) {
         console.log("there was an error", error);
@@ -62,59 +62,8 @@ module.exports = function (app, express) {
   })
 
   app.get('/portfolio/:id', function(req, res) {
-    console.log("These are the params", req.params);
-    var test = {
-      data: [
-        {
-          currentUser: 'Neeraj Kohirkar',
-          targetUser: 'John Kim',
-          scores: [
-            {
-              name: 'John Kim',
-              score: 95,
-              date: 'January 5 2014'
-            },
-            {
-              name: 'John Kim',
-              score: 96,
-              date: 'February 1 2015'
-            },
-            {
-              name: 'John Kim',
-              score: 97,
-              date: 'March 14 2012'
-            }
-          ],
-          shares: 15,
-          buyingPrice: 18,
-          profit: 145
-        },
-        {
-          currentUser: 'Neeraj Kohirkar',
-          targetUser: 'Adam Smith',
-          scores: [
-            {
-              name: 'Adam Smith',
-              score: 81,
-              date: 'January 5 2014'
-            },
-            {
-              name: 'Adam Smith',
-              score: 82,
-              date: 'February 1 2015'
-            },
-            {
-              name: 'Adam Smith',
-              score: 83,
-              date: 'March 14 2012'
-            }
-          ],
-          shares: 100,
-          buyingPrice: 70,
-          profit: -450
-        }
-      ]
-    }
+    var id = req.user.id;
+    mainController.
     res.send(test);
   })
 

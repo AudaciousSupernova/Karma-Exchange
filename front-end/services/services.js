@@ -6,7 +6,6 @@ angular.module('app.services', [])
   return {
     // add a question from ask
     getUser: function(id) {
-
       return $http({
         method: 'GET',
         url: '/profile/' + id,

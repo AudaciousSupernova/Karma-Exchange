@@ -7,7 +7,8 @@ angular.module('app.profile', [])
   $scope.isUser = true;
   $scope.user;
   $scope.leaders;
-  $scope.currentUserInfo = "invalid";
+  $scope.loggedinUserInfo = "invalid";
+  $scope.profileId;
 
   //Save the user id, included in the location path
 
@@ -37,6 +38,10 @@ angular.module('app.profile', [])
     User.getUser(id)
       .then(function(data) {
         $scope.user = data[0];
+        if ($scope.user.profile_photo === null) {
+          $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
+        }
+        console.log("What does my user look like?", $scope.user);
         console.log("Well here we are", $scope.user);
         //if id matches logged-in id
           //then call getLeaders
@@ -56,8 +61,11 @@ angular.module('app.profile', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      $scope.currentUserInfo = Root.currentUserInfo
-     $scope.getUserById($scope.currentUserInfo.id);
+      $scope.loggedinUserInfo = Root.currentUserInfo.data;
+      var currentPath = $location.path();
+      currentPath = currentPath.split("");
+      $scope.profileId = currentPath.splice(9).join("");
+     $scope.getUserById($scope.profileId);
     }
   })
 
