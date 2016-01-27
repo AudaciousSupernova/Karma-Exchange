@@ -2,7 +2,7 @@ angular.module('app.profile', [])
 
 	//<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root) {
+.controller('ProfileController', function($scope, $location, User, Auth, Root, $mdDialog) {
 
   $scope.isUser = true;
   $scope.user;
@@ -55,6 +55,49 @@ angular.module('app.profile', [])
       .then(function(data) {
         $scope.leaders = data;
       })
+  }
+
+  $scope.clickBuy = function() {
+    $mdDialog.show({
+      templateUrl: '../views/buy.html',
+      locals: {
+        profile: $scope.user, 
+        loggedinUserInfo: $scope.loggedinUserInfo
+      },
+      controller: BuyModalController
+    })
+      .then(function(clickedItem) {
+        console.log(clickedItem, "this was clicked");
+      })
+  }
+
+  function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist) {
+
+    $scope.profile = profile;
+    $scope.loggedinUserInfo = loggedinUserInfo;
+    $scope.sharesToBuy;
+    console.log("logged in info", $scope.loggedinUserInfo);
+    console.log("profile user info", $scope.profile);
+
+    $scope.confirm = function() {
+  
+      var transaction = {
+        user_id: $scope.loggedinUserInfo.id, 
+        target_id: $scope.profile.id, 
+        type: "buy", 
+        numberShares: $scope.sharesToBuy, 
+        karma: 90
+      }
+      console.log("transaction", transaction);
+      TransactionHist.addTransaction(transaction)
+        .then(function(results) {
+          $mdDialog.hide();
+        })
+    }
+
+    $scope.exit = function() {
+      $mdDialog.hide();
+    }
   }
 
   Auth.checkLoggedIn().then(function(boolean) {
