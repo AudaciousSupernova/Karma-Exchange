@@ -227,6 +227,17 @@ var getScores = function(userId, callback){
 
 // var addStock
 
+var addStock = function(investmentObj, callback) {
+	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
+		if (err) {
+			console.log("there was an error inserting into currentStocks", err);
+		} else {
+			console.log("inserting into currentStocks successful");
+			callback(null, res.insertId);
+		}
+	})
+}
+
 // var getStocks
 
 var getStocks = function(userId, callback){
@@ -268,6 +279,7 @@ module.exports = {
 
 	//Current Stock methods
 	getStocks: getStocks,
+	addStock: addStock
 	// getStocks:getStocks,
 	// updateStock:updateStock,
 	// deleteStock:deleteStock,

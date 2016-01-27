@@ -42,6 +42,14 @@ angular.module('app.services', [])
         console.log(res.data)
         return res.data;
       })
+    }, 
+
+    addInvestment: function(investment) {
+      return $http({
+        method: 'POST', 
+        url: '/profile/buy', 
+        data: {investment: investment}
+      })
     }
   }
 })
