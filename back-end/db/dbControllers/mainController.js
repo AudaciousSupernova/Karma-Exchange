@@ -48,12 +48,27 @@ var findUser = function(name, password, callback){
 //finds the user by id, useful for buy/sell events
 //returns an array of obj's (should only be one)
 var findUserById = function(userId, callback){
-	connection.query('SELECT * FROM users where facebookKey=?', userId, function(err, rows){
+	connection.query('SELECT * FROM users WHERE id=?', [userId], function(err, rows){
 		if(err){
 			console.log("Error finding user by id :", err)
 			callback(err,null);
-		} else{
-			console.log(rows)
+		} else {
+			console.log(rows);
+			callback(null,rows);
+		}
+	})
+}
+
+
+//finds the user by facebookKey, useful for buy/sell events
+//returns an array of obj's (should only be one)
+var findUserByFbKey = function(fbKey, callback){
+	connection.query('SELECT * FROM users WHERE facebookKey=?', [fbKey], function(err, rows){
+		if(err){
+			console.log("Error finding user by facebookKey :", err)
+			callback(err,null);
+		} else {
+			console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -182,6 +197,7 @@ module.exports = {
 	deleteUser: deleteUser,
 	countUsers: countUsers,
 	getAllUsers:getAllUsers,
+	findUserByFbKey: findUserByFbKey,
 	//transaction methods
 
 	addTransaction:addTransaction,
