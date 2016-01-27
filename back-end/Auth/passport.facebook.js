@@ -1,5 +1,5 @@
 var passport = require('passport');
-// var constants = require('./../../constants'); 
+// var constants = require('./../../constants');
 var mainController = require('../db/dbControllers/mainController')
 var FacebookStrategy = require('passport-facebook').Strategy;
 // var usersController = require('./../components/users/usersController');
@@ -31,7 +31,26 @@ passport.use(new FacebookStrategy({
     process.nextTick(function () {
       console.log('Facebook Profile',profile);
       console.log('Access Token', accessToken);
-      return done(null, profile);
+      console.log(profile.id)
+      var id = profile.id
+      var displayName = profile.displayName;
+      mainController.findUserByFbKey(profile.id, function(err, profile){
+        if (!profile.length) {
+          console.log(displayName, 'displayname');
+          var addObj = {'facebookKey': id, 'name': displayName, 'karma': 0};
+          mainController.addUser(addObj, function (err, userId) {
+            if (err){
+              console.log('Error');
+            } else {
+              console.log(userId,'userId');
+              return done(null, addObj);
+            }
+          })
+        } else {
+          console.log(profile[0], 'profile')
+          return done(null, profile[0]);
+        }
+      })
     });
   }
 ))

@@ -18,17 +18,17 @@ angular.module('app.index', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      Root.addUserInfo($rootScope.user.data._json);
-      $scope.currentUserInfo = Root.currentUserInfo;
+      Root.addUserInfo($rootScope.user);
+      $scope.currentUserInfo = Root.currentUserInfo.data;
       console.log("check it out", $scope.currentUserInfo);
     }
   })
 
 
 
-  
-  
-  
+
+
+
 
   // if (!Auth.isAuth()) {
   //   $location.path('/signin');
