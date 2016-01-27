@@ -19,10 +19,17 @@ div.spaceHolder{
 	opacity:0;
 }
 
-div.navbar > span > a{
+div.navbar > span {
 	color: white;
 }
 
 md-content{
 	overflow:hidden;
+}
+.png-icon{
+    margin-bottom: -6px;
+    margin-right: 2%;
+    display: inline-block;
+    background-repeat: no-repeat no-repeat;
+    pointer-events: none;
 }
