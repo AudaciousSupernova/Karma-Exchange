@@ -6,7 +6,6 @@ angular.module('app.services', [])
   return {
     // add a question from ask
     getUser: function(id) {
-
       return $http({
         method: 'GET',
         url: '/profile/' + id,
@@ -35,7 +34,6 @@ angular.module('app.services', [])
   return {
     // add a question from ask
     getInvestments: function(id) {
-
       return $http({
         method: 'GET',
         url: '/portfolio/' + id,
@@ -90,3 +88,14 @@ angular.module('app.services', [])
   }
 })
 
+.factory('TransactionHist', function ($http, $location) {
+  return {
+    addTransaction: function(transactionObj) {
+      return $http({
+        method: 'POST', 
+        url: '/transaction/sell', 
+        data: {transactionObj: transactionObj}
+      })
+    }
+  }
+})

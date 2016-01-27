@@ -1,9 +1,9 @@
 <div ng-module="app.profile">
 
-  <section>
+  <section ng-model="user">
 
     <div class = "user info">
-      <img src="http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg">
+      <img src="{{user.profile_photo}}">
       <span>
         <md-content>
           <md-button ng-click="test(investment.targetUser, investment.shares, investment.buyingPrice, investment.profit)" class="md-raised">

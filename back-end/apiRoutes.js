@@ -1,4 +1,5 @@
 var passport = require('./Auth/passport.facebook');
+var mainController = require('./db/dbControllers/mainController.js');
 
 
 module.exports = function (app, express) {
@@ -31,33 +32,15 @@ module.exports = function (app, express) {
     })
 
   app.get('/profile/:id', function(req, res) {
-    console.log('check the params', req.params);
-    var data = {
-      id: 9999,
-      name: 'Neeraj Kohirkar',
-      email: '08nk08@gmail.com',
-      facebookKey: 1234,
-      scores: [
-        {
-          name: 'Neeraj Kohirkar',
-          score: 98,
-          date: 'January 1 2013'
-        },
-        {
-          name: 'Neeraj Kohirkar',
-          score: 99,
-          date: 'February 22, 2014'
-        },
-        {
-          name: 'Neeraj Kohirkar',
-          score: 22,
-          date: 'June 2, 2010'
-        }
-      ],
-      currentScore: 99
-  };
-    res.send(data);
-  })
+    var id = req.params.id;
+    mainController.findUserById(id, function(error, response) {
+      if (error) {
+        console.log("there was an error", error);
+      } else {
+        res.send(response);
+      }
+    })
+  });
 
   app.get('/leaders', function(req, res) {
     console.log("leader route worked too");
@@ -78,62 +61,46 @@ module.exports = function (app, express) {
     res.send(test);
   })
 
-  app.get('/portfolio/:id', function(req, res) {
-    console.log("These are the params", req.params);
-    var test = {
-      data: [
-        {
-          currentUser: 'Neeraj Kohirkar',
-          targetUser: 'John Kim',
-          scores: [
-            {
-              name: 'John Kim',
-              score: 95,
-              date: 'January 5 2014'
-            },
-            {
-              name: 'John Kim',
-              score: 96,
-              date: 'February 1 2015'
-            },
-            {
-              name: 'John Kim',
-              score: 97,
-              date: 'March 14 2012'
-            }
-          ],
-          shares: 15,
-          buyingPrice: 18,
-          profit: 145
-        },
-        {
-          currentUser: 'Neeraj Kohirkar',
-          targetUser: 'Adam Smith',
-          scores: [
-            {
-              name: 'Adam Smith',
-              score: 81,
-              date: 'January 5 2014'
-            },
-            {
-              name: 'Adam Smith',
-              score: 82,
-              date: 'February 1 2015'
-            },
-            {
-              name: 'Adam Smith',
-              score: 83,
-              date: 'March 14 2012'
-            }
-          ],
-          shares: 100,
-          buyingPrice: 70,
-          profit: -450
-        }
-      ]
-    }
-    res.send(test);
+  app.post('/transaction/sell', function(req, res) {
+    var transactionObj = req.body.transactionObj;
+    mainController.addTransaction(transactionObj, function(err, results) {
+      if (err) {
+        console.log("there was an error", err);
+      } else {
+        res.status(201).json(results);
+      }
+    })
   })
+
+  app.get('/portfolio/:id', function(req, res) {
+    var id = req.params.id;
+    console.log(id);
+    mainController.getStocks(id, function(err, results) {
+      if (err) {
+        console.log("here is the error", err);
+      } else {
+        var subRoutine = function(counter, results) {
+          if (counter === results.length) {
+            res.send(results);
+          } else {
+            mainController.findUserById(results[counter].target_id, function(err, response) {
+              if (err) {
+                console.log("there was an error", err);
+              } else {
+                results[counter].name = response[0].name;
+                counter++;
+                subRoutine(counter, results);
+              }
+            })
+          }
+        }
+        subRoutine(0, results);
+      }
+    })
+    
+  })
+
+
 
   app.get('/trending', function(req, res) {
     console.log("trending route worked too");
