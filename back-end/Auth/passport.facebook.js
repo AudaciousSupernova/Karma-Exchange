@@ -42,7 +42,8 @@ passport.use(new FacebookStrategy({
       var email = profile.emails[0].value;
       // Passport will search the database for a record of a user
       mainController.findUserByFbKey(profile.id, function(err, profile){
-        //If the user is not found, we will add the user using the authentication details obtained from Facebook Authentication
+        //If the user is not found, we will add the user using the authentication details
+        //obtained from Facebook Authentication
         if (!profile.length) {
           var addObj = {'facebookKey': id, 'name': displayName, 'karma': 0, 'profile_photo':photo, 'email': email};
           mainController.addUser(addObj, function (err, userId) {
@@ -54,7 +55,8 @@ passport.use(new FacebookStrategy({
             }
           })
         } else {
-          //If the user is found, run a check to see if the users photo has been changed since the last login.
+          //If the user is found, run a check to see if the users photo has been changed
+          //since the last login.
           if (profile[0].profile_photo !== photo) {
             //Update the photo with the value provided from the most recent login
             mainController.updatePhoto(id, photo, function(err, userId) {
