@@ -22,3 +22,7 @@ div.spaceHolder{
 div.navbar > span > a{
 	color: white;
 }
+
+md-content{
+	overflow:hidden;
+}
