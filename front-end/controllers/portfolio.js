@@ -30,12 +30,29 @@ angular.module('app.portfolio', [])
       })
   }
 
-  function SellModalController($scope, $mdDialog, investment) {
+  function SellModalController($scope, $mdDialog, investment, TransactionHist) {
 
     $scope.investment = investment;
+    $scope.sharesToSell;
 
-    $scope.hide = function() {
-      $mdDialog.hide()
+    $scope.confirm = function() {
+  
+      var transaction = {
+        user_id: $scope.investment.user_id, 
+        target_id: $scope.investment.target_id, 
+        type: "sell", 
+        numberShares: $scope.sharesToSell, 
+        karma: 90
+      }
+      console.log("transaction", transaction);
+      TransactionHist.addTransaction(transaction)
+        .then(function(results) {
+          $mdDialog.hide();
+        })
+    }
+
+    $scope.exit = function() {
+      $mdDialog.hide();
     }
   }
 

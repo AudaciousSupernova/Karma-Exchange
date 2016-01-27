@@ -88,3 +88,14 @@ angular.module('app.services', [])
   }
 })
 
+.factory('TransactionHist', function ($http, $location) {
+  return {
+    addTransaction: function(transactionObj) {
+      return $http({
+        method: 'POST', 
+        url: '/transaction/sell', 
+        data: {transactionObj: transactionObj}
+      })
+    }
+  }
+})

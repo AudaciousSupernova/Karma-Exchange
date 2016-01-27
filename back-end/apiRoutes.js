@@ -61,6 +61,17 @@ module.exports = function (app, express) {
     res.send(test);
   })
 
+  app.post('/transaction/sell', function(req, res) {
+    var transactionObj = req.body.transactionObj;
+    mainController.addTransaction(transactionObj, function(err, results) {
+      if (err) {
+        console.log("there was an error", err);
+      } else {
+        res.status(201).json(results);
+      }
+    })
+  })
+
   app.get('/portfolio/:id', function(req, res) {
     var id = req.params.id;
     console.log(id);
@@ -89,32 +100,7 @@ module.exports = function (app, express) {
     
   })
 
-  /*
-  var id = req.params.id;
-    var myStocks = [];
-    mainController.getStocks(id, function(error, results) {
-      var counter = 0;
-      results.forEach(function(investment) {
-        if (counter === results.length) {
 
-          res.send(results);
-        } else {
-
-          mainController.findUserById(investment.target_id, function(error, response) {
-              if (error) {
-                console.log("there was an error", error);
-              } else {
-                investment.targetName = response[0].name;
-                myStocks.push(investment);
-                console.log("these are my stocks", myStocks);
-              }
-            })
-          })
-        }
-      // console.log("what are my stocks", results);
-      // res.send(results);
-    })
-  */
 
   app.get('/trending', function(req, res) {
     console.log("trending route worked too");
