@@ -30,10 +30,13 @@ module.exports = function (app, express) {
       res.redirect('/#/')
     })
 
-  app.get('/profile', function(req, res) {
-    console.log('this route worked!');
+  app.get('/profile/:id', function(req, res) {
+    console.log('check the params', req.params);
     var data = {
+      id: 9999,
       name: 'Neeraj Kohirkar', 
+      email: '08nk08@gmail.com', 
+      facebookKey: 1234,
       scores: [
         {
           name: 'Neeraj Kohirkar', 
@@ -75,27 +78,27 @@ module.exports = function (app, express) {
     res.send(test);
   })
 
-  app.get('/portfolio', function(req, res) {
-    console.log("portfolio route works");
+  app.get('/portfolio/:id', function(req, res) {
+    console.log("These are the params", req.params);
     var test = {
       data: [
         {
           currentUser: 'Neeraj Kohirkar', 
-          targetUser: 'NEW USER', 
+          targetUser: 'John Kim', 
           scores: [
             {
-              name: 'NEW USER', 
-              score: 9000, 
+              name: 'John Kim', 
+              score: 95, 
               date: 'January 5 2014'
             }, 
             {
-              name: 'NEW USER', 
-              score: 9000, 
+              name: 'John Kim', 
+              score: 96, 
               date: 'February 1 2015'
             }, 
             {
-              name: 'NEW USER', 
-              score: 33, 
+              name: 'John Kim', 
+              score: 97, 
               date: 'March 14 2012'
             }
           ], 
@@ -105,27 +108,27 @@ module.exports = function (app, express) {
         }, 
         {
           currentUser: 'Neeraj Kohirkar', 
-          targetUser: 'NEWEST USER', 
+          targetUser: 'Adam Smith', 
           scores: [
             {
-              name: 'NEWEST USER', 
-              score: 10000, 
+              name: 'Adam Smith', 
+              score: 81, 
               date: 'January 5 2014'
             }, 
             {
-              name: 'NEWEST USER', 
-              score: 10000, 
+              name: 'Adam Smith', 
+              score: 82, 
               date: 'February 1 2015'
             }, 
             {
-              name: 'NEWEST USER', 
-              score: 10000, 
+              name: 'Adam Smith', 
+              score: 83, 
               date: 'March 14 2012'
             }
           ], 
-          shares: 900, 
-          buyingPrice: 2000, 
-          profit: 500
+          shares: 100, 
+          buyingPrice: 70, 
+          profit: -450
         }
       ]
     }

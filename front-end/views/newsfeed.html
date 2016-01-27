@@ -1,20 +1,20 @@
 <div ng-module="app.newsfeed">
 
-  <h3> Newsfeed </h3>
+  <h2> Trending Buy and Sell Activity </h2>
     <table>
       <tr>
-        <th class='user-header'> Trending Name </th>
+        <th> Name </th>
+        <th> Graph </th>
         <th class='user-header'> Current Score </th>
-        <th class='user-header'> Graph </th>
       </tr>
       <tr ng-repeat="trend in trending">
         <td> {{trend.name}} </td>
         <td> {{trend.currentScore}} </td>
         <td> Scores include {{trend.scores[0].score}} </td>
         <td>
-          <form> 
-            <input type="submit" value="Buy Shares"/> 
-          </form>
+          <md-content>
+              <md-button class="md-raised">Buy Shares</md-button>
+          </md-content>
         </td>
       </tr>
     </table>

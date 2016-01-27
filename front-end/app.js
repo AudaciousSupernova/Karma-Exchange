@@ -8,7 +8,8 @@ angular.module('app', [
   'ngRoute', 
   'ui.router', 
   'app.services', 
-  'app.index'
+  'app.index', 
+  'ngMaterial'
   ])
 
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {
@@ -45,7 +46,7 @@ angular.module('app', [
       authenticate: true
     })
     .state('portfolio', {
-      url: '/portfolio', 
+      url: '/portfolio/:id', 
       templateUrl: 'views/portfolio.html', 
       controller: 'PortfolioController',
       authenticate: true
@@ -67,14 +68,3 @@ angular.module('app', [
     })
   $urlRouterProvider.otherwise('/')
 })
-
-.run(function ($rootScope, $state, Auth) {
-  $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-    Auth.checkLoggedIn().then(function (boolean) {
-      if (boolean === false && toState.authenticate) {
-          $state.transitionTo("home");
-          event.preventDefault();
-        }
-      });
-  });
-});

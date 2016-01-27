@@ -1,5 +1,8 @@
-<div ng-module="app.buy">
+<md-dialog>
+  <md-dialog-content>
+   <div> Are you sure you want to sell {{investment.shares}} shares of {{investment.name}}? </div>
+  <md-button ng-click="hide()" class="md-primary" aria-label="Complete">
+    Confirm
+  </md-dialog-content>
 
-  <div> This is my BUY page </div>
-
-</div>
+</md-dialog>

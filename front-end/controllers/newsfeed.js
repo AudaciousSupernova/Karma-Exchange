@@ -1,8 +1,11 @@
 angular.module('app.newsfeed', [])
 
-.controller('NewsfeedController', function($scope, $location, Newsfeed) {
+//<h3> Newsfeed Controller </h3>
+.controller('NewsfeedController', function($scope, $rootScope, $location, Newsfeed, Auth) {
   $scope.trending;
-
+  console.log("in the newsfeed controller", $rootScope.user)
+  //trending data will be the same data for every user
+  //call the function and store results in $scope.trending
   $scope.getTrending = function() {
     Newsfeed.getTrending()
       .then(function(results) {
@@ -10,7 +13,13 @@ angular.module('app.newsfeed', [])
       })
   };
 
-  $scope.getTrending();
+  Auth.checkLoggedIn().then(function(boolean) {
+    if (boolean === false) {
+      $location.path('/')
+    } else {
+      $scope.getTrending();
+    }
+  })
   
 
   // if (!Auth.isAuth()) {
