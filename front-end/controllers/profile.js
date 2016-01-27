@@ -36,7 +36,8 @@ angular.module('app.profile', [])
 
     User.getUser(id)
       .then(function(data) {
-        $scope.user = data;
+        $scope.user = data[0];
+        console.log("Well here we are", $scope.user);
         //if id matches logged-in id
           //then call getLeaders
         //else

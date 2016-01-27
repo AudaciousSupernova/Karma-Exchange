@@ -1,8 +1,8 @@
 -- current update
 
 -- example update
-USE main;
-ALTER TABLE scoresHist ADD score int NOT NULL;
+-- USE main;
+-- ALTER TABLE users ADD profile_photo varchar(300);
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);
 

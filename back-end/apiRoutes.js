@@ -1,4 +1,5 @@
 var passport = require('./Auth/passport.facebook');
+var mainController = require('./db/dbControllers/mainController.js');
 
 
 module.exports = function (app, express) {
@@ -31,33 +32,15 @@ module.exports = function (app, express) {
     })
 
   app.get('/profile/:id', function(req, res) {
-    console.log('check the params', req.params);
-    var data = {
-      id: 9999,
-      name: 'Neeraj Kohirkar',
-      email: '08nk08@gmail.com',
-      facebookKey: 1234,
-      scores: [
-        {
-          name: 'Neeraj Kohirkar',
-          score: 98,
-          date: 'January 1 2013'
-        },
-        {
-          name: 'Neeraj Kohirkar',
-          score: 99,
-          date: 'February 22, 2014'
-        },
-        {
-          name: 'Neeraj Kohirkar',
-          score: 22,
-          date: 'June 2, 2010'
-        }
-      ],
-      currentScore: 99
-  };
-    res.send(data);
-  })
+    var id = req.user.id;
+    mainController.findUserById(id, function(error, response) {
+      if (error) {
+        console.log("there was an error", error);
+      } else {
+        res.send(response);
+      }
+    })
+  });
 
   app.get('/leaders', function(req, res) {
     console.log("leader route worked too");
