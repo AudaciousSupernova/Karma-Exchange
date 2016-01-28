@@ -34,21 +34,27 @@ angular.module('app.portfolio', [])
 
     $scope.investment = investment;
     $scope.sharesToSell;
+    console.log("this is the investment", $scope.investment)
+    console.log("this is shares to sell", $scope.sharesToSell);
 
     $scope.confirm = function() {
-  
-      var transaction = {
-        user_id: $scope.investment.user_id, 
-        target_id: $scope.investment.target_id, 
-        type: "sell", 
-        numberShares: $scope.sharesToSell, 
-        karma: 90
+      if ($scope.sharesToSell > $scope.investment.numberShares) {
+        console.log("You are trying to sell more than you have!");
+        $mdDialog.hide();
+      } else {
+        var transaction = {
+          user_id: $scope.investment.user_id, 
+          target_id: $scope.investment.target_id, 
+          type: "sell", 
+          numberShares: $scope.sharesToSell, 
+          karma: 90
+        }
+        console.log("transaction", transaction);
+        TransactionHist.addTransaction(transaction)
+          .then(function(results) {
+            $mdDialog.hide();
+          })        
       }
-      console.log("transaction", transaction);
-      TransactionHist.addTransaction(transaction)
-        .then(function(results) {
-          $mdDialog.hide();
-        })
     }
 
     $scope.exit = function() {
