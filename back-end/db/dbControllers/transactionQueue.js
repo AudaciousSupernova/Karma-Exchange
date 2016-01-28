@@ -36,7 +36,6 @@ var addTransaction = function(transactionObj, callback){
 		}
 	})
 }
-addTransaction(transactionObj, console.log);
 
 //finds all transactions associated with a target_id
 //returns an array of all open tranasctions for the target

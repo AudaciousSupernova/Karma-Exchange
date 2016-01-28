@@ -134,7 +134,6 @@ var checkTransaction = function(target_id, type, callback){
 		}
 	})
 }
-makeTransaction(sampleTransaction, console.log)
 
 // transactionQueueController.deleteOpenTransaction(3, console.log)
 // transactionQueueController.updateOpenTransaction(4, 10, console.log)
