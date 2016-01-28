@@ -45,7 +45,7 @@ passport.use(new FacebookStrategy({
         //If the user is not found, we will add the user using the authentication details
         //obtained from Facebook Authentication
         if (!profile.length) {
-          var addObj = {'facebookKey': id, 'name': displayName, 'karma': 0, 'profile_photo':photo, 'email': email};
+          var addObj = {'facebookKey': id, 'name': displayName, 'karma': 1000, 'profile_photo':photo, 'email': email};
           mainController.addUser(addObj, function (err, userId) {
             if (err){
               console.log('Error');
