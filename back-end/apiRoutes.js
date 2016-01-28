@@ -1,5 +1,6 @@
 var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
+var scoresUtil = require('./utils/scoresUtil')
 
 
 module.exports = function (app, express) {
@@ -57,11 +58,11 @@ module.exports = function (app, express) {
     var id = req.params.id;
     console.log(req.params, "these are my req params")
     console.log(id, "this is my id");
-    mainController.getScores(id, function (err, results) {
+    scoresUtil.getScoresHistWithCurrentScores(id, function (err, results) {
       if (err) {
         console.log (err,'error');
       } else {
-        console.log(results, 'results')
+        console.log(results)
         res.send(results);
       }
     })

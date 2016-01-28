@@ -57,6 +57,7 @@ angular.module('app.profile', [])
     console.log("what does my user contain", $scope.user);
     Scores.getScores($scope.user.id)
       .then(function (results) {
+        console.log('I AM HERE');
         console.log(results, "Scores from Score factory");
         $scope.scores = results;
         console.log($scope.scores, 'scores in the profile controller');

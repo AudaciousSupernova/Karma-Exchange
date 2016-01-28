@@ -40,7 +40,7 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 			currentIndex--;
 		}
 		addTotalsToResultObj(resultObj);
-		callback([resultObj, scoreObjs])
+		callback(err, [resultObj, scoreObjs])
 	})
 }
 
