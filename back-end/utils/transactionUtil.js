@@ -1,6 +1,6 @@
 var mainController = require('../db/dbControllers/mainController')
 var transactionQueueController = require('../db/dbControllers/transactionQueue')
-
+var scoresUtil = require('./scoresUtil')
 //<h3>Make transaction</h3>
 //this is the big function of the utils. It checks for a transaction
 //then, using the number of shares, updates the transaction queue for each
@@ -82,7 +82,7 @@ var checkTransaction = function(target_id, type, callback){
 
 // transactionQueueController.deleteOpenTransaction(3, console.log)
 // transactionQueueController.updateOpenTransaction(4, 10, console.log)
-checkTransaction(2, "buy", console.log);
+// checkTransaction(2, "buy", console.log);
 
 // var transactionObj = {
 // 	user_id: 1,

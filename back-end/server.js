@@ -6,6 +6,7 @@ var port = process.env.PORT || 3000;
 var mainController = require('./db/dbControllers/mainController')
 var session = require('express-session');
 var transactionUtil = require('./utils/transactionUtil')
+var scoresUtil = require('./utils/scoresUtil')
 
 // var transactionQueueController = require('./db/dbControllers/transactionQueue')
 //<h3>Main Controller examples</h3>
