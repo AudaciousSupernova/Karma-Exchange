@@ -14,7 +14,7 @@ angular.module('app.services', [])
         console.log(res.data)
         return res.data;
       })
-    }, 
+    },
 
     getLeaderData: function() {
 
@@ -42,12 +42,12 @@ angular.module('app.services', [])
         console.log(res.data)
         return res.data;
       })
-    }, 
+    },
 
     addInvestment: function(investment) {
       return $http({
-        method: 'POST', 
-        url: '/profile/buy', 
+        method: 'POST',
+        url: '/profile/buy',
         data: {investment: investment}
       })
     }
@@ -100,9 +100,25 @@ angular.module('app.services', [])
   return {
     addTransaction: function(transactionObj) {
       return $http({
-        method: 'POST', 
-        url: '/transaction/sell', 
+        method: 'POST',
+        url: '/transaction/sell',
         data: {transactionObj: transactionObj}
+      })
+    }
+  }
+})
+
+.factory('Scores', function ($http, $location) {
+  return {
+    getScores: function(id) {
+      console.log("here is the id", id)
+      return $http({
+        method: 'GET',
+        url: '/profile/score/' + id
+      })
+      .then(function(res) {
+        console.log(res.data, "scores sent from apiRoutes")
+        return res.data;
       })
     }
   }

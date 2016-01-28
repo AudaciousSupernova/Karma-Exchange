@@ -268,7 +268,7 @@ module.exports = {
 	getAllUsers:getAllUsers,
 	findUserByFbKey: findUserByFbKey,
 	updatePhoto:updatePhoto,
-	
+
 	//transaction methods
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
@@ -279,7 +279,7 @@ module.exports = {
 
 	//Current Stock methods
 	getStocks: getStocks,
-	addStock: addStock
+	addStock: addStock,
 	// getStocks:getStocks,
 	// updateStock:updateStock,
 	// deleteStock:deleteStock,

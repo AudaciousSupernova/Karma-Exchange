@@ -1,5 +1,6 @@
 var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
+var scoresUtil = require('./utils/scoresUtil')
 
 
 module.exports = function (app, express) {
@@ -49,6 +50,20 @@ module.exports = function (app, express) {
         console.log("could not add investment", err);
       } else {
         res.status(201).json(results);
+      }
+    })
+  })
+
+  app.get('/profile/score/:id', function (req, res) {
+    var id = req.params.id;
+    console.log(req.params, "these are my req params")
+    console.log(id, "this is my id");
+    scoresUtil.getScoresHistWithCurrentScores(id, function (err, results) {
+      if (err) {
+        console.log (err,'error');
+      } else {
+        console.log(results)
+        res.send(results);
       }
     })
   })
@@ -108,7 +123,7 @@ module.exports = function (app, express) {
         subRoutine(0, results);
       }
     })
-    
+
   })
 
 

@@ -1,7 +1,7 @@
 var mainController = require('../db/dbControllers/mainController')
 
 // <h3>Utilities for controlling score functions</h3>
-// gets the score history for a given user and builds their 
+// gets the score history for a given user and builds their
 // current total scores off of it
 //
 // currently only builds the social score, other scores can
@@ -40,13 +40,13 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 			currentIndex--;
 		}
 		addTotalsToResultObj(resultObj);
-		callback(resultObj)		
+		callback(err, [resultObj, scoreObjs])
 	})
 }
 
 
 getScoresHistWithCurrentScores(3,console.log)
-//tests the test object 
+//tests the test object
 var testTestObj = function(testObj){
 	for(var key in testObj){
 		if(!testObj[key]){
