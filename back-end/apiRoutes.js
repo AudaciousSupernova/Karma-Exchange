@@ -53,6 +53,20 @@ module.exports = function (app, express) {
     })
   })
 
+  app.get('/profile/score/:id', function (req, res) {
+    var id = req.params.id;
+    console.log(req.params, "these are my req params")
+    console.log(id, "this is my id");
+    mainController.getScores(id, function (err, results) {
+      if (err) {
+        console.log (err,'error');
+      } else {
+        console.log(results, 'results')
+        res.send(results);
+      }
+    })
+  })
+
   app.get('/leaders', function(req, res) {
     console.log("leader route worked too");
     var test = [
@@ -108,7 +122,7 @@ module.exports = function (app, express) {
         subRoutine(0, results);
       }
     })
-    
+
   })
 
 

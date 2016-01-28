@@ -2,13 +2,15 @@ angular.module('app.profile', [])
 
 	//<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root, $mdDialog) {
+.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog) {
 
   $scope.isUser = true;
   $scope.user;
   $scope.leaders;
   $scope.loggedinUserInfo = "invalid";
   $scope.profileId;
+  $scope.currentScore;
+  $scope.scores;
 
   //Save the user id, included in the location path
 
@@ -38,15 +40,26 @@ angular.module('app.profile', [])
     User.getUser(id)
       .then(function(data) {
         $scope.user = data[0];
-        if ($scope.user.profile_photo === null) {
+        if ($scope.user.profil2e_photo === null) {
           $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
         }
         console.log("What does my user look like?", $scope.user);
         console.log("Well here we are", $scope.user);
+        $scope.getScores();
         //if id matches logged-in id
           //then call getLeaders
         //else
           //display buy shares button
+      })
+  }
+
+  $scope.getScores = function () {
+    console.log("what does my user contain", $scope.user);
+    Scores.getScores($scope.user.id)
+      .then(function (results) {
+        console.log(results, "Scores from Score factory");
+        $scope.scores = results;
+        console.log($scope.scores, 'scores in the profile controller');
       })
   }
 
@@ -123,10 +136,11 @@ angular.module('app.profile', [])
       $location.path('/')
     } else {
       $scope.loggedinUserInfo = Root.currentUserInfo.data;
+
       var currentPath = $location.path();
       currentPath = currentPath.split("");
       $scope.profileId = currentPath.splice(9).join("");
-     $scope.getUserById($scope.profileId);
+      $scope.getUserById($scope.profileId);
     }
   })
 
