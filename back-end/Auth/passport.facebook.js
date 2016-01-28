@@ -51,7 +51,28 @@ passport.use(new FacebookStrategy({
               console.log('Error');
             } else {
               console.log(userId,'userId');
-              return done(null, addObj);
+              var investmentScoreObj = {
+                user_id: userId, 
+                type: "social-investment", 
+                score: 35
+              }
+              var baseScoreObj = {
+                user_id: userId, 
+                type: "social", 
+                score: 95
+              }
+
+              mainController.addScore(baseScoreObj, function(err, response) {
+                if (err) {
+                  console.log("baseScoreObj was not added", err);
+                } else {
+                  mainController.addScore(investmentScoreObj, function(err, response) {
+                    console.log("investmentScoreObj was not added", err);
+                    return done(null, addObj);
+                  })
+                }
+              })
+              // return done(null, addObj);
             }
           })
         } else {

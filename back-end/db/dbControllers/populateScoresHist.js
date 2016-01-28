@@ -14,7 +14,7 @@ mainController.getAllUsers(function(err, users){
 		totalAdditions += numberOfNewScores;
 		
 		for(var subI = 0; subI < numberOfNewScores; subI++){
-			var type = Math.random() > .3? 'social-investment' : 'social';
+			var type = Math.random() > .5? 'social-investment' : 'social';
 			var randomScoreObj = {
 				user_id: i+1,
 				type: type,
