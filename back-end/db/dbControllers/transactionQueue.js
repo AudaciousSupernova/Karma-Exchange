@@ -18,12 +18,12 @@ connection.connect(function(err){
 //<h3>Transaction Queue function</h3>
 // adds a transaction to the queue
 // example transactionQueue obj
-// var transactionObj = {
-// 	user_id: 1,
-// 	type: "buy",
-// 	target_id: 2,
-// 	numberShares: 3
-// }
+var transactionObj = {
+	user_id: 1,
+	type: "buy",
+	target_id: 2,
+	numberShares: 4
+}
 
 var addTransaction = function(transactionObj, callback){
 	connection.query('INSERT INTO openTransactions SET ?', transactionObj, function(err, res){
@@ -36,6 +36,7 @@ var addTransaction = function(transactionObj, callback){
 		}
 	})
 }
+addTransaction(transactionObj, console.log);
 
 //finds all transactions associated with a target_id
 //returns an array of all open tranasctions for the target
@@ -49,7 +50,6 @@ var findOpenTransaction = function(target_id, type, callback){
 			console.log("Error finding transactions for target " + target_id, err)
 			callback(err, null);
 		} else{
-			console.log(rows)
 			callback(null, rows);
 		}
 	})
