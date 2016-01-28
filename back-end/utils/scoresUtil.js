@@ -40,13 +40,11 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 			currentIndex--;
 		}
 		addTotalsToResultObj(resultObj);
-		callback(err, [resultObj, scoreObjs])
+		callback(null, [resultObj, scoreObjs]);		
 	})
 }
 
-
-getScoresHistWithCurrentScores(3,console.log)
-//tests the test object
+//tests the test object 
 var testTestObj = function(testObj){
 	for(var key in testObj){
 		if(!testObj[key]){
