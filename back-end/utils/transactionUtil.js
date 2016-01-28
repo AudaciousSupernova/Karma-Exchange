@@ -45,8 +45,16 @@ var makeTransaction = function(transactionObj, callback){
 // 	target_id: 2,
 // 	numberShares: 3
 // }
-var closeOpenTransaction = function(){
-
+// var sampleTransaction = {
+// 	user_id: 1,
+// 	target_id: 2,
+// 	type: "sell",
+// 	numberShares: 15,
+// 	karma: 44
+// }
+var closeOpenTransaction = function(transactionQueueObj){
+	mainController.addTransaction()
+	transactionQueueObj.id
 }
 
 
