@@ -3,7 +3,7 @@ angular.module('app.portfolio', [])
   //<h3> Portfolio Controller </h3>
 .controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root) {
   $scope.investments; 
-
+  $scope.clickedInvestment;
   $scope.loggedinUserInfo;
   //Save the user id, included in the location path
   $scope.currentUserInfo = "invalid";
@@ -12,7 +12,7 @@ angular.module('app.portfolio', [])
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
       .then(function(results) {
-        console.log("I have successfully received current user investments.")
+        // console.log("I have successfully received current user investments.")
         $scope.investments = results;
         console.log("and i'm finally here", $scope.investments);
       })
@@ -20,6 +20,7 @@ angular.module('app.portfolio', [])
 
 
   $scope.clickSell = function(investment) {
+    $scope.clickedInvestment = investment.id;
     $mdDialog.show({
       templateUrl: '../views/sell.html',
       locals: {
@@ -37,27 +38,26 @@ angular.module('app.portfolio', [])
 
 
     $scope.investment = investment;
-    console.log("What does investment", $scope.investment)
     $scope.loggedinUserInfo = loggedinUserInfo
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
     console.log("this is the investment", $scope.investment)
-    console.log("this is shares to sell", $scope.sharesToSell);
+    // console.log("this is shares to sell", $scope.sharesToSell);
 
   $scope.getScores = function () {
-    console.log("what does my user contain", $scope.investment.target_id);
+    // console.log("what does my user contain", $scope.investment.target_id);
     Scores.getScores($scope.investment.target_id)
       .then(function (results) {
-        console.log('I AM HERE');
-        console.log(results, "Scores from Score factory");
+        // console.log('I AM HERE');
+        // console.log(results, "Scores from Score factory");
         if (results.length === 0) {
           $scope.scores = [];
         } else {
           $scope.scores = results;
-          console.log("what exactly is scope.scores?", $scope.scores);
+          // console.log("what exactly is scope.scores?", $scope.scores);
           $scope.targetCurrentScore = $scope.scores[0].social.total;
-          console.log("do we have it here?", $scope.targetCurrentScore)
+          // console.log("do we have it here?", $scope.targetCurrentScore)
           var transaction = {
             user_id: $scope.investment.user_id, 
             target_id: $scope.investment.target_id, 
@@ -66,13 +66,15 @@ angular.module('app.portfolio', [])
             karma: $scope.sharesToSell * $scope.targetCurrentScore//reference logged in user's karma
           }
 
-        console.log("WHAT IS MY CURRENT SCORE", $scope.targetCurrentScore);
-        console.log($scope.scores, 'scores in the sell controller');
+        // console.log("WHAT IS MY CURRENT SCORE", $scope.targetCurrentScore);
+        // console.log($scope.scores, 'scores in the sell controller');
           // console.log("is the current score being saved", $scope.targetCurrentScore)
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + $scope.sharesToSell * $scope.targetCurrentScore;
           TransactionHist.addTransaction(transaction)
             .then(function(results) {
+              investment.numberShares = investment.numberShares - $scope.sharesToSell;
               $mdDialog.hide();
+
             })  
         }
 
@@ -104,9 +106,9 @@ angular.module('app.portfolio', [])
       $location.path('/')
     } else {
       $scope.loggedinUserInfo = Root.currentUserInfo.data;
-      console.log("Is the id correct", $scope.loggedinUserInfo);
+      // console.log("Is the id correct", $scope.loggedinUserInfo);
       $scope.getInvestments($scope.loggedinUserInfo.id); 
-      
+
     }
   })
 
