@@ -9,7 +9,7 @@ angular.module('app.profile', [])
   $scope.leaders;
   $scope.loggedinUserInfo = "invalid";
   $scope.profileId;
-  $scope.currentScore;
+  $scope.loggedinUserInfo.currentScore = "No score currently";
   $scope.scores;
 
   //Save the user id, included in the location path
@@ -59,7 +59,14 @@ angular.module('app.profile', [])
       .then(function (results) {
         console.log('I AM HERE');
         console.log(results, "Scores from Score factory");
-        $scope.scores = results;
+        if (results.length === 0) {
+          $scope.scores = [];
+        } else {
+          $scope.scores = results;
+          console.log("what exactly is scope.scores?", $scope.scores);
+          $scope.loggedinUserInfo.currentScore = $scope.scores[0].social.total;
+        }
+        console.log("WHAT IS MY CURRENT SCORE", $scope.currentScore);
         console.log($scope.scores, 'scores in the profile controller');
       })
   }
@@ -88,7 +95,7 @@ angular.module('app.profile', [])
   function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio) {
 
     $scope.profile = profile;
-    $scope.score = 89;
+    $scope.score = loggedinUserInfo.currentScore;
     $scope.loggedinUserInfo = loggedinUserInfo;
     $scope.sharesToBuy;
     console.log("logged in info", $scope.loggedinUserInfo);
@@ -116,7 +123,7 @@ angular.module('app.profile', [])
         console.log("NOT ENOUGH MONEY")
         $mdDialog.hide();
       } else {
-        $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score - transaction.numberShares);
+        $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
         TransactionHist.addTransaction(transaction)
           .then(function(results) {
             Portfolio.addInvestment(investment)
