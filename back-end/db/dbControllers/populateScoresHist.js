@@ -4,7 +4,7 @@ var mainController = require('./mainController')
 //gets all users and then adds some random scores to their history
 mainController.getAllUsers(function(err, users){
 	var users = users;
-	var length = 5;
+	var length = users.length;
 	var totalAdditions = 0;
 	var currentAddition = 1;
 
@@ -14,7 +14,7 @@ mainController.getAllUsers(function(err, users){
 		totalAdditions += numberOfNewScores;
 		
 		for(var subI = 0; subI < numberOfNewScores; subI++){
-			var type = Math.random() > .1? 'social-investment' : 'social';
+			var type = Math.random() > .3? 'social-investment' : 'social';
 			var randomScoreObj = {
 				user_id: i+1,
 				type: type,
