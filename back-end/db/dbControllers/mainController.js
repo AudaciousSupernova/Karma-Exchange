@@ -225,16 +225,7 @@ var getScores = function(userId, callback){
 
 //<h3>Current Stocks</h3>
 
-// var addStock
-
-var investmentObj = {
-	user_id: 1,
-	target_id: 1,
-	numberShares: 100
-};
-
-
-
+// Adds a stock 
 var addStock = function(investmentObj, callback) {
 	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
 		if (err) {
@@ -246,16 +237,7 @@ var addStock = function(investmentObj, callback) {
 	})
 }
 
-addStock(investmentObj, function(err, results) {
-	if (err) {
-		console.log("could not add properly");
-	} else {
-
-	}
-})
-
-// var getStocks
-
+// Gets a stock for a specified user
 var getStocks = function(userId, callback){
 	console.log("am i in HERE NOW", userId);
   connection.query('SELECT * FROM currentStocks WHERE user_id=?', [userId], function(err, rows){
@@ -269,7 +251,7 @@ var getStocks = function(userId, callback){
   })
 }
 
-// updates the stock of a specified user 
+// Updates the stock of a specified user 
 var updateStock = function(userId, targetId, newNumShares, callback) {
 	connection.query('UPDATE currentStocks SET numberShares=? WHERE target_id=? AND user_id=?', [newNumShares, targetId, userId], function(err, result) {
 		if (err) {
@@ -282,9 +264,7 @@ var updateStock = function(userId, targetId, newNumShares, callback) {
 	})
 }
 
-
-
-// var deleteStock
+// Deletes the stock of a specified user 
 var deleteStock = function(userId, targetId, newNumShares, callback) {
 	connection.query('DELETE FROM currentStocks WHERE target_id=? AND user_id=?', [targetId, userId], function(err, response) {
 		if (err) {
@@ -320,7 +300,7 @@ module.exports = {
 	//Current Stock methods
 	getStocks: getStocks,
 	addStock: addStock,
-	// getStocks:getStocks,
-	// updateStock:updateStock,
-	// deleteStock:deleteStock,
+	getStocks:getStocks,
+	updateStock:updateStock,
+	deleteStock:deleteStock,
 }
