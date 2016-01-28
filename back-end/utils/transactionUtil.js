@@ -16,47 +16,65 @@ var scoresUtil = require('./scoresUtil')
 var makeTransaction = function(transactionObj, callback){
 	var desiredShares = transactionObj.numberShares
 	var savedDesiredShares = desiredShares
+	//checkTransaction returns a tuple with the first el being the number
+	//of shares available/desired and the second being an array of queued
+	//transactions.
 	checkTransaction(transactionObj.target_id, transactionObj.type, function(err, response){
-		if(err){
-			console.log("Error finding transaction ", err)
-		} else {
+		scoresUtil.getScoresHistWithCurrentScores(transactionQueueObj.target_id, function(scoresHistWithCurrentScores){
+			var currentScores = scoresHistWithCurrentScores[0]
+			//scoreClass may be added in the future to help differential better
+			var scoreClass = transactionQueueObj.scoreClass || 'social';
+			//sets the current share value to be used in all interactions
+			var shareValue = currentScores[scoreClass].total;
 			//Does error checking to make sure the input is accurate
 			if(desiredShares >  response[0]){
 				var errorMessage ="Error in transaction util.js. Number desired exceeds number available"
 				console.log(errorMessage)
 				callback(errorMessage)
-			} else{
+			} else {
 				var openTransactions = response[1]
 				while(desiredShares > 0){
 					var sharesAvailable = openTransactions[i].numberShares
-					if(desiredShares - sharesAvailable >= 0){
-					}				
+					if(desiredShares - sharesAvailable > 0){
+						desiredShares -= sharesAvailable
+						closeOpenTransaction(openTransactions[i], shareValue)
+					//if more available than desired make a partial transaction
+					}	else if(desiredShares - sharesAvailable < 0){
+						//needs to close the overarching transaction and
+						//update the queue and update a partial transaction
+
+					//in the 0 case close both transaction
+					}	else {
+						closeOpenTransaction(openTransactions[i], shareValue)
+						transactionObj.karma = shareValue * desiredShares
+						mainController.addTransaction(transactionObj)
+					}		
 				}
 			}
-		}
+		})	
 	})
 }
 
-// adds a transaction to the queue
-// example transactionQueue obj
-// var transactionObj = {
-// 	user_id: 1,
-// 	type: "buy",
-// 	target_id: 2,
-// 	numberShares: 3
-// }
-// var sampleTransaction = {
-// 	user_id: 1,
-// 	target_id: 2,
-// 	type: "sell",
-// 	numberShares: 15,
-// 	karma: 44
-// }
-var closeOpenTransaction = function(transactionQueueObj){
-	mainController.addTransaction()
-	transactionQueueObj.id
-}
 
+//takes a tranasctionQueueObj adds the transaction to the users
+//history and deleted the entry from the transaction Queue
+
+var closeOpenTransaction = function(transactionQueueObj, shareValue){
+	var transactionId = transactionQueueObj.id
+	//converts the object so it can be stored in the transaction hist table
+	transactionQueueObj.karma = transactionQueueObj.numberShares * shareValue;
+	delete transactionQueueObj['id']
+	mainController.addTransaction(transactionQueueObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+	transactionQueueController.deleteOpenTransaction(transactionId, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+}
 
 //turns the buyer into seller and switched the type
 //so that both records are maintained

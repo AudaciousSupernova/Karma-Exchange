@@ -44,9 +44,7 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 	})
 }
 
-
-getScoresHistWithCurrentScores(3,console.log)
-//tests the test object
+//tests the test object 
 var testTestObj = function(testObj){
 	for(var key in testObj){
 		if(!testObj[key]){
