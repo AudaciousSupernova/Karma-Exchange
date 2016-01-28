@@ -227,6 +227,14 @@ var getScores = function(userId, callback){
 
 // var addStock
 
+var investmentObj = {
+	user_id: 1,
+	target_id: 1,
+	numberShares: 100
+};
+
+
+
 var addStock = function(investmentObj, callback) {
 	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
 		if (err) {
@@ -237,6 +245,14 @@ var addStock = function(investmentObj, callback) {
 		}
 	})
 }
+
+addStock(investmentObj, function(err, results) {
+	if (err) {
+		console.log("could not add properly");
+	} else {
+
+	}
+})
 
 // var getStocks
 
@@ -253,9 +269,33 @@ var getStocks = function(userId, callback){
   })
 }
 
-// var updateStock
+// updates the stock of a specified user 
+var updateStock = function(userId, targetId, newNumShares, callback) {
+	connection.query('UPDATE currentStocks SET numberShares=? WHERE target_id=? AND user_id=?', [newNumShares, targetId, userId], function(err, result) {
+		if (err) {
+			console.log("Error updating stock of user", userId); 
+			callback(err, null)
+		} else {
+			console.log('Updated stock for user', userId); 
+			callback(null, userId); 
+		}
+	})
+}
+
+
 
 // var deleteStock
+var deleteStock = function(userId, targetId, newNumShares, callback) {
+	connection.query('DELETE FROM currentStocks WHERE target_id=? AND user_id=?', [targetId, userId], function(err, response) {
+		if (err) {
+			console.log("Error deleting stock of user", userId);
+			callback(err, null); 
+		} else {
+			console.log("Deleted stock of user", userId); 
+			callback(null, userId); 
+		}
+	})
+}
 
 module.exports = {
 	connection: connection,
