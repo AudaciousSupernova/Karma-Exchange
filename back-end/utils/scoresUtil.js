@@ -29,18 +29,24 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 
 		var currentScore = 0;
 		var currentIndex = scoreObjs.length - 1;
-		//builds out the first two values for each score element
-		while(!testTestObj(testObj)){
-			var currentSubType = scoreObjs[currentIndex].type
-			var currentInvestmentType = investmentTypes[currentSubType]
-			if(!testObj[currentSubType]){
-				testObj[currentSubType] = true
-				resultObj[currentInvestmentType][currentSubType] = scoreObjs[currentIndex].score
+
+		if (currentIndex < 0) {
+			callback(err, [])
+		} else {
+			//builds out the first two values for each score element
+			while(!testTestObj(testObj)){
+				console.log("what is type?", scoreObjs[currentIndex].type)
+				var currentSubType = scoreObjs[currentIndex].type
+				var currentInvestmentType = investmentTypes[currentSubType]
+				if(!testObj[currentSubType]){
+					testObj[currentSubType] = true
+					resultObj[currentInvestmentType][currentSubType] = scoreObjs[currentIndex].score
+				}
+				currentIndex--;
 			}
-			currentIndex--;
+			addTotalsToResultObj(resultObj);
+			callback(null, [resultObj, scoreObjs]);		
 		}
-		addTotalsToResultObj(resultObj);
-		callback(null, [resultObj, scoreObjs]);		
 	})
 }
 

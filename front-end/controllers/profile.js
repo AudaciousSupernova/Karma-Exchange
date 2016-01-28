@@ -9,7 +9,7 @@ angular.module('app.profile', [])
   $scope.leaders;
   $scope.loggedinUserInfo = "invalid";
   $scope.profileId;
-  $scope.currentScore;
+  $scope.currentScore = "No score currently";
   $scope.scores;
 
   //Save the user id, included in the location path
@@ -59,7 +59,14 @@ angular.module('app.profile', [])
       .then(function (results) {
         console.log('I AM HERE');
         console.log(results, "Scores from Score factory");
-        $scope.scores = results;
+        if (results.length === 0) {
+          $scope.scores = [];
+        } else {
+          $scope.scores = results;
+          console.log("what exactly is scope.scores?", $scope.scores);
+          $scope.currentScore = $scope.scores[0].social.total;
+        }
+        console.log("WHAT IS MY CURRENT SCORE", $scope.currentScore);
         console.log($scope.scores, 'scores in the profile controller');
       })
   }
