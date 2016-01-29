@@ -19,7 +19,7 @@ angular.module('app', [
       url: '/', 
       templateUrl: 'app/views/auth.html', 
       controller: 'AuthController',
-      authenticate: false
+      authenticate: true
     })
     .state('newsfeed', {
       url: '/newsfeed', 

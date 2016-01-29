@@ -74,7 +74,12 @@ angular.module('app.services', [])
 .factory('Auth', function ($http, $location, $rootScope) {
   return {
     checkLoggedIn: function () {
-      return $http.get('/api/loggedin').then(function (user) {
+      return $http({
+        method: 'GET',
+        url: '/api/loggedin'
+      })
+      .then(function (user) {
+        console.log("what is my user", user);
         if (user.data.id) {
           console.log('recognizes user', user)
           $rootScope.user = user;

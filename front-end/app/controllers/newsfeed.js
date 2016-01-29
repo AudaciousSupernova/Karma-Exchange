@@ -13,8 +13,9 @@ angular.module('app.newsfeed', [])
       })
   };
 
-  Auth.checkLoggedIn().then(function(boolean) {
-    if (boolean === false) {
+  Auth.checkLoggedIn().then(function(loggedIn) {
+    console.log(loggedIn,"what is logged in")
+    if (loggedIn === false) {
       $location.path('/')
     } else {
       $scope.getTrending();

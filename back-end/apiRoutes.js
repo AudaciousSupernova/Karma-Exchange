@@ -6,20 +6,15 @@ var scoresUtil = require('./utils/scoresUtil')
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns.
-	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_likes', 'user_photos', 'user_posts'] }),
-	  function(req, res){});
+	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_likes', 'user_photos', 'user_posts'] }));
 
 	app.get('/auth/facebook/callback',
-	  passport.authenticate('facebook', { failureRedirect: '/#/' }),
-	  function(req, res) {
-	    res.redirect('/#/newsfeed');
-	  });
+	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
 
   app.get('/api/loggedin',
     function (req, res) {
-      auth = req.isAuthenticated();
-      console.log(auth);
-      if (auth) {
+      if (req.isAuthenticated()) {
+        console.log(req.user,'req.user')
         res.send(req.user);
       } else {
         res.redirect('/');

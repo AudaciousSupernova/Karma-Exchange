@@ -15,10 +15,12 @@ if(process.env.PORT){
 
 // The user profile is used to identify the user from passport.
 passport.serializeUser(function(user, done) {
+  console.log('from serialize', user);
   done(null, user);
 });
 // Passport will return the input user, since we are not actually serializing the user.
 passport.deserializeUser(function(user, done) {
+  console.log('from deserialize', user);
   done(null, user);
 });
 
@@ -55,24 +57,25 @@ passport.use(new FacebookStrategy({
                 user_id: userId, 
                 type: "social-investment", 
                 score: 35
-              }
+              };
               var baseScoreObj = {
                 user_id: userId, 
                 type: "social", 
                 score: 95
-              }
+              };
 
               mainController.addScore(baseScoreObj, function(err, response) {
                 if (err) {
                   console.log("baseScoreObj was not added", err);
                 } else {
                   mainController.addScore(investmentScoreObj, function(err, response) {
-                    console.log("investmentScoreObj was not added", err);
-                    return done(null, addObj);
+                    // console.log("investmentScoreObj was added", response);
+                    // console.log(profile,'profile on new user')
+                    addObj.id = userId;
+                    done(null, addObj);
                   })
                 }
               })
-              // return done(null, addObj);
             }
           })
         } else {
@@ -89,7 +92,7 @@ passport.use(new FacebookStrategy({
             });
           }
           console.log(profile[0], 'passport log on found user')
-          return done(null, profile[0]);
+          done(null, profile[0]);
         }
       })
     });
