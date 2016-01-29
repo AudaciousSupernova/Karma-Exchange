@@ -117,7 +117,7 @@ var updateUser = function(newUserObj, callback){
 		    	callback(err, null)
 		    } else{
 			    console.log('Updated user ' + user_id);
-			    callback(null, user_id);
+			    callback(null, userObj);
 		    }
 		  }
 		);		
@@ -134,7 +134,7 @@ var updateKarma = function(userId, karmaChange, callback){
 	    	console.log("Error updating Karma of userId " + userId)
 	    	callback(err, null)
 	    } else{
-		    console.log('Changed user ' + userId + '\'s karma to ' + karmaChange);
+		    console.log('Changed user ' + userId + '\'s karma by ' + karmaChange);
 		    callback(null, userId);
 	    }
 	  }

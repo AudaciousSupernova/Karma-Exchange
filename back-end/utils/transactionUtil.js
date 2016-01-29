@@ -94,7 +94,6 @@ var closeOpenTransaction = function(transactionQueueObj, shareValue){
 	var transactionId = transactionQueueObj.id
 	//converts the object so it can be stored in the transaction hist table
 	transactionQueueObj.karma = transactionQueueObj.numberShares * shareValue;
-	console.log(transactionQueueObj.karma, "karma")
 	var karmaChange = transactionQueueObj.type === "sell"? transactionQueueObj.karma : -transactionQueueObj.karma;
 	delete transactionQueueObj['id']
 	mainController.addTransaction(transactionQueueObj, function(err, response){
