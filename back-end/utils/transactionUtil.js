@@ -51,33 +51,25 @@ var makeTransaction = function(transactionObj, callback){
 						var newShares = sharesAvailable - desiredShares
 						desiredShares = 0
 						console.log(desiredShares)
+						//update the queue and update a partial transaction
 						transactionQueueController.updateOpenTransaction(openTransactions[i].id, newShares,function(err, transactionQueueObj){
 							if(err){
 								console.log(err)
 							}
 						})
-
-						transactionObj.karma = shareValue * savedDesiredShares
-						mainController.addTransaction(transactionObj, function(err, response){
-							if(err){
-								console.log(err)
-							}
-						})
-						//needs to close the overarching transaction and
-						//update the queue and update a partial transaction
-
-					//in the 0 case close both transaction
+					//in the 0 case close the transaction and exit the loop
 					}	else {
 						desiredShares = 0
 						closeOpenTransaction(openTransactions[i], shareValue)
-						transactionObj.karma = shareValue * savedDesiredShares
-						mainController.addTransaction(transactionObj, function(err,response){
-							if(err){
-								console.log(err)
-							}
-						})
 					}		
-				}
+				}				
+				//needs to close the overarching transaction and
+				transactionObj.karma = shareValue * savedDesiredShares
+				mainController.addTransaction(transactionObj, function(err, response){
+					if(err){
+						console.log(err)
+					}
+				})			
 			}
 		})	
 	})
