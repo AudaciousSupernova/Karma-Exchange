@@ -1,6 +1,3 @@
-
-
-
 -- current update
 
 -- use transactionQueue;
@@ -11,9 +8,9 @@ USE main;
 
 -- ALTER TABLE users ADD profile_photo varchar(300);
 
-ALTER TABLE users ADD social int DEFAULT 0
+ALTER TABLE users ADD social int DEFAULT 0;
 
-ALTER TABLE users ADD social_investment int DEFAULT 0
+ALTER TABLE users ADD social_investment int DEFAULT 0;
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);
 
