@@ -17,37 +17,37 @@ angular.module('app', [
   $stateProvider
     .state('home', {
       url: '/', 
-      templateUrl: 'views/auth.html', 
+      templateUrl: 'app/views/auth.html', 
       controller: 'AuthController',
       authenticate: false
     })
     .state('newsfeed', {
       url: '/newsfeed', 
-      templateUrl: 'views/newsfeed.html', 
+      templateUrl: 'app/views/newsfeed.html', 
       controller: 'NewsfeedController',
       authenticate: true
     })
     .state('profile', {
       url: '/profile/:id', 
-      templateUrl: 'views/profile.html', 
+      templateUrl: 'app/views/profile.html', 
       controller: 'ProfileController',
       authenticate: true
     })
     .state('buy', {
       url: '/buy', 
-      templateUrl: 'views/buy.html', 
+      templateUrl: 'app/views/buy.html', 
       controller: 'BuyController',
       authenticate: true
     })
     .state('sell', {
       url: '/sell', 
-      templateUrl: 'views/sell.html', 
+      templateUrl: 'app/views/sell.html', 
       controller: 'SellController',
       authenticate: true
     })
     .state('portfolio', {
       url: '/portfolio/:id', 
-      templateUrl: 'views/portfolio.html', 
+      templateUrl: 'app/views/portfolio.html', 
       controller: 'PortfolioController',
       authenticate: true
     })
