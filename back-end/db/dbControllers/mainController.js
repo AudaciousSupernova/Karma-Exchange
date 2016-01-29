@@ -225,8 +225,7 @@ var getScores = function(userId, callback){
 
 //<h3>Current Stocks</h3>
 
-// var addStock
-
+// Adds a stock 
 var addStock = function(investmentObj, callback) {
 	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
 		if (err) {
@@ -238,8 +237,7 @@ var addStock = function(investmentObj, callback) {
 	})
 }
 
-// var getStocks
-
+// Gets a stock for a specified user
 var getStocks = function(userId, callback){
 	console.log("am i in HERE NOW", userId);
   connection.query('SELECT * FROM currentStocks WHERE user_id=?', [userId], function(err, rows){
@@ -253,9 +251,31 @@ var getStocks = function(userId, callback){
   })
 }
 
-// var updateStock
+// Updates the stock of a specified user 
+var updateStock = function(userId, targetId, newNumShares, callback) {
+	connection.query('UPDATE currentStocks SET numberShares=? WHERE target_id=? AND user_id=?', [newNumShares, targetId, userId], function(err, result) {
+		if (err) {
+			console.log("Error updating stock of user", userId); 
+			callback(err, null)
+		} else {
+			console.log('Updated stock for user', userId); 
+			callback(null, userId); 
+		}
+	})
+}
 
-// var deleteStock
+// Deletes the stock of a specified user 
+var deleteStock = function(userId, targetId, newNumShares, callback) {
+	connection.query('DELETE FROM currentStocks WHERE target_id=? AND user_id=?', [targetId, userId], function(err, response) {
+		if (err) {
+			console.log("Error deleting stock of user", userId);
+			callback(err, null); 
+		} else {
+			console.log("Deleted stock of user", userId); 
+			callback(null, userId); 
+		}
+	})
+}
 
 module.exports = {
 	connection: connection,
@@ -280,7 +300,7 @@ module.exports = {
 	//Current Stock methods
 	getStocks: getStocks,
 	addStock: addStock,
-	// getStocks:getStocks,
-	// updateStock:updateStock,
-	// deleteStock:deleteStock,
+	getStocks:getStocks,
+	updateStock:updateStock,
+	deleteStock:deleteStock,
 }
