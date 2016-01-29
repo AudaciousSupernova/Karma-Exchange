@@ -22,7 +22,7 @@ var transactionObj = {
 	user_id: 1,
 	type: "buy",
 	target_id: 2,
-	numberShares: 6
+	numberShares: 8
 }
 
 var addTransaction = function(transactionObj, callback){

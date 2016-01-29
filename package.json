@@ -8,14 +8,14 @@
     "start": "nodemon back-end/server.js",
     "postinstall": "bower install",
     "buildDb": "npm run buildMainDb && npm run buildTransactionDb",
-    "buidMainDb" : "mysql -u root -p < back-end/db/dbSchema/mainSchema.sql",
+    "buidMainDb": "mysql -u root -p < back-end/db/dbSchema/mainSchema.sql",
     "buildTransactionDb": "mysql -u root -p < back-end/db/dbSchema/transactionQueue.sql",
     "updateDb": "mysql -u root -p < back-end/db/dbSchema/updateSchema.sql",
     "populateDbs": "npm run populateUserTable && npm run populateTransactionHist && npm run populateScoresHist",
-    "populateUserTable" : "node back-end/db/dbControllers/populateUserTable.js",
-    "populateTransactionHist" : "node back-end/db/dbControllers/populateTransactionHist.js",
-    "populateScoresHist" : "node back-end/db/dbControllers/populateScoresHist.js",
-    "populateCurrentStocks" : "node back-end/db/dbControllers/populateCurrentStocks.js"
+    "populateUserTable": "node back-end/db/dbControllers/populateUserTable.js",
+    "populateTransactionHist": "node back-end/db/dbControllers/populateTransactionHist.js",
+    "populateScoresHist": "node back-end/db/dbControllers/populateScoresHist.js",
+    "populateCurrentStocks": "node back-end/db/dbControllers/populateCurrentStocks.js"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,8 @@
     "mysql": "^2.10.2",
     "nodemon": "^1.8.1",
     "passport": "^0.3.2",
-    "passport-facebook": "^2.0.0"
+    "passport-facebook": "^2.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "browser-sync": "^2.11.1",

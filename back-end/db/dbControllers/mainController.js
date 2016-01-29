@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-
+var _ = require('underscore')
 
 var connection = mysql.createConnection({
   user: "root",
@@ -103,21 +103,43 @@ var getAllUsers = function(callback){
 
 }
 
+//even though this leverages two controller methods since it is
+//essentially just an update it is here
+//newUserObj must have user_id and the new properties
+var updateUser = function(newUserObj, callback){
+	var user_id = newUserObj.id
+	findUserById(user_id, function(err, userObj){
+		userObj = userObj[0]
+		_.extend(userObj, newUserObj)
+		connection.query('UPDATE users SET ? Where ID = ?',[userObj, user_id], function (err, result) {
+		    if (err){
+		    	console.log("Error updating user # " + user_id)
+		    	callback(err, null)
+		    } else{
+			    console.log('Updated user ' + user_id);
+			    callback(null, user_id);
+		    }
+		  }
+		);		
+	})
+}
 
-//updates the karma of a specified user
-var updateKarma = function(userId, newKarma, callback){
-	connection.query('UPDATE users SET karma = ? Where ID = ?',[newKarma, userId], function (err, result) {
+//updates the karma of a specified user this is kept as a
+//seperate function because it utilized the difference rather
+//than just overwriting the property, this leads to fewer
+//db interactions. It CAN accept a negative value for karmaChange
+var updateKarma = function(userId, karmaChange, callback){
+	connection.query('UPDATE users SET karma = karma +? Where ID = ?',[karmaChange, userId], function (err, result) {
 	    if (err){
 	    	console.log("Error updating Karma of userId " + userId)
 	    	callback(err, null)
 	    } else{
-		    console.log('Changed user ' + userId + '\'s karma to ' + newKarma);
+		    console.log('Changed user ' + userId + '\'s karma to ' + karmaChange);
 		    callback(null, userId);
 	    }
 	  }
 	);
 }
-
 
 //updates the photo of a specified user
 var updatePhoto = function (userId, newPhoto, callback){

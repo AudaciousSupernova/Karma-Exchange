@@ -41,7 +41,6 @@ var makeTransaction = function(transactionObj, callback){
 				var i = openTransactions.length
 				while(desiredShares > 0){
 					i--;
-					console.log(i, desiredShares)
 					var sharesAvailable = openTransactions[i].numberShares
 					if(desiredShares - sharesAvailable > 0){
 						desiredShares -= sharesAvailable
@@ -50,7 +49,6 @@ var makeTransaction = function(transactionObj, callback){
 					}	else if(desiredShares - sharesAvailable < 0){
 						var newShares = sharesAvailable - desiredShares
 						desiredShares = 0
-						console.log(desiredShares)
 						//update the queue and update a partial transaction
 						transactionQueueController.updateOpenTransaction(openTransactions[i].id, newShares,function(err, transactionQueueObj){
 							if(err){
@@ -63,9 +61,16 @@ var makeTransaction = function(transactionObj, callback){
 						closeOpenTransaction(openTransactions[i], shareValue)
 					}		
 				}				
-				//needs to close the overarching transaction and
+				//needs to close the overarcing transaction and update karma
 				transactionObj.karma = shareValue * savedDesiredShares
+				var karmaChange = transactionObj.type === "sell"? transactionObj.karma : -transactionObj.karma;
 				mainController.addTransaction(transactionObj, function(err, response){
+					if(err){
+						console.log(err)
+					}
+				})
+				//may want to add the update karma call into the add transaction
+				mainController.updateKarma(transactionObj.user_id, karmaChange, function(err, response){
 					if(err){
 						console.log(err)
 					}
@@ -75,17 +80,29 @@ var makeTransaction = function(transactionObj, callback){
 	})
 }
 
-
-
+// var sampleQueueObj = {
+// 	user_id:1,
+// 	type:'buy',
+// 	target_id:2,
+// 	numberShares:9,
+// 	id:65
+// }
 //takes a tranasctionQueueObj adds the transaction to the users
-//history and deleted the entry from the transaction Queue
+//history, updates karma, and deleted the entry from the transaction Queue
 
 var closeOpenTransaction = function(transactionQueueObj, shareValue){
 	var transactionId = transactionQueueObj.id
 	//converts the object so it can be stored in the transaction hist table
 	transactionQueueObj.karma = transactionQueueObj.numberShares * shareValue;
+	console.log(transactionQueueObj.karma, "karma")
+	var karmaChange = transactionQueueObj.type === "sell"? transactionQueueObj.karma : -transactionQueueObj.karma;
 	delete transactionQueueObj['id']
 	mainController.addTransaction(transactionQueueObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+	mainController.updateKarma(transactionQueueObj.user_id, karmaChange, function(err, response){
 		if(err){
 			console.log(err)
 		}
@@ -127,6 +144,9 @@ var checkTransaction = function(target_id, type, callback){
 	})
 }
 
+
+//tests
+// makeTransaction(sampleTransaction)
 // transactionQueueController.deleteOpenTransaction(3, console.log)
 // transactionQueueController.updateOpenTransaction(4, 10, console.log)
 // checkTransaction(2, "buy", console.log);
