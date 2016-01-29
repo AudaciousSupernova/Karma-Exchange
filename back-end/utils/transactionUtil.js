@@ -1,6 +1,7 @@
 var mainController = require('../db/dbControllers/mainController')
 var transactionQueueController = require('../db/dbControllers/transactionQueue')
 var scoresUtil = require('./scoresUtil')
+var stocksUtil = require('./stocksUtil')
 
 
 //<h3>Make transaction</h3>
@@ -58,42 +59,85 @@ var makeTransaction = function(transactionObj, callback){
 					}		
 				}				
 				//needs to close the overarcing transaction and update karma
-				transactionObj.karma = shareValue * savedDesiredShares
-				var karmaChange = transactionObj.type === "sell"? transactionObj.karma : -transactionObj.karma;
-				mainController.addTransaction(transactionObj, function(err, response){
-					if(err){
-						console.log(err)
-					}
-				})
-				//may want to add the update karma call into the add transaction
-				mainController.updateKarma(transactionObj.user_id, karmaChange, function(err, response){
-					if(err){
-						console.log(err)
-					}
-				})			
+				closeTransactionRequest(transactionObj, savedDesiredShares, shareValue)
 			}
 		})	
 	})
 }
 
-var sampleQueueObj = {
-	user_id:1,
-	type:'sell',
-	target_id:188,
-	numberShares:4,
-	id:79
+
+// var sampleTransaction1 = {
+// 	user_id: 3,
+// 	target_id: 2,
+// 	type: "sell",
+// 	numberShares: 15, 
+// }
+//closes a transaction request that either goes through make transaction
+//or one that goes directly through the server
+var closeTransactionRequest = function(transactionObj, shareValue){
+	var desiredShares = transactionObj.numberShares
+	desiredShares = transactionObj.type === "buy"? desiredShares : -desiredShares;
+	transactionObj.karma = shareValue * -desiredShares
+
+	mainController.addTransaction(transactionObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+	//may want to add the update karma call into the add transaction
+	mainController.updateKarma(transactionObj.user_id, transactionObj.karma, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})	
 }
+
+// closeTransactionRequest(sampleTransaction1, 25)
+
+var closeOpenTransaction = function(transactionQueueObj, shareValue){
+	var desiredShares = transactionQueueObj.numberShares
+	desiredShares = transactionQueueObj.type === "buy"? desiredShares : -desiredShares;
+	var transactionId = transactionQueueObj.id
+	//converts the object so it can be stored in the transaction hist table
+	transactionQueueObj.karma = shareValue * -desiredShares;
+	delete transactionQueueObj['id']
+	mainController.addTransaction(transactionQueueObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+	mainController.updateKarma(transactionQueueObj.user_id, transactionQueue.karma, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+	transactionQueueController.deleteOpenTransaction(transactionId, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+}
+
+// var sampleQueueObj = {
+// 	user_id:3,
+// 	type:'sell',
+// 	target_id:2,
+// 	numberShares:8,
+// 	id:78
+// }
 //takes a tranasctionQueueObj adds the transaction to the users
 //history, updates karma, and deleted the entry from the transaction Queue
 
 var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange, shareValue){
-	var karmaChange = transactionQueueObj.type === "sell"? newShares * shareValue : -newShares * shareValue;
+	var karmaChange = transactionQueueObj.type === "sell"? sharesChange * shareValue : -sharesChange * shareValue;
 	transactionQueueController.updateOpenTransaction(transactionQueueObj.id, sharesChange,function(err, transactionQueueObj){
 		if(err){
 			console.log(err)
 		}
 	})
 	delete transactionQueueObj['id']
+	transactionQueueObj.karma = karmaChange
+	transactionQueueObj.numberShares = sharesChange
 	mainController.addTransaction(transactionQueueObj, function(err, response){
 		if(err){
 			console.log(err)
@@ -106,41 +150,7 @@ var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange,
 	})
 }
 
-// updateOpenTransactionAndStocks()
-
-var closeOpenTransaction = function(transactionQueueObj, shareValue){
-	var transactionId = transactionQueueObj.id
-	//converts the object so it can be stored in the transaction hist table
-	transactionQueueObj.karma = transactionQueueObj.numberShares * shareValue;
-	var karmaChange = transactionQueueObj.type === "sell"? transactionQueueObj.karma : -transactionQueueObj.karma;
-	delete transactionQueueObj['id']
-	mainController.addTransaction(transactionQueueObj, function(err, response){
-		if(err){
-			console.log(err)
-		}
-	})
-	mainController.updateKarma(transactionQueueObj.user_id, karmaChange, function(err, response){
-		if(err){
-			console.log(err)
-		}
-	})
-	transactionQueueController.deleteOpenTransaction(transactionId, function(err, response){
-		if(err){
-			console.log(err)
-		}
-	})
-}
-
-//turns the buyer into seller and switched the type
-//so that both records are maintained
-var reverseTransaction = function(transactionObj){
-	//switches the type between buy and sell
-	var newType = transactionObj.type === "buy"? "sell" : "buy";
-	var newUserId = transactionObj.target_id;
-	transactionObj.target_id = transactionObj.user_id;
-	transactionObj.user_id = newUserId;
-	transactionObj.type = newType;
-}
+// updateOpenTransactionAndStocks(sampleQueueObj, 3, 50)
 
 //<h3>Transaction Queue Checkers</h3>
 //checks for transactions of a type from a specific target
@@ -161,7 +171,6 @@ var checkTransaction = function(target_id, type, callback){
 	})
 }
 
-
 //tests
 // makeTransaction(sampleTransaction)
 // transactionQueueController.deleteOpenTransaction(3, console.log)
@@ -175,6 +184,17 @@ var checkTransaction = function(target_id, type, callback){
 // 	numberShares: 3
 // }
 // // transactionQueueController.addTransaction(transactionObj, console.log)
+
+//turns the buyer into seller and switched the type
+//so that both records are maintained
+var reverseTransaction = function(transactionObj){
+	//switches the type between buy and sell
+	var newType = transactionObj.type === "buy"? "sell" : "buy";
+	var newUserId = transactionObj.target_id;
+	transactionObj.target_id = transactionObj.user_id;
+	transactionObj.user_id = newUserId;
+	transactionObj.type = newType;
+}
 
 //creates both the buy and sell transaction and adds them
 //to the transactionHist database. Usefull for populating
