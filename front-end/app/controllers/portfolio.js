@@ -2,7 +2,7 @@ angular.module('app.portfolio', [])
 
   //<h3> Portfolio Controller </h3>
 .controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root) {
-  $scope.investments; 
+  $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
   //Save the user id, included in the location path
@@ -22,9 +22,9 @@ angular.module('app.portfolio', [])
   $scope.clickSell = function(investment) {
     $scope.clickedInvestment = investment.id;
     $mdDialog.show({
-      templateUrl: '../views/sell.html',
+      templateUrl: '../app/views/sell.html',
       locals: {
-        investment: investment, 
+        investment: investment,
         loggedinUserInfo: $scope.loggedinUserInfo
       },
       controller: SellModalController
@@ -59,10 +59,10 @@ angular.module('app.portfolio', [])
           $scope.targetCurrentScore = $scope.scores[0].social.total;
           // console.log("do we have it here?", $scope.targetCurrentScore)
           var transaction = {
-            user_id: $scope.investment.user_id, 
-            target_id: $scope.investment.target_id, 
-            type: "sell", 
-            numberShares: $scope.sharesToSell, 
+            user_id: $scope.investment.user_id,
+            target_id: $scope.investment.target_id,
+            type: "sell",
+            numberShares: $scope.sharesToSell,
             karma: $scope.sharesToSell * $scope.targetCurrentScore//reference logged in user's karma
           }
 
@@ -75,7 +75,7 @@ angular.module('app.portfolio', [])
               investment.numberShares = investment.numberShares - $scope.sharesToSell;
               $mdDialog.hide();
 
-            })  
+            })
         }
 
       })
@@ -86,8 +86,8 @@ angular.module('app.portfolio', [])
         console.log("You are trying to sell more than you have!");
         $mdDialog.hide();
       } else {
-        $scope.getScores()      
-        
+        $scope.getScores()
+
         //grab the target_id
         //get scores by target_id
           //all the scores
@@ -107,13 +107,13 @@ angular.module('app.portfolio', [])
     } else {
       $scope.loggedinUserInfo = Root.currentUserInfo.data;
       // console.log("Is the id correct", $scope.loggedinUserInfo);
-      $scope.getInvestments($scope.loggedinUserInfo.id); 
+      $scope.getInvestments($scope.loggedinUserInfo.id);
 
     }
   })
 
 
-  
+
 
   // if (!Auth.isAuth()) {
   //   $location.path('/signin');
