@@ -10,6 +10,8 @@ CREATE TABLE users (
   karma int NOT NULL,
   facebookKey varchar(200),
   profile_photo varchar(300),
+  social int DEFAULT 0,
+  social_investment int DEFAULT 0,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );
