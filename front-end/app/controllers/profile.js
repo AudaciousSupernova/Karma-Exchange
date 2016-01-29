@@ -83,7 +83,7 @@ angular.module('app.profile', [])
 
   $scope.clickBuy = function() {
     $mdDialog.show({
-      templateUrl: '../views/buy.html',
+      templateUrl: '../app/views/buy.html',
       locals: {
         profile: $scope.user,
         loggedinUserInfo: $scope.loggedinUserInfo
