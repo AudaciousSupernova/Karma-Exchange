@@ -50,11 +50,7 @@ var makeTransaction = function(transactionObj, callback){
 						var newShares = sharesAvailable - desiredShares
 						desiredShares = 0
 						//update the queue and update a partial transaction
-						transactionQueueController.updateOpenTransaction(openTransactions[i].id, newShares,function(err, transactionQueueObj){
-							if(err){
-								console.log(err)
-							}
-						})
+					  updateOpenTransaction(openTransactions[i], newShares, shareValue)
 					//in the 0 case close the transaction and exit the loop
 					}	else {
 						desiredShares = 0
@@ -80,15 +76,37 @@ var makeTransaction = function(transactionObj, callback){
 	})
 }
 
-// var sampleQueueObj = {
-// 	user_id:1,
-// 	type:'buy',
-// 	target_id:2,
-// 	numberShares:9,
-// 	id:65
-// }
+var sampleQueueObj = {
+	user_id:1,
+	type:'sell',
+	target_id:188,
+	numberShares:4,
+	id:79
+}
 //takes a tranasctionQueueObj adds the transaction to the users
 //history, updates karma, and deleted the entry from the transaction Queue
+
+var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange, shareValue){
+	var karmaChange = transactionQueueObj.type === "sell"? newShares * shareValue : -newShares * shareValue;
+	transactionQueueController.updateOpenTransaction(transactionQueueObj.id, sharesChange,function(err, transactionQueueObj){
+		if(err){
+			console.log(err)
+		}
+	})
+	delete transactionQueueObj['id']
+	mainController.addTransaction(transactionQueueObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})	
+	mainController.updateKarma(transactionQueueObj.user_id, karmaChange, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+}
+
+// updateOpenTransactionAndStocks()
 
 var closeOpenTransaction = function(transactionQueueObj, shareValue){
 	var transactionId = transactionQueueObj.id

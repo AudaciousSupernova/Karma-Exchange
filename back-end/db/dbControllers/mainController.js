@@ -274,8 +274,8 @@ var getStocks = function(userId, callback){
 }
 
 // Updates the stock of a specified user 
-var updateStock = function(userId, targetId, newNumShares, callback) {
-	connection.query('UPDATE currentStocks SET numberShares=? WHERE target_id=? AND user_id=?', [newNumShares, targetId, userId], function(err, result) {
+var updateStock = function(userId, targetId, changeShares, callback) {
+	connection.query('UPDATE currentStocks SET numberShares=numberShares +? WHERE target_id=? AND user_id=?', [changeShares, targetId, userId], function(err, result) {
 		if (err) {
 			console.log("Error updating stock of user", userId); 
 			callback(err, null)
@@ -285,6 +285,7 @@ var updateStock = function(userId, targetId, newNumShares, callback) {
 		}
 	})
 }
+
 
 // Deletes the stock of a specified user 
 var deleteStock = function(userId, targetId, newNumShares, callback) {
