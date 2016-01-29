@@ -22,7 +22,7 @@ var transactionObj = {
 	user_id: 1,
 	type: "buy",
 	target_id: 2,
-	numberShares: 4
+	numberShares: 8
 }
 
 var addTransaction = function(transactionObj, callback){
@@ -36,6 +36,8 @@ var addTransaction = function(transactionObj, callback){
 		}
 	})
 }
+
+// addTransaction(transactionObj, console.log)
 
 //finds all transactions associated with a target_id
 //returns an array of all open tranasctions for the target
