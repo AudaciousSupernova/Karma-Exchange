@@ -15,9 +15,9 @@ mainController.getAllUsers(function(err, users){
 			var month = (Math.floor(Math.random() * (13 - 11)) + 11).toString();
 		}
 		else {
-			var month = (Math.floor(Math.random() * (3 - 1)) + 1).toString();
+			var month = (Math.floor(Math.random() * (2 - 1)) + 1).toString();
 		}
-		var day = (Math.floor(Math.random() * (29 - 1)) + 1).toString();
+		var day = (Math.floor(Math.random() * (30 - 1)) + 1).toString();
 		var hour = (Math.floor(Math.random() * (24 - 0)) + 0).toString();
 		var minute = (Math.floor(Math.random() * (60 - 0)) + 0).toString();
 		var second = (Math.floor(Math.random() * (60 - 0)) + 0).toString();
@@ -41,7 +41,7 @@ mainController.getAllUsers(function(err, users){
 
 	for(var i = 0; i < length; i++){
 	// for(var i = 0; i < users.length; i++){
-		var numberOfNewScores = Math.floor(Math.random() * 20);
+		var numberOfNewScores = Math.floor(Math.random() * 100);
 		totalAdditions += numberOfNewScores;
 
 		for(var subI = 0; subI < numberOfNewScores; subI++){
