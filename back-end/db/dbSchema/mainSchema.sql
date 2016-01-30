@@ -23,6 +23,7 @@ CREATE TABLE scoresHist (
   FOREIGN KEY(user_id) REFERENCES users(id),
   social int NOT NULL,
   social_investment int NOT NULL,
+  currentScore int NOT NULL,
   ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)

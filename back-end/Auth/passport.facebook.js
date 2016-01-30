@@ -63,7 +63,8 @@ passport.use(new FacebookStrategy({
               var scoreObj = {
                 user_id: userId,
                 social_investment: 5,
-                social: 5
+                social: 5,
+                currentScore: 10
               };
               // var baseScoreObj = {
               //   user_id: userId,

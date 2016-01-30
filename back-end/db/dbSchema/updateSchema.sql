@@ -23,6 +23,8 @@ ALTER TABLE scoresHist ADD social int;
 
 ALTER TABLE scoresHist ADD social_investment int;
 
+ALTER TABLE scoresHist  ADD currentScore int;
+
 ALTER TABLE scoresHist DROP COLUMN score;
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);
