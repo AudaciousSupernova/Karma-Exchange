@@ -11,7 +11,6 @@ angular.module('app.services', [])
         url: '/profile/' + id,
       })
       .then(function(res) {
-        console.log(res.data)
         return res.data;
       })
     },

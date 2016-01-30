@@ -10,8 +10,9 @@ CREATE TABLE users (
   karma int NOT NULL,
   facebookKey varchar(200),
   profile_photo varchar(300),
-  social int DEFAULT 0,
-  social_investment int DEFAULT 0,
+  social int DEFAULT 5,
+  social_investment int DEFAULT 5,
+  currentScore int DEFAULT 10,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );
@@ -20,8 +21,8 @@ CREATE TABLE scoresHist (
 	/* stores the history of scores for all users */
   user_id int,
   FOREIGN KEY(user_id) REFERENCES users(id),
-  type varchar(50),
-  score int NOT NULL,
+  social int NOT NULL,
+  social_investment int NOT NULL,
   ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)

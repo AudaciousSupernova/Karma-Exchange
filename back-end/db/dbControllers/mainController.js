@@ -117,7 +117,7 @@ var updateUser = function(newUserObj, callback){
 			    callback(null, userObj);
 		    }
 		  }
-		);		
+		);
 	})
 }
 
@@ -244,13 +244,15 @@ var getScores = function(userId, callback){
 
 //<h3>Current Stocks</h3>
 
-// Adds a stock 
+// Adds a stock
 //example investmentObj
 // {
 // 	user_id:1,
 // 	target_id:2,
 // 	numberShares:5
 // }
+// Adds a stock
+
 var addStock = function(investmentObj, callback) {
 	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
 		if (err) {
@@ -283,32 +285,32 @@ var getStockRow = function(userId, targetId, callback){
     } else {
       callback(null,rows);
     }
-  })	
+  })
 }
 
-// Updates the stock of a specified user 
+// Updates the stock of a specified user
 var updateStock = function(userId, targetId, changeShares, callback) {
 	connection.query('UPDATE currentStocks SET numberShares=numberShares +? WHERE target_id=? AND user_id=?', [changeShares, targetId, userId], function(err, result) {
 		if (err) {
-			console.log("Error updating stock of user", userId); 
+			console.log("Error updating stock of user", userId);
 			callback(err, null)
 		} else {
-			console.log('Updated stock for user', userId); 
-			callback(null, userId); 
+			console.log('Updated stock for user', userId);
+			callback(null, userId);
 		}
 	})
 }
 
 
-// Deletes the stock of a specified user 
+// Deletes the stock of a specified user
 var deleteStock = function(userId, targetId, callback) {
 	connection.query('DELETE FROM currentStocks WHERE target_id=? AND user_id=?', [targetId, userId], function(err, response) {
 		if (err) {
 			console.log("Error deleting stock of user", userId);
-			callback(err, null); 
+			callback(err, null);
 		} else {
-			console.log("Deleted stock of user", userId); 
-			callback(null, userId); 
+			console.log("Deleted stock of user", userId);
+			callback(null, userId);
 		}
 	})
 }
@@ -336,7 +338,8 @@ module.exports = {
 	//Current Stock methods
 	getStocks: getStocks,
 	addStock: addStock,
-	getStocks:getStocks,
-	updateStock:updateStock,
-	deleteStock:deleteStock,
+	getStocks: getStocks,
+	getStockRow: getStockRow,
+	updateStock: updateStock,
+	deleteStock: deleteStock,
 }

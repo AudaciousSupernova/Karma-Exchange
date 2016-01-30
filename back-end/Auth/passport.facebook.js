@@ -15,12 +15,10 @@ if(process.env.PORT){
 
 // The user profile is used to identify the user from passport.
 passport.serializeUser(function(user, done) {
-  console.log('from serialize', user);
   done(null, user);
 });
 // Passport will return the input user, since we are not actually serializing the user.
 passport.deserializeUser(function(user, done) {
-  console.log('from deserialize', user);
   done(null, user);
 });
 
@@ -47,33 +45,38 @@ passport.use(new FacebookStrategy({
         //If the user is not found, we will add the user using the authentication details
         //obtained from Facebook Authentication
         if (!profile.length) {
-          var addObj = {'facebookKey': id, 'name': displayName, 'karma': 1000, 'profile_photo':photo, 'email': email};
+          console.log("THIS IS A NEW USER")
+          var addObj = {
+            'facebookKey': id,
+            'name': displayName,
+            'karma': 1000,
+            'profile_photo':photo,
+            'email': email,
+            'social': 5,
+            'social_investment':5,
+            'currentScore':10
+          };
           mainController.addUser(addObj, function (err, userId) {
             if (err){
               console.log('Error');
             } else {
-              console.log(userId,'userId');
-              var investmentScoreObj = {
-                user_id: userId, 
-                type: "social-investment", 
-                score: 35
+              var scoreObj = {
+                user_id: userId,
+                social_investment: 5,
+                social: 5
               };
-              var baseScoreObj = {
-                user_id: userId, 
-                type: "social", 
-                score: 95
-              };
+              // var baseScoreObj = {
+              //   user_id: userId,
+              //   type: "social",
+              //   score: 95
+              // };
 
-              mainController.addScore(baseScoreObj, function(err, response) {
+              mainController.addScore(scoreObj, function(err, response) {
                 if (err) {
-                  console.log("baseScoreObj was not added", err);
+                  console.log("scoreObj was not added", err);
                 } else {
-                  mainController.addScore(investmentScoreObj, function(err, response) {
-                    // console.log("investmentScoreObj was added", response);
-                    // console.log(profile,'profile on new user')
-                    addObj.id = userId;
-                    done(null, addObj);
-                  })
+                  addObj.id = userId;
+                  done(null, addObj);
                 }
               })
             }
@@ -91,7 +94,6 @@ passport.use(new FacebookStrategy({
               }
             });
           }
-          console.log(profile[0], 'passport log on found user')
           done(null, profile[0]);
         }
       })

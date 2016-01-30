@@ -14,7 +14,6 @@ module.exports = function (app, express) {
   app.get('/api/loggedin',
     function (req, res) {
       if (req.isAuthenticated()) {
-        console.log(req.user,'req.user')
         res.send(req.user);
       } else {
         res.redirect('/');
