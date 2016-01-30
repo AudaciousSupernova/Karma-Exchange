@@ -10,12 +10,14 @@ var stocksUtil = require('./stocksUtil')
 //open transaction present in the order added to the queue
 
 var sampleTransaction = {
-	user_id: 3,
+	user_id: 1,
 	target_id: 2,
-	type: "sell",
+	type: "buy",
 	numberShares: 15, 
 }
-var makeTransaction = function(transactionObj, callback){
+
+//callback can be added in the future	
+var makeTransaction = function(transactionObj){
 	var desiredShares = transactionObj.numberShares
 	var savedDesiredShares = desiredShares
 	var type = transactionObj.type === "buy"? "sell" : "buy";
@@ -25,18 +27,14 @@ var makeTransaction = function(transactionObj, callback){
 
 	checkTransaction(transactionObj.target_id, type, function(err, transactionQueueObj){
 
-		scoresUtil.getScoresHistWithCurrentScores(transactionObj.target_id, function(err, scoresHistWithCurrentScores){
-			var currentScores = scoresHistWithCurrentScores[0]
-			//scoreClass may be added in the future to help differential better
-			var scoreClass = transactionObj.scoreClass || 'social';
+		mainController.findUserById(transactionObj.target_id, function(err, targetUserObj){
 			//sets the current share value to be used in all interactions
-			var shareValue = currentScores[scoreClass].total;
+			var shareValue = targetUserObj[0].currentScore
 			var currentShares = transactionQueueObj[0]
 			//Does error checking to make sure the input is accurate
 			if(desiredShares >  transactionQueueObj[0]){
 				var errorMessage ="Error in transaction util.js. Number desired exceeds number available"
 				console.log(errorMessage)
-				callback(errorMessage)
 			} else {
 				var openTransactions = transactionQueueObj[1]
 				var i = openTransactions.length
@@ -51,7 +49,7 @@ var makeTransaction = function(transactionObj, callback){
 						var newShares = sharesAvailable - desiredShares
 						desiredShares = 0
 						//update the queue and update a partial transaction
-					  updateOpenTransaction(openTransactions[i], newShares, shareValue)
+					  updateOpenTransactionAndStocks(openTransactions[i], newShares, shareValue)
 					//in the 0 case close the transaction and exit the loop
 					}	else {
 						desiredShares = 0
@@ -59,7 +57,7 @@ var makeTransaction = function(transactionObj, callback){
 					}		
 				}				
 				//needs to close the overarcing transaction and update karma
-				closeTransactionRequest(transactionObj, savedDesiredShares, shareValue)
+				closeTransactionRequest(transactionObj, shareValue)
 			}
 		})	
 	})
@@ -75,6 +73,7 @@ var makeTransaction = function(transactionObj, callback){
 //closes a transaction request that either goes through make transaction
 //or one that goes directly through the server
 var closeTransactionRequest = function(transactionObj, shareValue){
+
 	var desiredShares = transactionObj.numberShares
 	desiredShares = transactionObj.type === "buy"? desiredShares : -desiredShares;
 	transactionObj.karma = shareValue * -desiredShares
@@ -86,6 +85,11 @@ var closeTransactionRequest = function(transactionObj, shareValue){
 	})
 	//may want to add the update karma call into the add transaction
 	mainController.updateKarma(transactionObj.user_id, transactionObj.karma, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})
+	stocksUtil.updateOrAddStocks(transactionObj, function(err, response){
 		if(err){
 			console.log(err)
 		}
@@ -106,7 +110,7 @@ var closeOpenTransaction = function(transactionQueueObj, shareValue){
 			console.log(err)
 		}
 	})
-	mainController.updateKarma(transactionQueueObj.user_id, transactionQueue.karma, function(err, response){
+	mainController.updateKarma(transactionQueueObj.user_id, transactionQueueObj.karma, function(err, response){
 		if(err){
 			console.log(err)
 		}
@@ -116,6 +120,11 @@ var closeOpenTransaction = function(transactionQueueObj, shareValue){
 			console.log(err)
 		}
 	})
+	stocksUtil.updateOrAddStocks(transactionQueueObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})	
 }
 
 // var sampleQueueObj = {
@@ -148,6 +157,11 @@ var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange,
 			console.log(err)
 		}
 	})
+	stocksUtil.updateOrAddStocks(transactionQueueObj, function(err, response){
+		if(err){
+			console.log(err)
+		}
+	})		
 }
 
 // updateOpenTransactionAndStocks(sampleQueueObj, 3, 50)

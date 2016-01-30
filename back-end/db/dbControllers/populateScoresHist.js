@@ -14,11 +14,11 @@ mainController.getAllUsers(function(err, users){
 		totalAdditions += numberOfNewScores;
 		
 		for(var subI = 0; subI < numberOfNewScores; subI++){
-			var type = Math.random() > .5? 'social-investment' : 'social';
 			var randomScoreObj = {
 				user_id: i+1,
-				type: type,
-				score: Math.ceil(Math.random() * 100),
+				social: Math.ceil(Math.random() * 100),
+				social_investment: Math.ceil(Math.random() * 100),
+				currentScore: Math.ceil(Math.random() * 100),
 			}
 			mainController.addScore(randomScoreObj, function(err, response){
 				console.log("inserting score # " + currentAddition)
