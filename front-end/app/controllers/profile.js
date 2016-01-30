@@ -39,6 +39,7 @@ angular.module('app.profile', [])
 
     User.getUser(id)
       .then(function(data) {
+        console.log(data,'This is the data returned by User.getUser')
         $scope.user = data[0];
         if ($scope.user.profile_photo === null) {
           $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
@@ -46,9 +47,9 @@ angular.module('app.profile', [])
         if ($scope.user.email === null) {
           $scope.user.email = "No Email Provided"
         }
-        console.log("What does my user look like?", $scope.user);
-        console.log("Well here we are", $scope.user);
-        $scope.getScores();
+        // console.log("What does my user look like?", $scope.user);
+        // console.log("Well here we are", $scope.user);
+        // $scope.getScores();
         //if id matches logged-in id
           //then call getLeaders
         //else
