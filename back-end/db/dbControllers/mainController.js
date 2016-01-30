@@ -38,7 +38,6 @@ var findUser = function(name, password, callback){
 			console.log("Error finding user by name :", err)
 			callback(err, null);
 		} else{
-			// console.log(rows)
 			callback(null, rows);
 		}
 	})
@@ -53,7 +52,6 @@ var findUserById = function(userId, callback){
 			console.log("Error finding user by id :", err)
 			callback(err,null);
 		} else {
-			// console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -68,7 +66,6 @@ var findUserByFbKey = function(fbKey, callback){
 			console.log("Error finding user by facebookKey :", err)
 			callback(err,null);
 		} else {
-			// console.log(rows);
 			callback(null,rows);
 		}
 	})
@@ -248,6 +245,12 @@ var getScores = function(userId, callback){
 //<h3>Current Stocks</h3>
 
 // Adds a stock 
+//example investmentObj
+// {
+// 	user_id:1,
+// 	target_id:2,
+// 	numberShares:5
+// }
 var addStock = function(investmentObj, callback) {
 	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
 		if (err) {
@@ -259,23 +262,33 @@ var addStock = function(investmentObj, callback) {
 	})
 }
 
-// Gets a stock for a specified user
+// Gets all stocks for a specified user
 var getStocks = function(userId, callback){
-	console.log("am i in HERE NOW", userId);
   connection.query('SELECT * FROM currentStocks WHERE user_id=?', [userId], function(err, rows){
     if(err){
-      console.log("Error finding user by id :", err)
+      console.log("Error finding userStocks by id :", err)
       callback(err,null);
     } else {
-      console.log(rows);
       callback(null,rows);
     }
   })
 }
 
+//returns stocks of a target user for a given user
+var getStockRow = function(userId, targetId, callback){
+  connection.query('SELECT * FROM currentStocks WHERE user_id=? and target_id=?', [userId, targetId], function(err, rows){
+    if(err){
+      console.log("Error finding user by id :", err)
+      callback(err,null);
+    } else {
+      callback(null,rows);
+    }
+  })	
+}
+
 // Updates the stock of a specified user 
-var updateStock = function(userId, targetId, newNumShares, callback) {
-	connection.query('UPDATE currentStocks SET numberShares=? WHERE target_id=? AND user_id=?', [newNumShares, targetId, userId], function(err, result) {
+var updateStock = function(userId, targetId, changeShares, callback) {
+	connection.query('UPDATE currentStocks SET numberShares=numberShares +? WHERE target_id=? AND user_id=?', [changeShares, targetId, userId], function(err, result) {
 		if (err) {
 			console.log("Error updating stock of user", userId); 
 			callback(err, null)
@@ -286,8 +299,9 @@ var updateStock = function(userId, targetId, newNumShares, callback) {
 	})
 }
 
+
 // Deletes the stock of a specified user 
-var deleteStock = function(userId, targetId, newNumShares, callback) {
+var deleteStock = function(userId, targetId, callback) {
 	connection.query('DELETE FROM currentStocks WHERE target_id=? AND user_id=?', [targetId, userId], function(err, response) {
 		if (err) {
 			console.log("Error deleting stock of user", userId);

@@ -19,8 +19,8 @@ connection.connect(function(err){
 // adds a transaction to the queue
 // example transactionQueue obj
 var transactionObj = {
-	user_id: 1,
-	type: "buy",
+	user_id: 3,
+	type: "sell",
 	target_id: 2,
 	numberShares: 8
 }
@@ -70,13 +70,13 @@ var deleteOpenTransaction = function(transactionId, callback){
 }
 
 //updates a the number of shares available/desired in the queue
-var updateOpenTransaction = function(transactionId, newShares, callback){
-	connection.query('UPDATE openTransactions SET numberShares = ? Where ID = ?',[newShares, transactionId], function (err, response) {
+var updateOpenTransaction = function(transactionId, sharesChange, callback){
+	connection.query('UPDATE openTransactions SET numberShares = numberShares-? Where ID = ?',[sharesChange, transactionId], function (err, response) {
     if (err){
     	console.log("Error updating numberShares of transactionId " + transactionId)
     	callback(err, null)
     } else{
-	    console.log('Changed open transaction # ' + transactionId + '\'s shares to ' + newShares);
+	    console.log('Changed open transaction # ' + transactionId + '\'s shares by ' + sharesChange);
 	    callback(null, response);
     }
   });
