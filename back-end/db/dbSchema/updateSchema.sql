@@ -7,9 +7,9 @@
 USE main;
 
 -- ALTER TABLE users ADD profile_photo varchar(300);
-ALTER TABLE users DROP COLUMN social;
+-- ALTER TABLE users DROP COLUMN social;
 
-ALTER TABLE users DROP COLUMN social_investment;
+-- ALTER TABLE users DROP COLUMN social_investment;
 
 ALTER TABLE users ADD social int DEFAULT 5;
 
