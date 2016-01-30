@@ -3,7 +3,7 @@ var mainController = require('../db/dbControllers/mainController')
 var sampleTransactionObj = {
 	user_id: 3,
 	target_id: 2,
-	type: "buy",
+	type: "sell",
 	numberShares: 8, 
 }
 
@@ -53,7 +53,7 @@ var updateOrAddStocks = function(transactionObj, callback){
 						}
 					})
 				}
-			} else {
+			} else if(changeShares > 0){
 				//create new entry
 				mainController.addStock(transactionObj, function(err, response){
 					if(err){
@@ -63,12 +63,14 @@ var updateOrAddStocks = function(transactionObj, callback){
 						callback(null, response)
 					}
 				})
+			} else {
+				console.log("Error, change would put stocks below 0")
+				callback("Error, change would put stocks below 0")
 			}
 		}
 	})
 }
 
-// updateOrAddStocks(sampleTransactionObj, console.log)
 
 // mainController.getStockRow(3, 2, console.log)
 
