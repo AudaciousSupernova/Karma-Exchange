@@ -205,6 +205,18 @@ var getTransactionHist = function(userId, callback){
 	})
 };
 
+var targetTransactionHist = function(targetId, callback) {
+
+	connection.query('SELECT * FROM transactionHist where target_id=?', targetId, function(err, rows) {
+		if (err) {
+			console.log('Error finding transactionHist with target_id :' + targetId, err);
+		} else {
+			// console.log("here are the rows with targetId", rows);
+			callback(null, rows);
+		}
+	})
+}
+
 //<h3>Score History functions</h3>
 //adds a score to the users history
 //do not pass a timestamp, mysql will do this for you
@@ -276,6 +288,16 @@ var getStocks = function(userId, callback){
   })
 }
 
+var getTargetStocks = function(targetId, callback) {
+	connection.query('SELECT * from currentStocks WHERE target_id=?', [targetId], function(err, rows) {
+		if (err) {
+			console.log("Error finding stocks with target id :", err);
+		} else {
+			callback(null, rows);
+		}
+	})
+}
+
 //returns stocks of a target user for a given user
 var getStockRow = function(userId, targetId, callback){
   connection.query('SELECT * FROM currentStocks WHERE user_id=? and target_id=?', [userId, targetId], function(err, rows){
@@ -320,6 +342,7 @@ module.exports = {
 	addUser: addUser,
 	findUser: findUser,
 	findUserById: findUserById,
+	updateUser: updateUser,
 	updateKarma: updateKarma,
 	deleteUser: deleteUser,
 	countUsers: countUsers,
@@ -330,6 +353,7 @@ module.exports = {
 	//transaction methods
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
+	targetTransactionHist: targetTransactionHist,
 
 	//score History methods
 	addScore: addScore,
@@ -337,6 +361,7 @@ module.exports = {
 
 	//Current Stock methods
 	getStocks: getStocks,
+	getTargetStocks: getTargetStocks,
 	addStock: addStock,
 	getStocks: getStocks,
 	getStockRow: getStockRow,

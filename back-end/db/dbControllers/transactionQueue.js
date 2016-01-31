@@ -21,8 +21,8 @@ connection.connect(function(err){
 var transactionObj = {
 	user_id: 3,
 	type: "sell",
-	target_id: 2,
-	numberShares: 8
+	target_id: 4,
+	numberShares: 500
 }
 
 var addTransaction = function(transactionObj, callback){
