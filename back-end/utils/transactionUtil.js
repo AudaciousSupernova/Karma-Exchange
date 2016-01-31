@@ -10,11 +10,12 @@ var stocksUtil = require('./stocksUtil')
 //open transaction present in the order added to the queue
 
 var sampleTransaction = {
-	user_id: 1,
-	target_id: 2,
+	user_id: 5,
+	target_id: 4,
 	type: "buy",
-	numberShares: 15, 
+	numberShares: 12 
 }
+
 
 //callback can be added in the future	
 var makeTransaction = function(transactionObj){
@@ -31,30 +32,29 @@ var makeTransaction = function(transactionObj){
 			//sets the current share value to be used in all interactions
 			var shareValue = targetUserObj[0].currentScore
 			var currentShares = transactionQueueObj[0]
+			console.log("What are my desired shares", desiredShares);
+			console.log("What is my transactionQueueObj", transactionQueueObj);
 			//Does error checking to make sure the input is accurate
 			if(desiredShares >  transactionQueueObj[0]){
 				var errorMessage ="Error in transaction util.js. Number desired exceeds number available"
 				console.log(errorMessage)
 			} else {
 				var openTransactions = transactionQueueObj[1]
-				var i = openTransactions.length
+				var i = 0
 				while(desiredShares > 0){
-					i--;
 					var sharesAvailable = openTransactions[i].numberShares
-					if(desiredShares - sharesAvailable > 0){
+					if(desiredShares >= sharesAvailable){
 						desiredShares -= sharesAvailable
 						closeOpenTransaction(openTransactions[i], shareValue)
 					//if more available than desired make a partial transaction
-					}	else if(desiredShares - sharesAvailable < 0){
-						var newShares = sharesAvailable - desiredShares
-						desiredShares = 0
+					}	else if(desiredShares < sharesAvailable){
 						//update the queue and update a partial transaction
-					  updateOpenTransactionAndStocks(openTransactions[i], newShares, shareValue)
-					//in the 0 case close the transaction and exit the loop
-					}	else {
+					  updateOpenTransactionAndStocks(openTransactions[i], desiredShares, shareValue)
 						desiredShares = 0
-						closeOpenTransaction(openTransactions[i], shareValue)
-					}		
+
+					//in the 0 case close the transaction and exit the loop
+					}
+					i++;
 				}				
 				//needs to close the overarcing transaction and update karma
 				closeTransactionRequest(transactionObj, shareValue)
@@ -63,6 +63,7 @@ var makeTransaction = function(transactionObj){
 	})
 }
 
+// makeTransaction(sampleTransaction);
 
 // var sampleTransaction1 = {
 // 	user_id: 3,
@@ -92,7 +93,11 @@ var closeTransactionRequest = function(transactionObj, shareValue){
 	stocksUtil.updateOrAddStocks(transactionObj, function(err, response){
 		if(err){
 			console.log(err)
-		}
+		} 
+			scoresUtil.newSocialInvestmentScore(transactionObj.target_id);
+			//call updateInvestmentScore function from scoresUtil
+			//pass the transactionObj.target_id
+		
 	})	
 }
 
