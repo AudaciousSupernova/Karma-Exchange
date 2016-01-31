@@ -19,13 +19,13 @@ connection.connect(function(err){
 // adds a transaction to the queue
 // example transactionQueue obj
 var transactionObj = {
-	user_id: 3,
+	user_id: 56,
 	type: "sell",
-	target_id: 4,
-	numberShares: 500
+	target_id: 101,
+	numberShares: 8
 }
 
-var addTransaction = function(transactionObj, callback){
+var addTransactionToQueue= function(transactionObj, callback){
 	connection.query('INSERT INTO openTransactions SET ?', transactionObj, function(err, res){
 		if(err){
 			console.log("error inserting into transactionQueue", err)
@@ -37,7 +37,7 @@ var addTransaction = function(transactionObj, callback){
 	})
 }
 
-// addTransaction(transactionObj, console.log)
+// addTransactionToQueue(transactionObj, console.log)
 
 //finds all transactions associated with a target_id
 //returns an array of all open tranasctions for the target
@@ -85,7 +85,7 @@ var updateOpenTransaction = function(transactionId, sharesChange, callback){
 
 module.exports = {
 	connection: connection,
-	addTransaction: addTransaction,
+	addTransactionToQueue: addTransactionToQueue,
 	findOpenTransaction: findOpenTransaction,
 	deleteOpenTransaction: deleteOpenTransaction,
 	updateOpenTransaction: updateOpenTransaction,
