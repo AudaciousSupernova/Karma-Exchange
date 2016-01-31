@@ -22,7 +22,6 @@ angular.module('app.services', [])
         url: '/leaders',
       })
       .then(function(res) {
-        console.log(res.data)
         return res.data;
       })
     }
@@ -38,7 +37,6 @@ angular.module('app.services', [])
         url: '/portfolio/' + id,
       })
       .then(function(res) {
-        console.log(res.data)
         return res.data;
       })
     },
@@ -63,7 +61,6 @@ angular.module('app.services', [])
         url: '/trending',
       })
       .then(function(res) {
-        console.log(res.data)
         return res.data;
       })
     }
@@ -78,9 +75,7 @@ angular.module('app.services', [])
         url: '/api/loggedin'
       })
       .then(function (user) {
-        console.log("what is my user", user);
         if (user.data.id) {
-          console.log('recognizes user', user)
           $rootScope.user = user;
           return true;
         } else {
@@ -100,13 +95,28 @@ angular.module('app.services', [])
   }
 })
 
+
 .factory('TransactionHist', function ($http, $location) {
   return {
+    // calls makeTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.  
     addTransaction: function(transactionObj) {
       return $http({
         method: 'POST',
         url: '/transaction/sell',
         data: {transactionObj: transactionObj}
+      })
+    },
+    // returns number of shares available for given target_id
+    checkSharesAvail: function(target_id, type) {
+      console.log('are we in checkSharesAvail');
+      return $http({
+        method: 'GET',
+        url: '/transaction/check',
+        data: {target_id: target_id, type: type}
+      })
+      .then(function(res) {
+        console.log("response in transaction check", res.data)
+        return res.data;
       })
     }
   }
@@ -121,7 +131,6 @@ angular.module('app.services', [])
         url: '/profile/score/' + id
       })
       .then(function(res) {
-        console.log(res.data, "scores sent from apiRoutes")
         return res.data;
       })
     }

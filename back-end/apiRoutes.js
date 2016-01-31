@@ -1,6 +1,7 @@
 var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
 var scoresUtil = require('./utils/scoresUtil')
+var transactionUtil = require('./utils/transactionUtil')
 
 
 module.exports = function (app, express) {
@@ -92,6 +93,19 @@ module.exports = function (app, express) {
     })
   })
 
+  app.get('/transaction/check', function(req, res) {
+    var target_id = req.body.target_id;
+    var type = req.body.type;
+    transactionUtil.checkTransaction(target_id, type, function(err, response) {
+      if (err) {
+        console.log(err, null);
+      } else {
+        console.log(response); 
+        res.json(response[0]); 
+      }
+    })
+  })
+
   app.get('/portfolio/:id', function(req, res) {
     var id = req.params.id;
     console.log(id);
@@ -123,7 +137,6 @@ module.exports = function (app, express) {
 
 
   app.get('/trending', function(req, res) {
-    console.log("trending route worked too");
     var test = {
       data: [
         {

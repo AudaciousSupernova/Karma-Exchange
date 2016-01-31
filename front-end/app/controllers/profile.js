@@ -92,7 +92,6 @@ angular.module('app.profile', [])
       controller: BuyModalController
     })
       .then(function(clickedItem) {
-        console.log(clickedItem, "this was clicked");
       })
   }
 
@@ -102,8 +101,8 @@ angular.module('app.profile', [])
     $scope.score = loggedinUserInfo.currentScore;
     $scope.loggedinUserInfo = loggedinUserInfo;
     $scope.sharesToBuy;
-    console.log("logged in info", $scope.loggedinUserInfo);
-    console.log("profile user info", $scope.profile);
+    $scope.availableShares;
+    $scope.revealOptions = false;
 
     $scope.confirm = function() {
 
@@ -121,21 +120,42 @@ angular.module('app.profile', [])
         numberShares: $scope.sharesToBuy
       }
 
-      console.log("transaction", transaction);
-      console.log($scope.profile.karma, 'karma')
+      // SUCCESSFUL BUY! THIS ONLY HAPPENS WHEN YOU HAVE FOUND THE MATCHING SELL REQUEST TO YOUR BUY
+
+      // call makeTransaction, which calls checkTransatcion
+
+
+
+      // checkTransaction returns numShares of targetId (seller in this case) 
+
+
+
+      //  
       if ($scope.loggedinUserInfo.karma < $scope.score*transaction.numberShares) {
         console.log("NOT ENOUGH MONEY")
         $mdDialog.hide();
       } else {
-        $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
-        TransactionHist.addTransaction(transaction)
-          .then(function(results) {
-            Portfolio.addInvestment(investment)
-              .then(function(results) {
-                $mdDialog.hide();
-              })
-          })
+
+        if($scope.sharesToBuy > $scope.availableShares){
+          $scope.revealOptions = true;
+
+        } else{
+          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+          TransactionHist.addTransaction(transaction)
+            .then(function(results) {
+              Portfolio.addInvestment(investment)
+                .then(function(results) {
+                  $mdDialog.hide();
+                })
+            })         
+        }
       }
+    }
+
+    $scope.checkSharesAvail = function() {
+      TransactionHist.checkSharesAvail().then(function(response){
+        $scope.availableShares = response
+      });
     }
 
     $scope.exit = function() {

@@ -1,9 +1,30 @@
-<md-dialog>
+<md-dialog ng-init="checkSharesAvail()">
   <md-dialog-content>
-   <div> I want to buy <input ng-model="sharesToBuy"/> shares of {{investment.name}}? </div>
+   <div> 
+   	<p>There are {{availableShares}} number of shares available. How many would you like to buy?</p> I would like to buy <input ng-model="sharesToBuy"/> shares of {{investment.name}}
+   	</div>
 
-    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete"> Confirm </md-button>
-    <md-button class="md-primary" ng-click="exit()" aria-label="Complete"> Cancel </md-button>
+   	<p ng-show = "revealOptions">You have selected more shares than are available for immediate purchase</p>
+
+    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete" ng-hide="revealOptions"> Confirm </md-button>
+
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-hide="revealOptions"> Cancel </md-button>
+    <p ng-show = "revealOptions">You have selected more shares than are currently available. You have the following options:</p>
+
+    <p ng-show = "revealOptions"> You may choose to buy the currently available shares and allow the rest of your transaction to be completed upon market availability.</p>
+
+    <p ng-show = "revealOptions">You may choose to buy the currently available shares and immediately buy the remaining shares from Karma Exchange at 110% of current market value.</p>
+
+    <p ng-show="revealOptions">Or you may cancel your request</p>
+
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show="revealOptions"> Wait for availability</md-button>
+
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show="revealOptions"> Buy From Karma Exchange</md-button>
+
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show="revealOptions"> Cancel Your Order</md-button>
+
+
+
     
   </md-dialog-content>
 
