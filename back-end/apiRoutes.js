@@ -2,7 +2,7 @@ var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
 var scoresUtil = require('./utils/scoresUtil')
 var transactionUtil = require('./utils/transactionUtil')
-
+var transactionQueue = require('./db/dbControllers/transactionQueue')
 
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
@@ -82,7 +82,7 @@ module.exports = function (app, express) {
     res.send(test);
   })
 
-  app.post('/transaction/sell', function(req, res) {
+  app.post('/transaction/add', function(req, res) {
     var transactionObj = req.body.transactionObj;
     mainController.addTransaction(transactionObj, function(err, results) {
       if (err) {
@@ -96,12 +96,30 @@ module.exports = function (app, express) {
   app.get('/transaction/check', function(req, res) {
     var target_id = req.body.target_id;
     var type = req.body.type;
+    console.log("TransactionCheck", req)
     transactionUtil.checkTransaction(target_id, type, function(err, response) {
       if (err) {
         console.log(err, null);
       } else {
         console.log(response); 
         res.json(response[0]); 
+      }
+    })
+  })
+
+  app.post('/transaction/make', function(req, res) {
+    var transactionObj = req.body.transactionObj;
+    transactionUtil.makeTransaction(transactionObj)
+    res.send(201); 
+  })
+
+  app.post('/transaction/queue', function(req, res) {
+    var transactionObj = req.body.transactionObj;
+    transactionQueue.addTransactionToQueue(transactionObj, function(err, results) {
+      if (err) {
+        console.log(err, 'error!');
+      } else {
+        res.status(201).json(results);
       }
     })
   })

@@ -110,7 +110,8 @@ angular.module('app.profile', [])
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: $scope.sharesToBuy,
+        numberShares: 
+        $scope.availableShares > $scope.sharesToBuy ? $scope.availableShares : $scope.sharesToBuy,
         karma: 90
       }
 
@@ -153,8 +154,8 @@ angular.module('app.profile', [])
     }
 
     $scope.checkSharesAvail = function() {
-      TransactionHist.checkSharesAvail().then(function(response){
-        $scope.availableShares = response
+      TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
+        $scope.availableShares = response;
       });
     }
 

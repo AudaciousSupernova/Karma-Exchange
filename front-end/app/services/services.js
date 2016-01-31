@@ -98,25 +98,32 @@ angular.module('app.services', [])
 
 .factory('TransactionHist', function ($http, $location) {
   return {
-    // calls makeTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.  
+    // calls addTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.  
     addTransaction: function(transactionObj) {
       return $http({
         method: 'POST',
-        url: '/transaction/sell',
+        url: '/transaction/add',
         data: {transactionObj: transactionObj}
       })
     },
     // returns number of shares available for given target_id
     checkSharesAvail: function(target_id, type) {
-      console.log('are we in checkSharesAvail');
       return $http({
         method: 'GET',
         url: '/transaction/check',
         data: {target_id: target_id, type: type}
       })
       .then(function(res) {
-        console.log("response in transaction check", res.data)
         return res.data;
+      })
+    },
+    // calls makeTransaction
+
+    makeTransaction: function(transactionObj) {
+      return $http({
+        method: 'POST',
+        url: '/transaction/make',
+        data: transactionObj
       })
     }
   }
