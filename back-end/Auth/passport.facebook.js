@@ -1,4 +1,5 @@
 var passport = require('passport');
+var refresh = require('passport-oauth2-refresh');
 var mainController = require('../db/dbControllers/mainController')
 var FacebookStrategy = require('passport-facebook').Strategy;
 var callbackURL;
@@ -23,7 +24,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
-passport.use(new FacebookStrategy({
+var strategy = new FacebookStrategy({
     clientID: '767594746706952',
     clientSecret: 'd917065bc815ddf8ab8779c9f0b3c664',
     callbackURL: callbackURL,
@@ -33,6 +34,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     console.log("What is the access token?", accessToken);
+    console.log("WHAT IS THE REFRESH TOKEN", refreshToken);
     process.nextTick(function () {
       // console.log('Facebook Profile',profile);
       // console.log('Access Token', accessToken);
@@ -41,7 +43,7 @@ passport.use(new FacebookStrategy({
       var displayName = profile.displayName;
       var photo = profile.photos[0].value;
       var email = profile.emails[0].value;
-      var access = accessToken;
+      var token = accessToken;
       // Passport will search the database for a record of a user
       mainController.findUserByFbKey(profile.id, function(err, profile){
         //If the user is not found, we will add the user using the authentication details
@@ -56,7 +58,7 @@ passport.use(new FacebookStrategy({
             'social': 5,
             'social_investment':5,
             'currentScore':10,
-            'accessToken': access
+            'access_token': token
           };
           mainController.addUser(addObj, function (err, userId) {
             if (err){
@@ -87,13 +89,17 @@ passport.use(new FacebookStrategy({
         } else {
           //If the user is found, run a check to see if the users photo has been changed
           //since the last login.
-          if (profile[0].profile_photo !== photo) {
-            //Update the photo with the value provided from the most recent login
-            mainController.updatePhoto(id, photo, function(err, userId) {
+          console.log(profile[0].access_token,'\n',accessToken);
+          console.log(profile[0].profile_photo===photo, 'checking photo equality')
+          //profile[0] is what is returned from the database when a user is found
+          if (profile[0].profile_photo !== photo || profile[0].access_token !== accessToken) {
+            profile[0].access_token = accessToken;
+            profile[0].profile_photo = photo;
+            mainController.updateUser(profile[0], function(err, userId) {
               if (err) {
                 console.log('Error');
               } else {
-                console.log('Changed picture of ' + userId);
+                console.log('Updated user ' + userId);
               }
             });
           }
@@ -102,6 +108,9 @@ passport.use(new FacebookStrategy({
       })
     });
   }
-))
+)
+
+passport.use(strategy);
+refresh.use(strategy);
 
 module.exports = passport;

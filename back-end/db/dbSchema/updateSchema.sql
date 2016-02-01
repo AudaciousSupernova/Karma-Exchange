@@ -27,7 +27,7 @@ USE main;
 
 -- ALTER TABLE scoresHist DROP COLUMN score;
 
-ALTER TABLE users ADD accessToken varchar(255);
+ALTER TABLE users ADD access_token varchar(255);
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);
 
