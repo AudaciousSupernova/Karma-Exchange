@@ -100,6 +100,7 @@ var getAllUsers = function(callback){
 
 }
 
+
 //even though this leverages two controller methods since it is
 //essentially just an update it is here
 //newUserObj must have user_id and the new properties

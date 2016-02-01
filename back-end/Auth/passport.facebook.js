@@ -32,6 +32,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
   },
   function(accessToken, refreshToken, profile, done) {
+    console.log("What is the access token?", accessToken);
     process.nextTick(function () {
       // console.log('Facebook Profile',profile);
       // console.log('Access Token', accessToken);

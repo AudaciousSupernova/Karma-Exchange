@@ -2,8 +2,11 @@ var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
 var scoresUtil = require('./utils/scoresUtil')
 var transactionUtil = require('./utils/transactionUtil')
-var transactionQueue = require('./db/dbControllers/transactionQueue')
+var transactionQueue = require('./db/dbControllers/transactionQueue');
+var fbRequests = require('./db/dbControllers/fbRequests.js');
 
+
+// fbRequests.getFacebookData();
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns.
@@ -89,6 +92,17 @@ module.exports = function (app, express) {
         console.log("there was an error", err);
       } else {
         res.status(201).json(results);
+      }
+    })
+  })
+
+  app.get('/transaction/get/:id', function(req, res) {
+    var user_id = req.params.id;
+    mainController.getTransactionHist(user_id, function(err, results) {
+      if (err) {
+        console.log("there was an error", err);
+      } else {
+        res.send(results);
       }
     })
   })

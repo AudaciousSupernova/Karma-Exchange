@@ -9,6 +9,10 @@ angular.module('app.portfolio', [])
   $scope.currentUserInfo = "invalid";
   //call getInvestments, pass the userId on the function call
 
+   $scope.getTransactionHist = function () {
+    $location.path('/transactionhist/' + $scope.loggedinUserInfo.id);
+  }
+
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
       .then(function(results) {
@@ -58,7 +62,6 @@ angular.module('app.portfolio', [])
           karma: $scope.sharesToSell * results[0].currentScore//reference logged in user's karma
         }
 
-        
         $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + $scope.sharesToSell * results[0].currentScore;
         TransactionHist.addTransaction(transaction)
           .then(function(results) {
