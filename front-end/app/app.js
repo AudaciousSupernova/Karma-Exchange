@@ -9,6 +9,7 @@ angular.module('app', [
   'ui.router', 
   'app.services', 
   'app.index', 
+  'app.transactionHist',
   'ngMaterial'
   ])
 
@@ -64,6 +65,12 @@ angular.module('app', [
     .state('userSupport',{
       url: '/usersupport',
       templateUrl: 'userSupport.html',
+      authenticate: false
+    })
+    .state('transactionHist',{
+      url: '/transactionhist/:id',
+      templateUrl: 'app/views/transactionHist.html',
+      controller: 'TransactionHistController',
       authenticate: false
     })
   $urlRouterProvider.otherwise('/')

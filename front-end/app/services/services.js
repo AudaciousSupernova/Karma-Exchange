@@ -106,6 +106,17 @@ angular.module('app.services', [])
         data: {transactionObj: transactionObj}
       })
     },
+    //get all transactions for given user_id
+    getTransactions: function(user_id) {
+      console.log("here is the user id", user_id);
+      return $http({
+        method: 'GET', 
+        url: '/transaction/get/' + user_id
+      })
+      .then(function(res) {
+        return res.data;
+      })
+    },
     // returns number of shares available for given target_id
     checkSharesAvail: function(target_id, type) {
       return $http({
@@ -136,6 +147,20 @@ angular.module('app.services', [])
       return $http({
         method: 'GET',
         url: '/profile/score/' + id
+      })
+      .then(function(res) {
+        return res.data;
+      })
+    }
+  }
+})
+
+.factory('FB', function ($http, $location) {
+  return {
+    test: function() {
+      return $http({
+        method: 'GET',
+        url: '/facebook/test'
       })
       .then(function(res) {
         return res.data;
