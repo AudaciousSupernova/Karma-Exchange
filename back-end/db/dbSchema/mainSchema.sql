@@ -14,6 +14,7 @@ CREATE TABLE users (
   social_investment int DEFAULT 5,
   currentScore int DEFAULT 10,
   id int NOT NULL AUTO_INCREMENT,
+  acessToken varchar(255) NOT NULL,
   PRIMARY KEY (ID)
 );
 
