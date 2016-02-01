@@ -1,4 +1,4 @@
-angular.module('app.portfolio', [])
+angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
 .controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores) {
@@ -8,8 +8,9 @@ angular.module('app.portfolio', [])
   //Save the user id, included in the location path
   $scope.currentUserInfo = "invalid";
   //call getInvestments, pass the userId on the function call
+  $scope.labels = [];
 
-   $scope.getTransactionHist = function () {
+  $scope.getTransactionHist = function () {
     $location.path('/transactionhist/' + $scope.loggedinUserInfo.id);
   }
 
@@ -20,13 +21,26 @@ angular.module('app.portfolio', [])
       })
   }
 
-  $scope.getScores = function(target_id){
+  $scope.getScores = function(target_id, obj){
+    obj.data = [[]]
+    obj.series = obj.name
     Scores.getScores(target_id)
     .then(function(scoresHist){
-      $scope.scoresHist = scoresHist
+      for(var i = 0; i < scoresHist.length; i++){
+        obj.data[0].push(scoresHist[i].currentScore)
+      }
+      obj.currentScore = obj.data[0][obj.data[0].length - 1]      
     })
   }
 
+  $scope.addLabels = function(daysInPast){
+    for(; daysInPast >= 0; daysInPast--){
+      $scope.labels.push(daysInPast)
+    }
+    console.log("labels", $scope.labels)
+  }
+
+  $scope.addLabels(30)
 
   $scope.clickSell = function(investment) {
     $scope.clickedInvestment = investment.id;

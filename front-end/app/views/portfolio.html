@@ -13,10 +13,10 @@
         <th> Buying Price </th>
         <th> Profit </th>
       </tr>
-      <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id)'>
+      <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id, investment)'>
         <td> {{investment.name}} </td>
-        <td> N/A </td>
-        <td> <i>{{scoresHist.length}} scores available</i> </td>
+        <td> {{investment.currentScore}}</td>
+        <td> <canvas id="line" class="chart chart-line" chart-data="investment.data" chart-labels="labels" chart-legend="true" chart-series="investment.series" chart-click="onClick" ></canvas> </td>
         <td> {{investment.numberShares}} </td>
         <td> {{investment.buyingPrice}} </td>
         <td> {{investment.profit}} </td>
