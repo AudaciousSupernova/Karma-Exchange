@@ -14,7 +14,7 @@ var mainController = require("./mainController.js");
       //add new score to scores history
       //award any new karma to the user
 
-
+//me/posts?fields=comments.summary(true),likes.limit(1).summary(true)
 
 
 var getFacebookData = function() {
@@ -29,13 +29,13 @@ var getFacebookData = function() {
         var friends
         var pictures = 0;
         var posts = 0;
-        request('https://graph.facebook.com/v2.2/me/friends/?access_token=CAAK6H5Q1fAgBAKSlSCZBlK3Ce091FV8UnfTAKbdIZCvu7tK2GLJfXqzKnJOgZBsu3G3gdqEfkhuQ9xaPxpNeJ2sfZAAqCRBYHZCYdporyZAkeZCa12McSkz0kvysPHxLqpB8OgOZAfgZB8B2ZAHmJqZCZBZCmY2NfLxTGEZCuX8Sg0XKo4QSEqh8VMbEANSPSGJ87YphgklTaRb4jEOQZDZD', function (error, response, body) {
+        //refresh this user's access token
+          //update the user's access token in the database if it is different than what is already existing
+        request('https://graph.facebook.com/v2.2/me/friends/?access_token=' + user.access_token, function (error, response, body) {
           friends = JSON.parse(body).summary.total_count;
-
-          request('https://graph.facebook.com/v2.2/me/photos/?access_token=CAAK6H5Q1fAgBAKSlSCZBlK3Ce091FV8UnfTAKbdIZCvu7tK2GLJfXqzKnJOgZBsu3G3gdqEfkhuQ9xaPxpNeJ2sfZAAqCRBYHZCYdporyZAkeZCa12McSkz0kvysPHxLqpB8OgOZAfgZB8B2ZAHmJqZCZBZCmY2NfLxTGEZCuX8Sg0XKo4QSEqh8VMbEANSPSGJ87YphgklTaRb4jEOQZDZD', function (error, response, body) {
+          request('https://graph.facebook.com/v2.2/me/photos/?access_token=' + user.access_token, function (error, response, body) {
             pictures += JSON.parse(body).data.length;
-
-            request('https://graph.facebook.com/v2.2/me/posts/?access_token=CAAK6H5Q1fAgBAKSlSCZBlK3Ce091FV8UnfTAKbdIZCvu7tK2GLJfXqzKnJOgZBsu3G3gdqEfkhuQ9xaPxpNeJ2sfZAAqCRBYHZCYdporyZAkeZCa12McSkz0kvysPHxLqpB8OgOZAfgZB8B2ZAHmJqZCZBZCmY2NfLxTGEZCuX8Sg0XKo4QSEqh8VMbEANSPSGJ87YphgklTaRb4jEOQZDZD', function (error, response, body) {
+            request('https://graph.facebook.com/v2.2/me/posts/?access_token=' + user.access_token, function (error, response, body) {
               posts += JSON.parse(body).data.length;
               console.log(posts);
               //calculate new base score for user
@@ -47,6 +47,7 @@ var getFacebookData = function() {
                   console.log('There was an error updating the user', err);
                 } else {
                   console.log("This is the udpated user", user);
+                  setTimeout(console.log('one user has been completed'), 1000);
                 }
               })
 
