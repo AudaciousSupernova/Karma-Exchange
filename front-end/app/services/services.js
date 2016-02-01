@@ -143,10 +143,9 @@ angular.module('app.services', [])
 .factory('Scores', function ($http, $location) {
   return {
     getScores: function(id) {
-      console.log("here is the id", id)
       return $http({
         method: 'GET',
-        url: '/profile/score/' + id
+        url: '/profile/score/month/' + id
       })
       .then(function(res) {
         return res.data;

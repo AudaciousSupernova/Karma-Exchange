@@ -5,13 +5,15 @@
     <table>
       <tr>
         <th> Name </th>
-        <th> Current Score </th>
+        <th> Current Scores
+          <br/>Social
+        </th>
         <th> Trend </th>
         <th> Shares Bought </th>
         <th> Buying Price </th>
         <th> Profit </th>
       </tr>
-      <tr ng-repeat="investment in investments">
+      <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id)'>
         <td> {{investment.name}} </td>
         <td> N/A </td>
         <td> <i>Graph of scores</i> </td>

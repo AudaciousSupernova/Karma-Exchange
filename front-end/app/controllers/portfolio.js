@@ -1,7 +1,7 @@
 angular.module('app.portfolio', [])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
@@ -16,10 +16,16 @@ angular.module('app.portfolio', [])
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
       .then(function(results) {
-        // console.log("I have successfully received current user investments.")
         $scope.investments = results;
-        console.log("and i'm finally here", $scope.investments);
       })
+  }
+
+  $scope.getScores = function(target_id){
+    Scores.getScores(target_id)
+    .then(function(scoresHist){
+      $scope.scoresHist = scoresHist
+      console.log("scoresHist",scoresHist)
+    })
   }
 
 
@@ -46,11 +52,8 @@ angular.module('app.portfolio', [])
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
-    console.log("this is the investment", $scope.investment)
-    // console.log("this is shares to sell", $scope.sharesToSell);
 
   $scope.getUserById = function () {
-    // console.log("what does my user contain", $scope.investment.target_id);
     User.getUser($scope.investment.target_id)
       .then(function (results) {
 
@@ -91,7 +94,26 @@ angular.module('app.portfolio', [])
       $mdDialog.hide();
     }
   }
+//   .controller("LineCtrl", ['$scope', '$timeout', function ($scope, $timeout) {
 
+//   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+//   $scope.series = ['Series A', 'Series B'];
+//   $scope.data = [
+//     [65, 59, 80, 81, 56, 55, 40],
+//     [28, 48, 40, 19, 86, 27, 90]
+//   ];
+//   $scope.onClick = function (points, evt) {
+//     console.log(points, evt);
+//   };
+
+//   // Simulate async data update
+//   $timeout(function () {
+//     $scope.data = [
+//       [28, 48, 40, 19, 86, 27, 90],
+//       [65, 59, 80, 81, 56, 55, 40]
+//     ];
+//   }, 3000);
+// }]);
     Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
       $location.path('/')
