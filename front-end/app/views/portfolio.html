@@ -16,7 +16,7 @@
       <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id)'>
         <td> {{investment.name}} </td>
         <td> N/A </td>
-        <td> <i>Graph of scores</i> </td>
+        <td> <i>{{scoresHist.length}} scores available</i> </td>
         <td> {{investment.numberShares}} </td>
         <td> {{investment.buyingPrice}} </td>
         <td> {{investment.profit}} </td>

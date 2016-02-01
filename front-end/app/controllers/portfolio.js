@@ -24,7 +24,6 @@ angular.module('app.portfolio', [])
     Scores.getScores(target_id)
     .then(function(scoresHist){
       $scope.scoresHist = scoresHist
-      console.log("scoresHist",scoresHist)
     })
   }
 
