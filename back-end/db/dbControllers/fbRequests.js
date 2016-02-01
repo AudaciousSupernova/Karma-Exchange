@@ -3,6 +3,17 @@ var request = require('request');
 
 //<h3> Get Facebook Data Function </h3>
 
+//In this section, getFacebookData should be called every day on all users
+//The following all the steps required to achieve this
+//make a function call to get all users
+  //loop through every user and get facebook data using every user's access key
+    //after getting all facebook Data
+      //perform function to calculate new base score
+      //update current score, so update current user
+      //add new score to scores history
+      //award any new karma to the user
+
+
 var getFacebookData = function() {
   var friends
   var pictures = 0;
