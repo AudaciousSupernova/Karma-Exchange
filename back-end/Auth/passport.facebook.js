@@ -41,12 +41,12 @@ passport.use(new FacebookStrategy({
       var displayName = profile.displayName;
       var photo = profile.photos[0].value;
       var email = profile.emails[0].value;
+      var access = accessToken;
       // Passport will search the database for a record of a user
       mainController.findUserByFbKey(profile.id, function(err, profile){
         //If the user is not found, we will add the user using the authentication details
         //obtained from Facebook Authentication
         if (!profile.length) {
-          console.log("THIS IS A NEW USER")
           var addObj = {
             'facebookKey': id,
             'name': displayName,
@@ -55,7 +55,8 @@ passport.use(new FacebookStrategy({
             'email': email,
             'social': 5,
             'social_investment':5,
-            'currentScore':10
+            'currentScore':10,
+            'accessToken': access
           };
           mainController.addUser(addObj, function (err, userId) {
             if (err){

@@ -11,21 +11,23 @@ USE main;
 
 -- ALTER TABLE users DROP COLUMN social_investment;
 
-ALTER TABLE users ADD social int DEFAULT 5;
+-- ALTER TABLE users ADD social int DEFAULT 5;
 
-ALTER TABLE users ADD social_investment int DEFAULT 5;
+-- ALTER TABLE users ADD social_investment int DEFAULT 5;
 
-ALTER TABLE users ADD currentScore int DEFAULT 10;
+-- ALTER TABLE users ADD currentScore int DEFAULT 10;
 
-ALTER TABLE scoresHist DROP COLUMN type;
+-- ALTER TABLE scoresHist DROP COLUMN type;
 
-ALTER TABLE scoresHist ADD social int;
+-- ALTER TABLE scoresHist ADD social int;
 
-ALTER TABLE scoresHist ADD social_investment int;
+-- ALTER TABLE scoresHist ADD social_investment int;
 
-ALTER TABLE scoresHist  ADD currentScore int;
+-- ALTER TABLE scoresHist  ADD currentScore int;
 
-ALTER TABLE scoresHist DROP COLUMN score;
+-- ALTER TABLE scoresHist DROP COLUMN score;
+
+ALTER TABLE users ADD accessToken varchar(255);
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);
 
