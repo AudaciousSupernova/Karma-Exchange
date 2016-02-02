@@ -156,10 +156,10 @@ angular.module('app.services', [])
 
 .factory('FB', function ($http, $location) {
   return {
-    test: function() {
+    test: function(id) {
       return $http({
         method: 'GET',
-        url: '/facebook/test'
+        url: '/facebook/' + id
       })
       .then(function(res) {
         return res.data;

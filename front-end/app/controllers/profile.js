@@ -2,7 +2,7 @@ angular.module('app.profile', [])
 
 	//<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog) {
+.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB) {
 
   $scope.isUser = true;
   $scope.user;
@@ -34,6 +34,13 @@ angular.module('app.profile', [])
     only call getLeaders if user id matches logged-in user's id
 
 */
+
+ $scope.getFacebookData = function() {
+    FB.test($scope.user.id)
+      .then(function(results) {
+        console.log('results', results);
+      })
+  }
 
   $scope.getUserById = function(id) {
 
