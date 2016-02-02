@@ -87,7 +87,7 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 					if(singleDayValues[1].social.length > 1){
 						var yesterdaysScoreObj = singleDayValues[2]
 						var sumScore = _.reduce(singleDayValues[1].social, function(a, b){return a + b})
-						yesterdaysScoreObj.social = sumScore / singleDayValues[1].social.length
+						yesterdaysScoreObj.social = Math.round(sumScore / singleDayValues[1].social.length)
 						sumScore = _.reduce(singleDayValues[1].currentScore, function(a, b){return a + b})
 						yesterdaysScoreObj.currentScore = Math.round(sumScore / singleDayValues[1].social.length)
 						arrayOfScores.unshift(yesterdaysScoreObj)
