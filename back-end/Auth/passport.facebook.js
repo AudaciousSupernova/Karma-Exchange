@@ -1,5 +1,4 @@
 var passport = require('passport');
-var refresh = require('passport-oauth2-refresh');
 var mainController = require('../db/dbControllers/mainController')
 var FacebookStrategy = require('passport-facebook').Strategy;
 var callbackURL;
@@ -24,7 +23,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
-var strategy = new FacebookStrategy({
+passport.use(new FacebookStrategy({
     clientID: '767594746706952',
     clientSecret: 'd917065bc815ddf8ab8779c9f0b3c664',
     callbackURL: callbackURL,
@@ -70,12 +69,6 @@ var strategy = new FacebookStrategy({
                 social: 5,
                 currentScore: 10
               };
-              // var baseScoreObj = {
-              //   user_id: userId,
-              //   type: "social",
-              //   score: 95
-              // };
-
               mainController.addScore(scoreObj, function(err, response) {
                 if (err) {
                   console.log("scoreObj was not added", err);
@@ -108,9 +101,6 @@ var strategy = new FacebookStrategy({
       })
     });
   }
-)
-
-passport.use(strategy);
-refresh.use(strategy);
+))
 
 module.exports = passport;

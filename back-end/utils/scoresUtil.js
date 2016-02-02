@@ -40,7 +40,7 @@ var monthIndexBy3Letters = usefullVariables.monthIndexBy3Letters
 //<h3>Get Scores Functions</h3>
 //The various get scores functions call the getScores controller method which returns an array populated with scoreObj's sorted by timestamp the array is then checked vs the time to return the relevant information to the client. In the future it might be usefull to combine some of this information to single days to limit the amount of information sent back to client.
 
-//var sampleScoresObj = {	
+//var sampleScoresObj = {
 // 	currentScore: 63
 // 	id: 11749
 // 	social: 43
@@ -156,7 +156,9 @@ var newSocialInvestmentScore = function(target_id) {
 
 
 									var recentNumScores = Math.floor(scores.length * 0.8);
-
+									if (recentNumScores < 1) {
+										recentNumScores = 1;
+									}
 									for (var i = scores.length - 1; i>=0; i--) {
 										if (i >= recentNumScores) {
 											recentYVals.push(scores[i].social_investment);
@@ -165,6 +167,9 @@ var newSocialInvestmentScore = function(target_id) {
 										generalYVals.push(scores[i].social_investment);
 										generalXVals.push(i);
 									}
+									if (generalXVals.length < 2) {
+										generalXVals.push(generalXVals[0])
+									}
 
 									console.log("general scores", generalYVals);
 									console.log("general time", generalXVals);
@@ -172,7 +177,6 @@ var newSocialInvestmentScore = function(target_id) {
 									console.log("recent time", recentXVals);
 									recentVelocity = linearRegression(recentYVals, recentXVals).slope;
 									generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-
 									console.log("my recent vel", recentVelocity, "my general vel", generalVelocity);
 
 									if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
@@ -200,7 +204,7 @@ var newSocialInvestmentScore = function(target_id) {
 	})
 }
 
-// newSocialInvestmentScore(177)
+// newSocialInvestmentScore(1)
 
 
 var updateScores = function(newSocialInvestmentScore, user) {
@@ -209,10 +213,10 @@ var updateScores = function(newSocialInvestmentScore, user) {
 	var gap = user.social - user.social_investment;
 	var soc_weight = (user.social/(user.social + user.social_investment));
 	var social_investment_weight = (1 - soc_weight);
-	
+
 
 	user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
-	
+
 	console.log("here are my stats", user.social, user.social_investment, user.currentScore)
 	mainController.updateUser(user, function(err, results) {
 		if (err) {
@@ -221,9 +225,9 @@ var updateScores = function(newSocialInvestmentScore, user) {
 			console.log("here is the new userObj", results);
 			//add score to scores history
 			var scoreObj = {
-				user_id: user.id, 
-				social: user.social, 
-				social_investment: user.social_investment, 
+				user_id: user.id,
+				social: user.social,
+				social_investment: user.social_investment,
 				currentScore: user.currentScore
 			}
 			mainController.addScore(scoreObj, function(err, results) {
@@ -250,11 +254,11 @@ calculate new social investment score
 */
 
 // var sampleUser = {
-// 	name: "Kartik Test", 
-// 	password: "test", 
-// 	email: 'kartik@gmail.com', 
-// 	social: 1000, 
-// 	social_investment: 50, 
+// 	name: "Kartik Test",
+// 	password: "test",
+// 	email: 'kartik@gmail.com',
+// 	social: 1000,
+// 	social_investment: 50,
 // 	currentScore: 50
 // }
 
@@ -293,12 +297,12 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 				currentIndex--;
 			}
 			addTotalsToResultObj(resultObj);
-			callback(null, [resultObj, scoreObjs]);		
+			callback(null, [resultObj, scoreObjs]);
 		}
 	})
 }
 
-//tests the test object 
+//tests the test object
 var testTestObj = function(testObj){
 	for(var key in testObj){
 		if(!testObj[key]){
@@ -326,20 +330,20 @@ function linearRegression(y,x){
 		var sum_xy = 0;
 		var sum_xx = 0;
 		var sum_yy = 0;
-		
+
 		for (var i = 0; i < y.length; i++) {
-			
+
 			sum_x += x[i];
 			sum_y += y[i];
 			sum_xy += (x[i]*y[i]);
 			sum_xx += (x[i]*x[i]);
 			sum_yy += (y[i]*y[i]);
-		} 
-		
+		}
+
 		lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
 		lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
 		lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
-		
+
 		return lr;
 }
 
@@ -351,7 +355,7 @@ var known_x = [5.2, 5.7, 5.0, 4.2, 10, 14];
 
 module.exports = {
 	getScoresFromDaysAway: getScoresFromDaysAway,
-	getScoresHistWithCurrentScores: getScoresHistWithCurrentScores, 
-	newSocialInvestmentScore: newSocialInvestmentScore, 
+	getScoresHistWithCurrentScores: getScoresHistWithCurrentScores,
+	newSocialInvestmentScore: newSocialInvestmentScore,
 	updateScores: updateScores
 }
