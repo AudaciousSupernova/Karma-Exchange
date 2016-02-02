@@ -10,7 +10,8 @@ angular.module('app.profile', [])
   $scope.loggedinUserInfo = "invalid";
   $scope.profileId;
   $scope.loggedinUserInfo.currentScore = "No score currently";
-  $scope.scores;
+  $scope.scores = [[],[]];
+  $scope.labels = [];
 
   //Save the user id, included in the location path
 
@@ -45,47 +46,51 @@ angular.module('app.profile', [])
   $scope.getUserById = function(id) {
 
     User.getUser(id)
-      .then(function(data) {
-        $scope.user = data[0];
-        if ($scope.user.profile_photo === null) {
-          $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
-        }
-        if ($scope.user.email === null) {
-          $scope.user.email = "No Email Provided"
-        }
-        // console.log("What does my user look like?", $scope.user);
-        // console.log("Well here we are", $scope.user);
-        // $scope.getScores();
-        //if id matches logged-in id
-          //then call getLeaders
-        //else
-          //display buy shares button
-      })
+    .then(function(data) {
+      $scope.user = data[0];
+      if ($scope.user.profile_photo === null) {
+        $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
+      }
+      if ($scope.user.email === null) {
+        $scope.user.email = "No Email Provided"
+      }
+      // console.log("What does my user look like?", $scope.user);
+      // console.log("Well here we are", $scope.user);
+      // $scope.getScores();
+      //if id matches logged-in id
+        //then call getLeaders
+      //else
+        //display buy shares button
+    })
   }
 
   $scope.getScores = function () {
-    console.log("what does my user contain", $scope.user);
-    Scores.getScores($scope.user.id)
-      .then(function (results) {
-        console.log('I AM HERE');
-        console.log(results, "Scores from Score factory");
-        if (results.length === 0) {
-          $scope.scores = [];
-        } else {
-          $scope.scores = results;
-          console.log("what exactly is scope.scores?", $scope.scores);
-          $scope.loggedinUserInfo.currentScore = $scope.scores[0].social.total;
-        }
-        console.log("WHAT IS MY CURRENT SCORE", $scope.currentScore);
-        console.log($scope.scores, 'scores in the profile controller');
-      })
+    $scope.series = ["Social Score", "Total Score"]
+    Scores.getScores($scope.profileId)
+    .then(function (results) {
+      for(var i = 0; i < results.length; i++){
+        var scoreObj = results[i];
+        $scope.scores[0].push(scoreObj.social);
+        $scope.scores[1].push(scoreObj.currentScore);
+      }
+      console.log($scope.series,$scope.labels,$scope.scores)
+    })
+  }
+  $scope.addLabels = function(daysInPast){
+    for(; daysInPast >= 0; daysInPast--){
+      if(daysInPast % 5 === 0){
+        $scope.labels.push(daysInPast)
+      } else {
+        $scope.labels.push("")
+      }
+    }
   }
 
   $scope.getLeaders = function() {
     User.getLeaderData()
-      .then(function(data) {
-        $scope.leaders = data;
-      })
+    .then(function(data) {
+      $scope.leaders = data;
+    })
   }
 
   $scope.clickBuy = function() {
@@ -180,6 +185,8 @@ angular.module('app.profile', [])
       currentPath = currentPath.split("");
       $scope.profileId = currentPath.splice(9).join("");
       $scope.getUserById($scope.profileId);
+      $scope.addLabels(30);
+      $scope.getScores();
     }
   })
 

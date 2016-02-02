@@ -21,7 +21,7 @@
   </section>
   <section>
     <p> <i>This is where the user graph will go. The scores associated with this user are: </i>
-      <span ng-repeat = 'score in scores[1]'>{{score.score}} </span>
+      <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" ></canvas> 
     </p>
   </section>
 
