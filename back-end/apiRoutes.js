@@ -163,6 +163,13 @@ module.exports = function (app, express) {
 
   })
 
+  app.get('/facebook/:id', function(req, res) {
+    var id = req.params.id;
+    fbRequests.getFacebookUserData(id);
+    var string = "Successfully updated scores for all users in database!";
+    res.send(string);
+  })
+
 
 
   app.get('/trending', function(req, res) {

@@ -148,6 +148,47 @@ var newSocialInvestmentScore = function(target_id) {
 									latestTime = scores[scores.length - 1].ts;
 									timeOnMarket = latestTime - originTime;
 									newSocialInvestmentScore = 100;
+									var generalYVals = [];
+									var generalXVals = [];
+									var recentYVals = [];
+									var recentXVals = [];
+									var velocity;
+
+
+									var recentNumScores = Math.floor(scores.length * 0.8);
+
+									for (var i = scores.length - 1; i>=0; i--) {
+										if (i >= recentNumScores) {
+											recentYVals.push(scores[i].social_investment);
+											recentXVals.push(i);
+										}
+										generalYVals.push(scores[i].social_investment);
+										generalXVals.push(i);
+									}
+
+									console.log("general scores", generalYVals);
+									console.log("general time", generalXVals);
+									console.log("recent scores", recentYVals);
+									console.log("recent time", recentXVals);
+									recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+									generalVelocity = linearRegression(generalYVals, generalXVals).slope;
+
+									console.log("my recent vel", recentVelocity, "my general vel", generalVelocity);
+
+									if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
+										velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
+									} else {
+										velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
+									}
+									if (numShareHolders === 0) {
+										numShareHolders = 1;
+									}
+									if (sharesOnMarket === 0) {
+										sharesOnMarket = 1;
+									}
+									newSocialInvestmentScore = (numShareHolders * velocity)/(sharesOnMarket * 5);
+									console.log("here is my new social investment score", newSocialInvestmentScore)
+									// newSocialInvestmentScore = 100;
 									updateScores(newSocialInvestmentScore, user[0]);
 								}
 							})
@@ -158,6 +199,8 @@ var newSocialInvestmentScore = function(target_id) {
 		}
 	})
 }
+
+// newSocialInvestmentScore(177)
 
 
 var updateScores = function(newSocialInvestmentScore, user) {
@@ -274,6 +317,37 @@ var addTotalsToResultObj = function(resultObj){
 	resultObj[key].total = total
 	}
 }
+
+function linearRegression(y,x){
+		var lr = {};
+		var n = y.length;
+		var sum_x = 0;
+		var sum_y = 0;
+		var sum_xy = 0;
+		var sum_xx = 0;
+		var sum_yy = 0;
+		
+		for (var i = 0; i < y.length; i++) {
+			
+			sum_x += x[i];
+			sum_y += y[i];
+			sum_xy += (x[i]*y[i]);
+			sum_xx += (x[i]*x[i]);
+			sum_yy += (y[i]*y[i]);
+		} 
+		
+		lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+		lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+		lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+		
+		return lr;
+}
+
+var known_y = [4, 3, 1, 7, 8, 9];
+var known_x = [5.2, 5.7, 5.0, 4.2, 10, 14];
+
+// var lr = linearRegression(known_y, known_x);
+// console.log("what is lr", lr);
 
 module.exports = {
 	getScoresFromDaysAway: getScoresFromDaysAway,

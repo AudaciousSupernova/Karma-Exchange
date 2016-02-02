@@ -13,13 +13,6 @@ angular.module('app.newsfeed', [])
       })
   };
 
-  $scope.fbTest = function() {
-    FB.test()
-      .then(function(results) {
-        console.log('results');
-      })
-  }
-
   Auth.checkLoggedIn().then(function(loggedIn) {
     console.log(loggedIn,"what is logged in")
     if (loggedIn === false) {
