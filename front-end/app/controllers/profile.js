@@ -161,6 +161,23 @@ angular.module('app.profile', [])
       }
     }
 
+    $scope.wait = function() {
+
+      var transaction = {
+        user_id: $scope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: "buy",
+        numberShares: 
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
+      }
+
+      TransactionHist.makeTransaction(transaction).then(function()  {
+        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
+        TransactionHist.addTransactionToQueue(transaction);
+      })      
+      $mdDialog.hide();
+    }
+
     $scope.checkSharesAvail = function() {
       TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
         $scope.availableShares = response;

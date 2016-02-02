@@ -129,12 +129,21 @@ angular.module('app.services', [])
         return res.data;
       })
     },
-    // calls makeTransaction
 
+    // calls makeTransaction
     makeTransaction: function(transactionObj) {
       return $http({
         method: 'POST',
         url: '/transaction/make',
+        data: {transactionObj: transactionObj}
+      })
+    },
+
+    // calls addTransactionToQueue, which adds specified transaction to transaction queue 
+    addTransactionToQueue: function(transactionObj) {
+      return $http({
+        method: 'POST', 
+        url: '/transaction/queue', 
         data: {transactionObj: transactionObj}
       })
     }
