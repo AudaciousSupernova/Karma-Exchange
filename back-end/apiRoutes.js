@@ -52,22 +52,18 @@ module.exports = function (app, express) {
     })
   })
 
-  app.get('/profile/score/:id', function (req, res) {
+  app.get('/profile/score/month/:id', function (req, res) {
     var id = req.params.id;
-    console.log(req.params, "these are my req params")
-    console.log(id, "this is my id");
-    scoresUtil.getScoresHistWithCurrentScores(id, function (err, results) {
+    scoresUtil.getScoresFromDaysAway(id, 30, function (err, results) {
       if (err) {
-        console.log (err,'error');
+        console.log ('error', err);
       } else {
-        console.log(results)
         res.send(results);
       }
     })
   })
 
   app.get('/leaders', function(req, res) {
-    console.log("leader route worked too");
     var test = [
     {
       name: 'Kyle Morehead',
@@ -95,10 +91,11 @@ module.exports = function (app, express) {
       }
     })
   })
+  
 
   app.get('/transaction/get/:id', function(req, res) {
     var user_id = req.params.id;
-    mainController.getTransactionHist(user_id, function(err, results) {
+    transactionUtil.getHistWithNames(user_id, function(err, results) {
       if (err) {
         console.log("there was an error", err);
       } else {

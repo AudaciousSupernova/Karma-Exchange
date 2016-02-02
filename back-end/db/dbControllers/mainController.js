@@ -243,7 +243,7 @@ var addScore = function(scoreObj, callback){
 
 //grabs all scores for a target user
 var getScores = function(userId, callback){
-	connection.query('SELECT * FROM scoresHist where user_id=?', userId, function(err, rows){
+	connection.query('SELECT * FROM scoresHist where user_id=? ORDER BY ts', userId, function(err, rows){
 		if(err){
 			console.log("Error finding scoresHist of user_id :" + userId, err)
 			callback(err, null);

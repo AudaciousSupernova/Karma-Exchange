@@ -190,6 +190,30 @@ var checkTransaction = function(target_id, type, callback){
 	})
 }
 
+var getHistWithNames = function(user_id, callback){
+	mainController.getTransactionHist(user_id, function(err, histObjs){
+		var newHistObjs = [];
+		if(err){
+			callback(err)
+		}
+		var addNamesToObjs = function(i, histObjs){
+			if(i === histObjs.length){
+				callback(null, histObjs)
+			} else {
+			var histObj = histObjs[i]
+			mainController.findUserById(histObj.target_id, function(err, userObj){
+				if(err){
+					callback(err)
+				} else {
+					histObj.target_name = userObj[0].name
+					addNamesToObjs(i+1, histObjs)
+				}
+			})
+			}
+		}
+		addNamesToObjs(0, histObjs)
+	})
+}
 //tests
 // makeTransaction(sampleTransaction)
 // transactionQueueController.deleteOpenTransaction(3, console.log)
@@ -237,4 +261,5 @@ module.exports = {
 	makeTransaction: makeTransaction,
 	checkTransaction: checkTransaction,
 	makePopulateTransaction: makePopulateTransaction,
+	getHistWithNames: getHistWithNames,
 }

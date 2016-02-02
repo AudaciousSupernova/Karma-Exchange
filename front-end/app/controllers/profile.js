@@ -39,7 +39,6 @@ angular.module('app.profile', [])
 
     User.getUser(id)
       .then(function(data) {
-        console.log(data,'This is the data returned by User.getUser')
         $scope.user = data[0];
         if ($scope.user.profile_photo === null) {
           $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";

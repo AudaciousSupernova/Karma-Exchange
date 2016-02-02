@@ -6,6 +6,7 @@
     "angular-route": "latest",
     "angular-ui-router": "~0.2.15",
     "angular-material": "~1.0.3",
-    "angular-mocks": "~1.4.9"
+    "angular-mocks": "~1.4.9",
+    "angular-chart.js": "~0.8.8"
   }
 }

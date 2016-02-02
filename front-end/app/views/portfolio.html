@@ -1,21 +1,22 @@
 <div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
-  <div ng-click="getTransactionHist()"> My Transaction History </div>
- <h2> My Current Investments </h2>
+ <h2> Your Current Investments </h2>
     <table>
       <tr>
         <th> Name </th>
-        <th> Current Score </th>
+        <th> Current Scores
+          <br/>Social
+        </th>
         <th> Trend </th>
         <th> Shares Bought </th>
         <th> Buying Price </th>
         <th> Profit </th>
       </tr>
-      <tr ng-repeat="investment in investments">
+      <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id, investment)'>
         <td> {{investment.name}} </td>
-        <td> N/A </td>
-        <td> <i>Graph of scores</i> </td>
-        <td> {{investment.numberShares}} </td>
+        <td> {{investment.currentScore}}</td>
+        <td> <canvas id="line" class="chart chart-line" chart-data="investment.data" chart-labels="labels" chart-legend="false" chart-series="investment.series" chart-click="onClick" ></canvas> </td>
+        <td> {{investment.numberShares}} shares owned </td>
         <td> {{investment.buyingPrice}} </td>
         <td> {{investment.profit}} </td>
         <td>
@@ -29,6 +30,12 @@
       </tr>
 
     </table>
+  <div ng-click="getTransactionHist()"> Your Transaction History </div>
+  <div>
+      <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)">
+        <p>{{transaction.string}}</p>
+      </div>
+  </div>
    
 
 </div>

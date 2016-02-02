@@ -1,25 +1,56 @@
-angular.module('app.portfolio', [])
+angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
   //Save the user id, included in the location path
   $scope.currentUserInfo = "invalid";
   //call getInvestments, pass the userId on the function call
+  $scope.labels = [];
+  $scope.transactions = []
 
-   $scope.getTransactionHist = function () {
-    $location.path('/transactionhist/' + $scope.loggedinUserInfo.id);
-  }
+  Auth.checkLoggedIn().then(function(boolean) {
+    if (boolean === false) {
+      $location.path('/')
+    } else {
+      $scope.loggedinUserInfo = Root.currentUserInfo.data;
+      // console.log("Is the id correct", $scope.loggedinUserInfo);
+      $scope.getInvestments($scope.loggedinUserInfo.id);
+      $scope.getTransactionHist();
+      $scope.addLabels(30)
+    }
+  })
 
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
-      .then(function(results) {
-        // console.log("I have successfully received current user investments.")
-        $scope.investments = results;
-        console.log("and i'm finally here", $scope.investments);
-      })
+    .then(function(results) {
+      $scope.investments = results;
+    })
+  }
+
+  $scope.getScores = function(target_id, obj){
+    obj.data = [[]]
+    obj.series = obj.name
+    Scores.getScores(target_id)
+    .then(function(scoresHist){
+      for(var i = 0; i < scoresHist.length; i++){
+        obj.data[0].push(scoresHist[i].currentScore)
+      }
+      obj.currentScore = obj.data[0][obj.data[0].length - 1]
+    })
+  }
+
+
+  $scope.addLabels = function(daysInPast){
+    for(; daysInPast >= 0; daysInPast--){
+      if(daysInPast % 5 === 0){
+        $scope.labels.push(daysInPast)
+      } else {
+        $scope.labels.push("")
+      }
+    }
   }
 
 
@@ -38,6 +69,21 @@ angular.module('app.portfolio', [])
       })
   }
 
+  
+  $scope.getTransactionHist = function() {
+    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
+    .then(function(results) {
+      $scope.transactions = results;
+    })
+  } 
+
+  $scope.buildHistString = function(transaction){
+    var type = transaction.type === "buy"? ' bought ' : ' sold ';
+    var deltaKarma = transaction.type === "buy"? ' sharing ' : ' earning ';
+    transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
+
+  }
+
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 
 
@@ -46,11 +92,8 @@ angular.module('app.portfolio', [])
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
-    console.log("this is the investment", $scope.investment)
-    // console.log("this is shares to sell", $scope.sharesToSell);
 
   $scope.getUserById = function () {
-    // console.log("what does my user contain", $scope.investment.target_id);
     User.getUser($scope.investment.target_id)
       .then(function (results) {
 
@@ -91,17 +134,26 @@ angular.module('app.portfolio', [])
       $mdDialog.hide();
     }
   }
+//   .controller("LineCtrl", ['$scope', '$timeout', function ($scope, $timeout) {
 
-    Auth.checkLoggedIn().then(function(boolean) {
-    if (boolean === false) {
-      $location.path('/')
-    } else {
-      $scope.loggedinUserInfo = Root.currentUserInfo.data;
-      // console.log("Is the id correct", $scope.loggedinUserInfo);
-      $scope.getInvestments($scope.loggedinUserInfo.id);
+//   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+//   $scope.series = ['Series A', 'Series B'];
+//   $scope.data = [
+//     [65, 59, 80, 81, 56, 55, 40],
+//     [28, 48, 40, 19, 86, 27, 90]
+//   ];
+//   $scope.onClick = function (points, evt) {
+//     console.log(points, evt);
+//   };
 
-    }
-  })
+//   // Simulate async data update
+//   $timeout(function () {
+//     $scope.data = [
+//       [28, 48, 40, 19, 86, 27, 90],
+//       [65, 59, 80, 81, 56, 55, 40]
+//     ];
+//   }, 3000);
+// }]);
 
 
 
