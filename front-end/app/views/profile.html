@@ -1,6 +1,4 @@
 <div ng-module="app.profile">
-
-  <div class='fb-test' ng-click="getFacebookData()"> Get Facebook Data </div>
   <section ng-model="user">
 
     <div class = "user info">
@@ -14,6 +12,8 @@
       </span>
       <h4> Name: {{user.name}} </h4>
       <h4> Email: {{user.email}} </h4>
+       <div class='fb-test' ng-click="getFacebookData()"> Get Latest User Score </div>
+
       <h4> Current Score: {{user.currentScore}} </h4>
 
     </div>
