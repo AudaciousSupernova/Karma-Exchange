@@ -81,7 +81,7 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 				delete scoreObj['social_investment']
 				if(singleDayValues[0] === scoreDayOfYear){
 					singleDayValues[1].social.push(scoreObj.social)
-					singleDayValues[1].social.push(scoreObj.currentScore)
+					singleDayValues[1].currentScore.push(scoreObj.currentScore)
 					singleDayValues[2] = scoreObj
 				}else{
 					if(singleDayValues[1].social.length > 1){
