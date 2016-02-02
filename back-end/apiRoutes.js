@@ -31,7 +31,6 @@ module.exports = function (app, express) {
     })
 
   app.get('/profile/:id', function(req, res) {
-    var hi = req.params.hi;
     var id = req.params.id;
     mainController.findUserById(id, function(error, response) {
       if (error) {
