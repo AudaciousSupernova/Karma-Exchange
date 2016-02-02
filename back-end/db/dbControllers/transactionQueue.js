@@ -25,7 +25,7 @@ var transactionObj = {
 	numberShares: 8
 }
 
-var addTransactionToQueue= function(transactionObj, callback){
+var addTransactionToQueue = function(transactionObj, callback){
 	connection.query('INSERT INTO openTransactions SET ?', transactionObj, function(err, res){
 		if(err){
 			console.log("error inserting into transactionQueue", err)
@@ -37,7 +37,7 @@ var addTransactionToQueue= function(transactionObj, callback){
 	})
 }
 
-// addTransactionToQueue(transactionObj, console.log)
+addTransactionToQueue(transactionObj, console.log)
 
 //finds all transactions associated with a target_id
 //returns an array of all open tranasctions for the target

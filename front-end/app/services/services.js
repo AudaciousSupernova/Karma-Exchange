@@ -119,10 +119,11 @@ angular.module('app.services', [])
     },
     // returns number of shares available for given target_id
     checkSharesAvail: function(target_id, type) {
+      console.log('targetid', target_id, 'type', type);
       return $http({
         method: 'GET',
-        url: '/transaction/check',
-        data: {target_id: target_id, type: type}
+        url: '/transaction/check/',
+        params: {target_id: target_id, type: type}
       })
       .then(function(res) {
         return res.data;
@@ -134,7 +135,7 @@ angular.module('app.services', [])
       return $http({
         method: 'POST',
         url: '/transaction/make',
-        data: transactionObj
+        data: {transactionObj: transactionObj}
       })
     }
   }

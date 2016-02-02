@@ -139,6 +139,7 @@ var updateKarma = function(userId, karmaChange, callback){
 	);
 }
 
+
 //updates the photo of a specified user
 var updatePhoto = function (userId, newPhoto, callback){
 	connection.query('UPDATE users SET profile_photo = ? Where facebookKey = ?',[newPhoto, userId], function (err, response) {
