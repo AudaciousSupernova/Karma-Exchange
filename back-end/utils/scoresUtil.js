@@ -204,7 +204,7 @@ var newSocialInvestmentScore = function(target_id) {
 	})
 }
 
-newSocialInvestmentScore(1)
+// newSocialInvestmentScore(1)
 
 
 var updateScores = function(newSocialInvestmentScore, user) {
