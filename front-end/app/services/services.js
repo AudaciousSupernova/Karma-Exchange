@@ -146,6 +146,15 @@ angular.module('app.services', [])
         url: '/transaction/queue', 
         data: {transactionObj: transactionObj}
       })
+    },
+
+    // calls closeTransactionRequest, which closes specified transaction request 
+    closeTransactionRequest: function(transactionObj) {
+      return $http({
+        method: 'POST',
+        url: '/transaction/close',
+        data: {transactionObj: transactionObj}
+      })
     }
   }
 })
