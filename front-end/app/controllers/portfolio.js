@@ -18,7 +18,7 @@ angular.module('app.portfolio', ["chart.js"])
       $scope.loggedinUserInfo = Root.currentUserInfo.data;
       // console.log("Is the id correct", $scope.loggedinUserInfo);
       $scope.getInvestments($scope.loggedinUserInfo.id);
-      $scope.getTransactions();
+      $scope.getTransactionHist();
       $scope.addLabels(30)
     }
   })
@@ -42,9 +42,14 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
+
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
-      $scope.labels.push(daysInPast)
+      if(daysInPast % 5 === 0){
+        $scope.labels.push(daysInPast)
+      } else {
+        $scope.labels.push("")
+      }
     }
   }
 
@@ -65,13 +70,19 @@ angular.module('app.portfolio', ["chart.js"])
   }
 
   
-  $scope.getTransactions = function() {
+  $scope.getTransactionHist = function() {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {
-      console.log(results);
       $scope.transactions = results;
     })
   } 
+
+  $scope.buildHistString = function(transaction){
+    var type = transaction.type === "buy"? ' bought ' : ' sold ';
+    var deltaKarma = transaction.type === "buy"? ' sharing ' : ' earning ';
+    transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
+
+  }
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 

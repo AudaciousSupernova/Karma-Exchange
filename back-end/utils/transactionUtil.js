@@ -198,7 +198,6 @@ var getHistWithNames = function(user_id, callback){
 		}
 		var addNamesToObjs = function(i, histObjs){
 			if(i === histObjs.length){
-				console.log(histObjs)
 				callback(null, histObjs)
 			} else {
 			var histObj = histObjs[i]

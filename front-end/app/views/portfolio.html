@@ -32,21 +32,9 @@
     </table>
   <div ng-click="getTransactionHist()"> Your Transaction History </div>
   <div>
-    <table>
-      <tr>
-        <th> Name </th>
-        <th> Type of Transaction </th>
-        <th> Number of Shares </th>
-        <th> Karma </th>
-      </tr>
-      <tr ng-repeat="transaction in transactions">
-        <td> {{transaction.target_name}} </td>
-        <td> {{transaction.type}} </td>
-        <td> {{transaction.numberShares}}</td>
-        <td> {{transaction.karma}} </td>
-      </tr>
-
-    </table>
+      <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)">
+        <p>{{transaction.string}}</p>
+      </div>
   </div>
    
 
