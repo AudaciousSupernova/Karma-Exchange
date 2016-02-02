@@ -26,12 +26,19 @@ div.navbar > span {
 md-content{
 	overflow:hidden;
 }
+
 .png-icon{
     margin-bottom: -6px;
     margin-right: 2%;
     display: inline-block;
     background-repeat: no-repeat no-repeat;
     pointer-events: none;
+}
+
+span.navBar{
+	padding:10px 4px 9px 4px;
+	margin-left: -4px;
+	border-right: 2px solid gray;
 }
 
 span.currentUserNavBar{
@@ -44,4 +51,8 @@ span.currentUserNavBar{
 .navBar:hover {
   background-color: white;
   color: black;
+}
+
+td{
+	text-align: center;
 }

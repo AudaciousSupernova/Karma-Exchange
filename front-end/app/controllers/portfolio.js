@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
@@ -9,16 +9,25 @@ angular.module('app.portfolio', ["chart.js"])
   $scope.currentUserInfo = "invalid";
   //call getInvestments, pass the userId on the function call
   $scope.labels = [];
+  $scope.transactions = []
 
-  $scope.getTransactionHist = function () {
-    $location.path('/transactionhist/' + $scope.loggedinUserInfo.id);
-  }
+  Auth.checkLoggedIn().then(function(boolean) {
+    if (boolean === false) {
+      $location.path('/')
+    } else {
+      $scope.loggedinUserInfo = Root.currentUserInfo.data;
+      // console.log("Is the id correct", $scope.loggedinUserInfo);
+      $scope.getInvestments($scope.loggedinUserInfo.id);
+      $scope.getTransactions();
+      $scope.addLabels(30)
+    }
+  })
 
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
-      .then(function(results) {
-        $scope.investments = results;
-      })
+    .then(function(results) {
+      $scope.investments = results;
+    })
   }
 
   $scope.getScores = function(target_id, obj){
@@ -29,7 +38,7 @@ angular.module('app.portfolio', ["chart.js"])
       for(var i = 0; i < scoresHist.length; i++){
         obj.data[0].push(scoresHist[i].currentScore)
       }
-      obj.currentScore = obj.data[0][obj.data[0].length - 1]      
+      obj.currentScore = obj.data[0][obj.data[0].length - 1]
     })
   }
 
@@ -37,10 +46,8 @@ angular.module('app.portfolio', ["chart.js"])
     for(; daysInPast >= 0; daysInPast--){
       $scope.labels.push(daysInPast)
     }
-    console.log("labels", $scope.labels)
   }
 
-  $scope.addLabels(30)
 
   $scope.clickSell = function(investment) {
     $scope.clickedInvestment = investment.id;
@@ -56,6 +63,15 @@ angular.module('app.portfolio', ["chart.js"])
         console.log(clickedItem, "this was clicked");
       })
   }
+
+  
+  $scope.getTransactions = function() {
+    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
+    .then(function(results) {
+      console.log(results);
+      $scope.transactions = results;
+    })
+  } 
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 
@@ -127,16 +143,6 @@ angular.module('app.portfolio', ["chart.js"])
 //     ];
 //   }, 3000);
 // }]);
-    Auth.checkLoggedIn().then(function(boolean) {
-    if (boolean === false) {
-      $location.path('/')
-    } else {
-      $scope.loggedinUserInfo = Root.currentUserInfo.data;
-      // console.log("Is the id correct", $scope.loggedinUserInfo);
-      $scope.getInvestments($scope.loggedinUserInfo.id);
-
-    }
-  })
 
 
 

@@ -31,6 +31,7 @@ module.exports = function (app, express) {
     })
 
   app.get('/profile/:id', function(req, res) {
+    var hi = req.params.hi;
     var id = req.params.id;
     mainController.findUserById(id, function(error, response) {
       if (error) {
@@ -95,7 +96,7 @@ module.exports = function (app, express) {
 
   app.get('/transaction/get/:id', function(req, res) {
     var user_id = req.params.id;
-    mainController.getTransactionHist(user_id, function(err, results) {
+    transactionUtil.getHistWithNames(user_id, function(err, results) {
       if (err) {
         console.log("there was an error", err);
       } else {

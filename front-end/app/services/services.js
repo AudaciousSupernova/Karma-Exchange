@@ -8,7 +8,8 @@ angular.module('app.services', [])
     getUser: function(id) {
       return $http({
         method: 'GET',
-        url: '/profile/' + id,
+        url: '/profile/',
+        params : {id:id}
       })
       .then(function(res) {
         return res.data;

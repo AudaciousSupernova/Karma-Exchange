@@ -66,8 +66,9 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 			}
 			//bellow is an array, the first elements has the current day being checked and the second is all of the scores for that day which will be averaged. The third element in the array will be a saved obj that will be used to store the averaged value and passed back to the user
 			var singleDayValues = [-1,{"social":[],"currentScore":[]}]
+			var scoreObj;
 			for(var i = scoresObjs.length - 1; i > 0 ; i--){
-				var scoreObj = scoresObjs[i];
+				scoreObj = scoresObjs[i];
 
 				var scoreTime = scoreObj.ts.toString().split(" ")
 				var scoreMonth = scoreTime[1]
@@ -79,23 +80,24 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 				}
 				delete scoreObj['social_investment']
 				if(singleDayValues[0] === scoreDayOfYear){
-					console.log("checking again")
 					singleDayValues[1].social.push(scoreObj.social)
 					singleDayValues[1].social.push(scoreObj.currentScore)
 					singleDayValues[2] = scoreObj
 				}else{
-					if(singleDayValues[1].social.length){
+					if(singleDayValues[1].social.length > 1){
 						var yesterdaysScoreObj = singleDayValues[2]
 						var sumScore = _.reduce(singleDayValues[1].social, function(a, b){return a + b})
 						yesterdaysScoreObj.social = sumScore / singleDayValues[1].social.length
 						sumScore = _.reduce(singleDayValues[1].currentScore, function(a, b){return a + b})
-						yesterdaysScoreObj.currentScore = sumScore / singleDayValues[1].social.length
+						yesterdaysScoreObj.currentScore = Math.round(sumScore / singleDayValues[1].social.length)
 						arrayOfScores.unshift(yesterdaysScoreObj)
+					} else if(singleDayValues[2]){
+						arrayOfScores.unshift(singleDayValues[2])
 					}
-					singleDayValues [scoreDayOfYear,{"social":[],"currentScore":[]}]
-					arrayOfScores.unshift(scoreObj)
+					singleDayValues = [scoreDayOfYear,{"social":[scoreObj.social],"currentScore":[scoreObj.currentScore]}, scoreObj]
 				}
 			}
+			arrayOfScores.unshift(scoreObj)
 			callback(null, arrayOfScores)
 		}
 	})
@@ -113,8 +115,6 @@ var dayOfYear = function(month, day){
 	return dayOfYear
 }
 
-getScoresFromDaysAway(2, 30, console.log)
-
 var newSocialInvestmentScore = function(target_id) {
 
 	var originTime = 0;
@@ -128,7 +128,6 @@ var newSocialInvestmentScore = function(target_id) {
 		if (err) {
 			console.log('This is an error', err);
 		} else {
-			console.log("What does my user look like", user);
 			mainController.targetTransactionHist(target_id, function(err, rows) {
 				if (err) {
 					console.log("There was an error", err);
@@ -148,7 +147,6 @@ var newSocialInvestmentScore = function(target_id) {
 									originTime = scores[0].ts;
 									latestTime = scores[scores.length - 1].ts;
 									timeOnMarket = latestTime - originTime;
-									console.log("what is this", timeOnMarket);
 									newSocialInvestmentScore = 100;
 									updateScores(newSocialInvestmentScore, user[0]);
 								}
