@@ -144,57 +144,53 @@ var newSocialInvestmentScore = function(target_id) {
 								if (err) {
 									console.log("There was an error", err);
 								} else {
-									originTime = scores[0].ts;
-									latestTime = scores[scores.length - 1].ts;
-									timeOnMarket = latestTime - originTime;
-									newSocialInvestmentScore = 100;
-									var generalYVals = [];
-									var generalXVals = [];
-									var recentYVals = [];
-									var recentXVals = [];
-									var velocity;
-
-
-									var recentNumScores = Math.floor(scores.length * 0.8);
-									if (recentNumScores < 1) {
-										recentNumScores = 1;
-									}
-									for (var i = scores.length - 1; i>=0; i--) {
-										if (i >= recentNumScores) {
-											recentYVals.push(scores[i].social_investment);
-											recentXVals.push(i);
-										}
-										generalYVals.push(scores[i].social_investment);
-										generalXVals.push(i);
-									}
-									if (generalXVals.length < 2) {
-										generalXVals.push(generalXVals[0])
-									}
-
-									console.log("general scores", generalYVals);
-									console.log("general time", generalXVals);
-									console.log("recent scores", recentYVals);
-									console.log("recent time", recentXVals);
-									recentVelocity = 1;
-									// recentVelocity = linearRegression(recentYVals, recentXVals).slope;
-									generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-									console.log("my recent vel", recentVelocity, "my general vel", generalVelocity);
-
-									if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
-										velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
-									} else {
-										velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
-									}
-									if (numShareHolders === 0) {
-										numShareHolders = 1;
-									}
-									if (sharesOnMarket === 0) {
-										sharesOnMarket = 1;
-									}
-									newSocialInvestmentScore = (numShareHolders * velocity)/(sharesOnMarket * 5);
-									console.log("here is my new social investment score", newSocialInvestmentScore)
 									// newSocialInvestmentScore = 100;
-									updateScores(newSocialInvestmentScore, user[0]);
+									// var generalYVals = [];
+									// var generalXVals = [];
+									// var recentYVals = [];
+									// var recentXVals = [];
+									// var velocity;
+
+
+									// var recentNumScores = Math.floor(scores.length * 0.8);
+									// if (recentNumScores < 1) {
+									// 	recentNumScores = 1;
+									// }
+									// for (var i = scores.length - 1; i>=0; i--) {
+									// 	if (i >= recentNumScores) {
+									// 		recentYVals.push(scores[i].social_investment);
+									// 		recentXVals.push(i);
+									// 	}
+									// 	generalYVals.push(scores[i].social_investment);
+									// 	generalXVals.push(i);
+									// }
+									// if (generalXVals.length < 2) {
+									// 	generalXVals.push(generalXVals[0])
+									// }
+
+									// console.log("general scores", generalYVals);
+									// console.log("general time", generalXVals);
+									// console.log("recent scores", recentYVals);
+									// console.log("recent time", recentXVals);
+									// recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+									// generalVelocity = linearRegression(generalYVals, generalXVals).slope;
+									// console.log("my recent vel", recentVelocity, "my general vel", generalVelocity);
+
+									// if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
+									// 	velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
+									// } else {
+									// 	velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
+									// }
+									// if (numShareHolders === 0) {
+									// 	numShareHolders = 1;
+									// }
+									// if (sharesOnMarket === 0) {
+									// 	sharesOnMarket = 1;
+									// }
+									// newSocialInvestmentScore = (numShareHolders * velocity)/(sharesOnMarket * 5);
+									// console.log("here is my new social investment score", newSocialInvestmentScore)
+									// // newSocialInvestmentScore = 100;
+									// updateScores(newSocialInvestmentScore, user[0]);
 								}
 							})
 						}
