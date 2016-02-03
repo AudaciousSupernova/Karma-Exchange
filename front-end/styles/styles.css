@@ -3,10 +3,14 @@ div.navbar{
 	padding-top:2%;
 	width: 100%;
 	height:30px;
-	background-color: blue;
+	background-color: rgb(200, 20, 20);
 	position: fixed;
 	border-radius: 5px;
 	z-index: 10;
+}
+
+html, body, .md-raised{
+	background-color: rgb(240, 240, 240);
 }
 
 /*this is directly behind the nav bar to ensure that other
@@ -70,7 +74,7 @@ td{
 
 table{
 	border: 2px solid black;
-	box-shadow: 2px 2px;
+	box-shadow: 4px 4px;
 }
 tr, td, th{
 	outline: thin solid;
