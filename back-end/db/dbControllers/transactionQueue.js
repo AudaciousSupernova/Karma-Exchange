@@ -37,7 +37,7 @@ var addTransactionToQueue = function(transactionObj, callback){
 	})
 }
 
-addTransactionToQueue(transactionObj, console.log)
+// addTransactionToQueue(transactionObj, console.log)
 
 //finds all transactions associated with a target_id
 //returns an array of all open tranasctions for the target

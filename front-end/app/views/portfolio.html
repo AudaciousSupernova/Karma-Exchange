@@ -10,20 +10,17 @@
     <table ng-hide = "investmentHistory">
       <tr>
         <th> Name </th>
-        <th> Current Scores
-          <br/>Social
+        <th> Current Market Value
         </th>
         <th> Trend </th>
-        <th> Shares Bought </th>
-        <th> Buying Price </th>
+        <th> Shares Owned </th>
         <th> Profit </th>
       </tr>
       <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id, investment)'>
         <td> {{investment.name}} </td>
-        <td> {{investment.currentScore}}</td>
+        <td> Social: {{investment.currentScore}}</td>
         <td> <canvas id="line" class="chart chart-line" chart-data="investment.data" chart-labels="labels" chart-legend="false" chart-series="investment.series" chart-click="onClick" ></canvas> </td>
-        <td> {{investment.numberShares}} shares owned </td>
-        <td> {{investment.buyingPrice}} </td>
+        <td> {{investment.numberShares}}</td>
         <td> {{investment.profit}} </td>
         <td>
           <div layout="column" ng-cloak>

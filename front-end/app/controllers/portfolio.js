@@ -17,12 +17,25 @@ angular.module('app.portfolio', ["chart.js"])
     } else {
       $scope.loggedinUserInfo = Root.currentUserInfo.data;
       // console.log("Is the id correct", $scope.loggedinUserInfo);
-      $scope.getInvestments($scope.loggedinUserInfo.id);
-      $scope.getTransactionHist();
+      $scope.getTransactionHist(function(){
+        $scope.getInvestments($scope.loggedinUserInfo.id);
+      });
       $scope.addLabels(30)
     }
   })
 
+
+//gets all current investments for the user
+//properties on an investment object
+// $$hashKey: "object:37"
+// currentScore: 45
+// data: Array[1]
+// id: 3220
+// name: "Clemens Rohan"
+// numberShares: 64
+// series: "Clemens Rohan"
+// target_id: 85
+// user_id: 1
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
     .then(function(results) {
@@ -30,6 +43,8 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
+//<h3>Investment graph functions</h3>
+//uses the investment objects to calculate the score history of the investment so that the graph can be representative
   $scope.getScores = function(target_id, obj){
     obj.data = [[]]
     obj.series = obj.name
@@ -39,10 +54,11 @@ angular.module('app.portfolio', ["chart.js"])
         obj.data[0].push(scoresHist[i].currentScore)
       }
       obj.currentScore = obj.data[0][obj.data[0].length - 1]
+      $scope.addProfit(obj)
     })
   }
 
-
+//generates lables for the graph. Initially to 30 days in the past however that can be modified in the future
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
       if(daysInPast % 5 === 0){
@@ -53,7 +69,7 @@ angular.module('app.portfolio', ["chart.js"])
     }
   }
 
-
+//controls opening the sell menue to sell current stocks
   $scope.clickSell = function(investment) {
     $scope.clickedInvestment = investment.id;
     $mdDialog.show({
@@ -69,20 +85,70 @@ angular.module('app.portfolio', ["chart.js"])
       })
   }
 
-  
-  $scope.getTransactionHist = function() {
+//gets the transaction history for the current user
+//sample properties on a transaction object
+// id: 1729
+// karma: 4576
+// numberShares: 44
+// target_id: 64
+// target_name: "Rosie Bergnaum"
+// type: "sell"
+// user_id: 1
+  $scope.getTransactionHist = function(callback) {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {
       $scope.transactions = results.reverse();
+      callback()
     })
   } 
 
+//turns a transaction into a human friendly string
   $scope.buildHistString = function(transaction){
     var type = transaction.type === "buy"? ' bought ' : ' sold ';
     var deltaKarma = transaction.type === "buy"? ' sharing ' : ' earning ';
     transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
-
   }
+//searches through the investment history to get the profit for each set of shares this should probably eventually be moved to the back end unless we always want to grab the entire transaction history for a user. It could be added by making a controller that searched through transaction hist by user_id and target_id to help refine the search then using that to add a profit to the object whenever a user makes a get request for their current stocks.
+// hist
+// id: 1729
+// karma: 4576
+// numberShares: 44
+// target_id: 64
+// target_name: "Rosie Bergnaum"
+// type: "sell"
+// user_id: 1
+  $scope.addProfit = function(investment){
+    var shares = investment.numberShares
+    var profit = 0;
+
+    for(var i = 0; i < $scope.transactions.length; i++){
+      var transaction = $scope.transactions[i];
+
+      if(investment.target_id === transaction.target_id) {
+
+        if(shares - transaction.numberShares > 0){
+          console.log(transaction.numberShares, investment.currentScore, transaction.karma)
+          var profit = transaction.numberShares * investment.currentScore - transaction.karma
+          profit += profit        
+          shares -= transaction.numberShares
+          // <= 0 
+        } else {
+          var transactionScore = Math.round(transaction.karma / transaction.numberShares)
+          var profit = shares * investment.currentScore - shares * transactionScore
+          console.log("else profit", profit)
+          investment.profit = profit;
+        }
+      }
+    }
+  }
+// currentScore: 45
+// data: Array[1]
+// id: 3220
+// name: "Clemens Rohan"
+// numberShares: 64
+// series: "Clemens Rohan"
+// target_id: 85
+// user_id: 1
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 
