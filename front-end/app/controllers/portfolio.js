@@ -73,7 +73,7 @@ angular.module('app.portfolio', ["chart.js"])
   $scope.getTransactionHist = function() {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {
-      $scope.transactions = results;
+      $scope.transactions = results.reverse();
     })
   } 
 

@@ -1,13 +1,13 @@
 <div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
 
- <h2> Your Current Investments </h2>
-
-  <div ng-click="getTransactionHist()"> My Transaction History </div>
-  
- <h2> My Current Investments </h2>
-
-    <table>
+ <h2 ng-hide = "investmentHistory"> Your Current Investments </h2>
+ <h2 ng-show = "investmentHistory"> Your Transaction History </h2>
+    <md-button class="md-raised" ng-hide = "investmentHistory" ng-click = "investmentHistory = true">Show Transaction History</md-button><md-button class="md-raised" ng-show = "investmentHistory"  ng-click = "investmentHistory = false">Show Current Investments</md-button>
+ <br/>
+ <br/>
+ <br/>
+    <table ng-hide = "investmentHistory">
       <tr>
         <th> Name </th>
         <th> Current Scores
@@ -36,12 +36,39 @@
       </tr>
 
     </table>
-  <div ng-click="getTransactionHist()"> Your Transaction History </div>
-  <div>
-      <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)">
-        <p>{{transaction.string}}</p>
-      </div>
+  <div ng-show = "investmentHistory"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
+    <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)" ng-hide = "tableVersion">
+      <p>{{transaction.string}}</p>
+    </div>
+
+    <table ng-show = 'tableVersion'>
+      <tr>
+        <th> Name </th>
+        <th> Type of Transaction </th>
+        <th> Number of Shares </th>
+        <th> Karma </th>
+      </tr>
+      <tr ng-repeat="transaction in transactions">
+        <td> {{transaction.target_name}} </td>
+        <td> {{transaction.type}} </td>
+        <td> {{transaction.numberShares}}</td>
+        <td> {{transaction.karma}} </td>
+      </tr>
+
+    </table>
+
   </div>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+
    
 
 </div>
