@@ -178,6 +178,22 @@ angular.module('app.profile', [])
       $mdDialog.hide();
     }
 
+    $scope.buyDirect = function() { 
+      var transaction = {
+        user_id: $scope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: "buy",
+        numberShares: 
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
+      }
+
+      TransactionHist.makeTransaction(transaction).then(function() {
+        $scope.score = $scope.score * 1.1; 
+        TransactionHist.closeTransactionRequest(transaction); 
+      })
+      $mdDialog.hide(); 
+    }
+
     $scope.checkSharesAvail = function() {
       TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
         $scope.availableShares = response;

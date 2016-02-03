@@ -141,6 +141,7 @@ angular.module('app.services', [])
 
     // calls addTransactionToQueue, which adds specified transaction to transaction queue 
     addTransactionToQueue: function(transactionObj) {
+      
       return $http({
         method: 'POST', 
         url: '/transaction/queue', 
