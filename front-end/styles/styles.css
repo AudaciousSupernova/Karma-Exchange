@@ -67,3 +67,11 @@ td{
   background-color: blue;
   color: white;
 }
+
+table{
+	border: 2px solid black;
+	box-shadow: 2px 2px;
+}
+tr, td, th{
+	outline: thin solid;
+}
