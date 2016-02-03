@@ -226,7 +226,7 @@ var getHistWithNames = function(user_id, callback){
 // 	target_id: 2,
 // 	numberShares: 3
 // }
-// // transactionQueueController.addTransaction(transactionObj, console.log)
+// transactionQueueController.addTransactionToQueue(transactionObj, console.log)
 
 //turns the buyer into seller and switched the type
 //so that both records are maintained
@@ -262,4 +262,5 @@ module.exports = {
 	checkTransaction: checkTransaction,
 	makePopulateTransaction: makePopulateTransaction,
 	getHistWithNames: getHistWithNames,
+	closeTransactionRequest:closeTransactionRequest,
 }

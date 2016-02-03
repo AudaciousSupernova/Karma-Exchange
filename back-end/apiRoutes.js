@@ -105,20 +105,20 @@ module.exports = function (app, express) {
   })
 
   app.get('/transaction/check', function(req, res) {
-    var target_id = req.body.target_id;
-    var type = req.body.type;
-    console.log("TransactionCheck", req)
+    var target_id = req.param('target_id');
+    var type = req.param('type');
     transactionUtil.checkTransaction(target_id, type, function(err, response) {
       if (err) {
         console.log(err, null);
       } else {
-        console.log(response); 
+        console.log('response', response);
         res.json(response[0]); 
       }
     })
   })
 
   app.post('/transaction/make', function(req, res) {
+    console.log('transactionObject', req.body.transactionObj); 
     var transactionObj = req.body.transactionObj;
     transactionUtil.makeTransaction(transactionObj)
     res.send(201); 
@@ -133,6 +133,13 @@ module.exports = function (app, express) {
         res.status(201).json(results);
       }
     })
+  })
+
+  app.post('/transaction/close', function(req, res) {
+    console.log(req.body,'req to /transaction/close');
+    var transactionObj = req.body.transactionObj;
+    var shareValue = req.body.shareValue
+    transactionUtil.closeTransactionRequest(transactionObj, shareValue); 
   })
 
   app.get('/portfolio/:id', function(req, res) {

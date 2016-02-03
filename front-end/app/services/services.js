@@ -119,22 +119,42 @@ angular.module('app.services', [])
     },
     // returns number of shares available for given target_id
     checkSharesAvail: function(target_id, type) {
+      console.log('targetid', target_id, 'type', type);
       return $http({
         method: 'GET',
-        url: '/transaction/check',
-        data: {target_id: target_id, type: type}
+        url: '/transaction/check/',
+        params: {target_id: target_id, type: type}
       })
       .then(function(res) {
         return res.data;
       })
     },
-    // calls makeTransaction
 
+    // calls makeTransaction
     makeTransaction: function(transactionObj) {
       return $http({
         method: 'POST',
         url: '/transaction/make',
-        data: transactionObj
+        data: {transactionObj: transactionObj}
+      })
+    },
+
+    // calls addTransactionToQueue, which adds specified transaction to transaction queue 
+    addTransactionToQueue: function(transactionObj) {
+      
+      return $http({
+        method: 'POST', 
+        url: '/transaction/queue', 
+        data: {transactionObj: transactionObj}
+      })
+    },
+
+    // calls closeTransactionRequest, which closes specified transaction request 
+    closeTransactionRequest: function(transactionObj, shareValue) {
+      return $http({
+        method: 'POST',
+        url: '/transaction/close',
+        data: {transactionObj: transactionObj, shareValue: shareValue}
       })
     }
   }

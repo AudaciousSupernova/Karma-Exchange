@@ -122,8 +122,7 @@ angular.module('app.profile', [])
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: 
-        $scope.availableShares > $scope.sharesToBuy ? $scope.availableShares : $scope.sharesToBuy,
-        karma: 90
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       var investment = {
@@ -151,17 +150,49 @@ angular.module('app.profile', [])
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
 
-        } else{
+        } else {
+
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
-          TransactionHist.addTransaction(transaction)
-            .then(function(results) {
-              Portfolio.addInvestment(investment)
-                .then(function(results) {
-                  $mdDialog.hide();
-                })
+          TransactionHist.makeTransaction(transaction)
+            .then(function() {
+              $mdDialog.hide();
             })         
         }
       }
+    }
+
+    $scope.wait = function() {
+
+      var transaction = {
+        user_id: $scope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: "buy",
+        numberShares: 
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+      }
+
+      TransactionHist.makeTransaction(transaction).then(function()  {
+        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
+        TransactionHist.addTransactionToQueue(transaction);
+      })      
+      $mdDialog.hide();
+    }
+
+    $scope.buyDirect = function() { 
+      var transaction = {
+        user_id: $scope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: "buy",
+        numberShares: 
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+      }
+
+      var newScore = $scope.score * 1.1; 
+
+      TransactionHist.makeTransaction(transaction).then(function() {
+        TransactionHist.closeTransactionRequest(transaction, newScore); 
+      })
+      $mdDialog.hide(); 
     }
 
     $scope.checkSharesAvail = function() {
