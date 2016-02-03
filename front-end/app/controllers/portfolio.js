@@ -175,14 +175,17 @@ angular.module('app.portfolio', ["chart.js"])
   }
 
     $scope.confirm = function() {
+
       var transaction = {
-          user_id: $scope.investment.user_id,
-          target_id: $scope.investment.target_id,
-          type: "sell",
-          numberShares: $scope.sharesToSell,
-          karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
-        }
+        user_id: $scope.investment.user_id,
+        target_id: $scope.investment.target_id,
+        type: "sell",
+        numberShares: $scope.sharesToSell,
+        karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
+      }
+
       if ($scope.sharesToSell > $scope.investment.numberShares) {
+        console.log('investment', investment); 
         console.log("You are trying to sell more than you have!");
         $mdDialog.hide();
 
@@ -195,6 +198,7 @@ angular.module('app.portfolio', ["chart.js"])
           console.log("THERE ARE NOT ENOUGH SHARES REQUESTED ON THE MARKET")
 
         } else {
+
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
           $scope.investment.numberShares -= $scope.sharesToSell;
           TransactionHist.makeTransaction(transaction)
@@ -211,14 +215,17 @@ angular.module('app.portfolio', ["chart.js"])
     }
 
     $scope.wait = function () {
+
       var transaction = {
-          user_id: $scope.investment.user_id,
-          target_id: $scope.investment.target_id,
-          type: "sell",
-          numberShares: $scope.sharesToSell,
-          karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
-        }
-      Transaction.makeTransaction(transaction).then(function (){
+        user_id: $scope.investment.user_id,
+        target_id: $scope.investment.target_id,
+        type: "sell",
+        numberShares: $scope.sharesToSell,
+        //reference logged in user's karma
+        karma: $scope.sharesToSell * $scope.investment.currentScore
+      };
+
+      TransactionHist.makeTransaction(transaction).then(function() {
         transaction.numberShares = $scope.sharesToSell - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
       });
