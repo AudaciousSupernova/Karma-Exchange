@@ -10,7 +10,7 @@ var fbRequests = require('./db/dbControllers/fbRequests.js');
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns.
-	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_likes', 'user_photos', 'user_posts'] }));
+	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
 
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
@@ -54,7 +54,7 @@ module.exports = function (app, express) {
         res.send(response);
       }
     })
-  });  
+  });
 
 
   //Post request to complete buy transaction from certain user's profile
@@ -86,7 +86,7 @@ module.exports = function (app, express) {
         console.log('error on leaders/top users', err);
       } else {
         // console.log("These are my results", results);
-        res.send(results); 
+        res.send(results);
       }
     })
   })
@@ -102,7 +102,7 @@ module.exports = function (app, express) {
       }
     })
   })
-  
+
   //Get request to retrieve transactions associated with a certain user
   app.get('/transaction/get/:id', function(req, res) {
     var user_id = req.params.id;
@@ -123,7 +123,7 @@ module.exports = function (app, express) {
         console.log(err, null);
       } else {
         console.log('response', response);
-        res.json(response[0]); 
+        res.json(response[0]);
       }
     })
   })
@@ -132,7 +132,7 @@ module.exports = function (app, express) {
   app.post('/transaction/make', function(req, res) {
     var transactionObj = req.body.transactionObj;
     transactionUtil.makeTransaction(transactionObj)
-    res.send(201); 
+    res.send(201);
   })
 
   app.get('/transaction/all/', function(req, res) {
@@ -171,7 +171,7 @@ module.exports = function (app, express) {
   app.post('/transaction/close', function(req, res) {
     var transactionObj = req.body.transactionObj;
     var shareValue = req.body.shareValue
-    transactionUtil.closeTransactionRequest(transactionObj, shareValue); 
+    transactionUtil.closeTransactionRequest(transactionObj, shareValue);
   })
 
   app.delete('/transaction/queue/delete/:transactionId', function(req,res){
@@ -182,7 +182,7 @@ module.exports = function (app, express) {
       } else {
         res.send(204)
       }
-    })    
+    })
   })
 
   //Get request to retrieve all current stocks for logged-in user

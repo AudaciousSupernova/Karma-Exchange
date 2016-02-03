@@ -33,7 +33,6 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     console.log("What is the access token?", accessToken);
-    console.log("WHAT IS THE REFRESH TOKEN", refreshToken);
     process.nextTick(function () {
       // console.log('Facebook Profile',profile);
       // console.log('Access Token', accessToken);
