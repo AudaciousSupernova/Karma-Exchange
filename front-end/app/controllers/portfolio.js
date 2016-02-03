@@ -53,6 +53,10 @@ angular.module('app.portfolio', ["chart.js"])
       for(var i = 0; i < scoresHist.length; i++){
         obj.data[0].push(scoresHist[i].currentScore)
       }
+      var daysBeforeUserJoined = $scope.labels.length - obj.data[0].length 
+      for(var i = 0; i < daysBeforeUserJoined; i++){
+        obj.data[0].unshift(0)
+      }
       obj.currentScore = obj.data[0][obj.data[0].length - 1]
       $scope.addProfit(obj)
     })
