@@ -103,6 +103,26 @@ angular.module('app.profile', [])
       })
   }
 
+  //Click on report function that takes user to the report modal
+  //Add in ng-show logic for the report button on the profile view
+    //if your on someone elses profile and one week has not gone by
+      //hide button
+    //otherwise if your on your profile
+      //show button
+    //otherwise if one week has gone by
+      //show button
+  $scope.clickReport = function() {
+    $mdDialog.show({
+      templateUrl: '../app/views/report.html',
+      locals: {
+        user: $scope.user
+      },
+      controller: ReportModalController
+    })
+      .then(function(clickedItem) {
+      })
+  }
+
   function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio) {
 
     $scope.profile = profile;
@@ -199,6 +219,27 @@ angular.module('app.profile', [])
       $mdDialog.hide();
     }
   }
+
+  //<h3> ReportModalController Function </h3>
+  //This will include the logic to display all profile report details. These include: 
+    //Current Score
+    //Social Score
+    //Expected Social Score Trend
+    //Current Social Score Trend
+    //Future Expected Social Score Trend
+    //# of Shareholders
+    //# of shares on market
+    //Supply and demand ratio
+    //Close button, on click should exit
+
+  function ReportModalController($scope, $mdDialog, user) {
+    $scope.user = user;
+    console.log($scope.user);
+    $scope.exit = function() {
+      $mdDialog.hide();
+    }
+  }
+
 
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
