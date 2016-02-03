@@ -136,9 +136,10 @@ module.exports = function (app, express) {
   })
 
   app.post('/transaction/close', function(req, res) {
+    console.log(req.body,'req to /transaction/close');
     var transactionObj = req.body.transactionObj;
-    var shareVal = 
-    transactionUtil.closeTransactionRequest(transactionObj, )
+    var shareValue = req.body.shareValue
+    transactionUtil.closeTransactionRequest(transactionObj, shareValue); 
   })
 
   app.get('/portfolio/:id', function(req, res) {

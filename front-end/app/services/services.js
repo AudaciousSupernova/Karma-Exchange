@@ -150,11 +150,11 @@ angular.module('app.services', [])
     },
 
     // calls closeTransactionRequest, which closes specified transaction request 
-    closeTransactionRequest: function(transactionObj) {
+    closeTransactionRequest: function(transactionObj, shareValue) {
       return $http({
         method: 'POST',
         url: '/transaction/close',
-        data: {transactionObj: transactionObj}
+        data: {transactionObj: transactionObj, shareValue: shareValue}
       })
     }
   }

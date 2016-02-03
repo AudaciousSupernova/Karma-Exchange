@@ -262,4 +262,5 @@ module.exports = {
 	checkTransaction: checkTransaction,
 	makePopulateTransaction: makePopulateTransaction,
 	getHistWithNames: getHistWithNames,
+	closeTransactionRequest:closeTransactionRequest,
 }

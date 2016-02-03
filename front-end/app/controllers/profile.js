@@ -122,7 +122,7 @@ angular.module('app.profile', [])
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: 
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       var investment = {
@@ -168,7 +168,7 @@ angular.module('app.profile', [])
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: 
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       TransactionHist.makeTransaction(transaction).then(function()  {
@@ -184,12 +184,13 @@ angular.module('app.profile', [])
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: 
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
+        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
+      var newScore = $scope.score * 1.1; 
+
       TransactionHist.makeTransaction(transaction).then(function() {
-        $scope.score = $scope.score * 1.1; 
-        TransactionHist.closeTransactionRequest(transaction); 
+        TransactionHist.closeTransactionRequest(transaction, newScore); 
       })
       $mdDialog.hide(); 
     }
