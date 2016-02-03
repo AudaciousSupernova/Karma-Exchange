@@ -73,6 +73,11 @@ angular.module('app.profile', [])
         $scope.scores[0].push(scoreObj.social);
         $scope.scores[1].push(scoreObj.currentScore);
       }
+      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length 
+      for(var i = 0; i < daysBeforeUserJoined; i++){
+        $scope.scores[0].unshift(0)
+        $scope.scores[1].unshift(0)
+      }
       console.log($scope.series,$scope.labels,$scope.scores)
     })
   }

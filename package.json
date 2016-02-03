@@ -14,6 +14,7 @@
     "populateDbs": "npm run populateUserTable && npm run populateTransactionHist && npm run populateScoresHist",
     "populateUserTable": "node back-end/db/dbControllers/populateUserTable.js",
     "populateTransactionHist": "node back-end/db/dbControllers/populateTransactionHist.js",
+    "populateTransactionHistWithCurrentShares": "node back-end/db/dbControllers/populateTransactionHistWithCurrentShares.js",
     "populateScoresHist": "node back-end/db/dbControllers/populateScoresHist.js",
     "populateCurrentStocks": "node back-end/db/dbControllers/populateCurrentStocks.js"
   },
