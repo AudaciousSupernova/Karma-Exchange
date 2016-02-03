@@ -1,9 +1,26 @@
-<md-dialog>
+<md-dialog ng-init="checkSharesReq()">
   <md-dialog-content>
-   <div> Are you sure you want to sell <input ng-model="sharesToSell" placeholder="{{investment.numberShares}}"/> shares of {{investment.name}}? </div>
+    <div> 
+   		<p>Are you sure you want to sell</p> <input ng-model="	sharesToSell" placeholder="{{investment.numberShares}}"/> shares of {{investment.name}}?
+   </div>
 
-    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete"> Confirm </md-button>
-    <md-button class="md-primary" ng-click="exit()" aria-label="Complete"> Cancel </md-button>
+    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete" ng-hide='revealOptions'> Confirm </md-button>
+
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-hide='revealOptions'> Cancel </md-button>
+
+    <p ng-show='revealOptions'>There are not enough buy requests to sell all of your shares. You have the following options.:</p>
+
+    <p ng-show='revealOptions'>You may choose to make a partial sale of your shares and allow the rest of your transaction to be completed upon market demand.</p>
+
+    <p ng-show='revealOptions'>You may choose to choose to make a partial sale of your shares and immediately sell the remaining shares in your transaction to Karma Exchange at 90% of current market value.</p>
+
+    <p ng-show='revealOptions'>Or you may cancel your request</p>
+
+    <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show='revealOptions'> Wait For Availability</md-button>
+
+    <md-button class="md-primary" ng-click="sellDirect()" aria-label="Complete" ng-show='revealOptions'> Sell to Karma Exchange</md-button>
+
+    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show='revealOptions'> Cancel Your Sale</md-button>
     
   </md-dialog-content>
 

@@ -1,7 +1,7 @@
 <md-dialog ng-init="checkSharesAvail()">
   <md-dialog-content>
    <div> 
-   	<p>How many shares would you like to buy?</p> I would like to buy <input ng-model="sharesToBuy"/> shares of {{investment.name}}
+   	<p>How many shares would you like to buy?</p> I would like to buy <input ng-model="sharesToBuy"/> shares of {{profile.name}}
    	</div>
 
     <md-button ng-click="confirm()" class="md-primary" aria-label="Complete" ng-hide="revealOptions"> Confirm </md-button>
@@ -15,7 +15,7 @@
 
     <p ng-show="revealOptions">Or you may cancel your request</p>
 
-    <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show="revealOptions"> Wait for availability</md-button>
+    <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show="revealOptions"> Wait For Availability</md-button>
 
     <md-button class="md-primary" ng-click="buyDirect()" aria-label="Complete" ng-show="revealOptions"> Buy From Karma Exchange</md-button>
 

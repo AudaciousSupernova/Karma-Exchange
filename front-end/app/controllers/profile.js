@@ -136,17 +136,6 @@ angular.module('app.profile', [])
         numberShares: $scope.sharesToBuy
       }
 
-      // SUCCESSFUL BUY! THIS ONLY HAPPENS WHEN YOU HAVE FOUND THE MATCHING SELL REQUEST TO YOUR BUY
-
-      // call makeTransaction, which calls checkTransatcion
-
-
-
-      // checkTransaction returns numShares of targetId (seller in this case) 
-
-
-
-      //  
       if ($scope.loggedinUserInfo.karma < $scope.score*transaction.numberShares) {
         console.log("NOT ENOUGH MONEY")
         $mdDialog.hide();
@@ -189,14 +178,22 @@ angular.module('app.profile', [])
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: 
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+        $scope.availableShares
       }
+      var newScore = Math.round($scope.profile.currentScore * 1.1); 
 
-      var newScore = $scope.score * 1.1; 
+      if ($scope.availableShares) {
+        TransactionHist.makeTransaction(transaction).then(function() {
+          transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
+          TransactionHist.closeTransactionRequest(transaction, newScore); 
+        })
 
-      TransactionHist.makeTransaction(transaction).then(function() {
-        TransactionHist.closeTransactionRequest(transaction, newScore); 
-      })
+      } else {
+        transaction.numberShares = $scope.sharesToBuy; 
+        TransactionHist.closeTransactionRequest(transaction, newScore);
+      }
+      $scope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
+
       $mdDialog.hide(); 
     }
 
