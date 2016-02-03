@@ -25,8 +25,9 @@ var addToStocks = function(user_id, i, length){
 					target_id: stock.target_id,
 					type: "buy",
 					numberShares: Math.ceil(Math.random() * 50),
-					karma: Math.ceil(Math.random() * 20000),
 				}
+				randomTransactionObj.karma = Math.ceil(Math.random() * 100)*randomTransactionObj.numberShares,
+
 
 				mainController.addTransaction(randomTransactionObj, function(err, insertionId){
 					if(user_id === length-1){

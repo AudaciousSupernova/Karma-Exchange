@@ -127,16 +127,17 @@ angular.module('app.portfolio', ["chart.js"])
       if(investment.target_id === transaction.target_id) {
 
         if(shares - transaction.numberShares > 0){
-          console.log(transaction.numberShares, investment.currentScore, transaction.karma)
-          var profit = transaction.numberShares * investment.currentScore - transaction.karma
-          profit += profit        
+          profit += (transaction.numberShares * investment.currentScore - transaction.karma)
           shares -= transaction.numberShares
+          console.log(transaction.target_id, transaction.numberShares, investment.currentScore, transaction.karma, profit)
           // <= 0 
         } else {
           var transactionScore = Math.round(transaction.karma / transaction.numberShares)
-          var profit = shares * investment.currentScore - shares * transactionScore
-          console.log("else profit", profit)
+          profit += (shares * investment.currentScore - shares * transactionScore)
+          console.log("else", transaction.target_id, shares, investment.currentScore, transaction.karma, profit)
+          shares = 0
           investment.profit = profit;
+          break;
         }
       }
     }
