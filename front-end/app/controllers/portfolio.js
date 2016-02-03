@@ -113,14 +113,7 @@ angular.module('app.portfolio', ["chart.js"])
     transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
   }
 //searches through the investment history to get the profit for each set of shares this should probably eventually be moved to the back end unless we always want to grab the entire transaction history for a user. It could be added by making a controller that searched through transaction hist by user_id and target_id to help refine the search then using that to add a profit to the object whenever a user makes a get request for their current stocks.
-// hist
-// id: 1729
-// karma: 4576
-// numberShares: 44
-// target_id: 64
-// target_name: "Rosie Bergnaum"
-// type: "sell"
-// user_id: 1
+
   $scope.addProfit = function(investment){
     var shares = investment.numberShares
     var profit = 0;
@@ -146,14 +139,6 @@ angular.module('app.portfolio', ["chart.js"])
       }
     }
   }
-// currentScore: 45
-// data: Array[1]
-// id: 3220
-// name: "Clemens Rohan"
-// numberShares: 64
-// series: "Clemens Rohan"
-// target_id: 85
-// user_id: 1
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 
