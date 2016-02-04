@@ -103,4 +103,5 @@ module.exports = {
 	findOpenTransaction: findOpenTransaction,
 	deleteOpenTransaction: deleteOpenTransaction,
 	updateOpenTransaction: updateOpenTransaction,
+	findOpenUserTransactions: findOpenUserTransactions,
 }

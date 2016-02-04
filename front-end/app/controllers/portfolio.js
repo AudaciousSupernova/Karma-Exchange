@@ -10,9 +10,9 @@ angular.module('app.portfolio', ["chart.js"])
   //call getInvestments, pass the userId on the function call
   $scope.labels = [];
   $scope.transactions = []
-  $scope.currentInvestments = true;
+  $scope.currentInvestmentsView = true;
   $scope.openTransactionsView = false;
-  $scope.transactionHistory = false;
+  $scope.transactionHistoryView = false;
 
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
@@ -90,24 +90,6 @@ angular.module('app.portfolio', ["chart.js"])
     })
   } 
 
-
-//<h3>View getters</h3>
-//the following functions return values for the various views to help trigger the correct ones.
-
-//returns the currentInvestment value
-$scope.getCurrentInvestmentsView = function(){
-  return $scope.currentInvestments
-}
-//returns the transactionHistory value
-$scope.getTransactionHistoryView = function(){
-  return $scope.transactionHistory
-}
-//returns openTrasactions value
-$scope.getOpenTransactionsView = function(){
-  return $scope.openTransactionsView
-}
-
-
 //generates lables for the graph. Initially to 30 days in the past however that can be modified in the future
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
@@ -157,7 +139,7 @@ $scope.getOpenTransactionsView = function(){
           shares -= transaction.numberShares
           // <= 0 
         } else {
-          var transactionScore = Math.round(transaction.karma / transaction.numberShares)
+          var transactionScore = Math.abs(Math.round(transaction.karma / transaction.numberShares))
           profit += (shares * investment.currentScore - shares * transactionScore)
           shares = 0
           investment.profit = profit;
@@ -167,28 +149,30 @@ $scope.getOpenTransactionsView = function(){
     }
   }
 
-  var toggleViews = function(viewToShow){
+  $scope.toggleViews = function(viewToShow){
     if(viewToShow === "transactionHistory"){
-    console.log("stuff")      
-      $scope.transactionHistory = true;
-      $scope.currentInvestments = false;
+      $scope.transactionHistoryView = true;
+      $scope.currentInvestmentsView = false;
       $scope.openTransactionsView = false;
     } else if (viewToShow === "currentInvestments"){
-      $scope.currentInvestments = true;
-      $scope.transactionHistory = false;
+      $scope.currentInvestmentsView = true;
+      $scope.transactionHistoryView = false;
       $scope.openTransactionsView = false;
     } else {
       $scope.openTransactionsView = true;
-      $scope.currentInvestments = false;
-      $scope.transactionHistory = false;
+      $scope.currentInvestmentsView = false;
+      $scope.transactionHistoryView = false;
     }
   }
 
-  var toggleOpenTransactions = function(){
+  $scope.toggleOpenTransactions = function(){
     $scope.getOpenUserTransactions()
-    toggleViews('openTransactions')
+    $scope.toggleViews('openTransactions')
   }
 
+  $scope.associateData = function(openTransaction){
+    
+  }
 
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
