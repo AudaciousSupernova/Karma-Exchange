@@ -56,7 +56,7 @@ angular.module('app.portfolio', ["chart.js"])
       for(var i = 0; i < scoresHist.length; i++){
         obj.data[0].push(scoresHist[i].currentScore)
       }
-      var daysBeforeUserJoined = $scope.labels.length - obj.data[0].length 
+      var daysBeforeUserJoined = $scope.labels.length - obj.data[0].length
       for(var i = 0; i < daysBeforeUserJoined; i++){
         obj.data[0].unshift(0)
       }
@@ -166,7 +166,7 @@ angular.module('app.portfolio', ["chart.js"])
         if(shares - transaction.numberShares > 0){
           profit += (transaction.numberShares * investment.currentScore - transaction.karma)
           shares -= transaction.numberShares
-          // <= 0 
+          // <= 0
         } else {
           var transactionScore = Math.abs(Math.round(transaction.karma / transaction.numberShares))
           profit += (shares * investment.currentScore - shares * transactionScore)
@@ -297,22 +297,21 @@ angular.module('app.portfolio', ["chart.js"])
         numberShares: $scope.requestedShares,
         karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
       }
-      console.log($scope.investment.currentScore);
       var newScore = Math.round($scope.investment.currentScore * 0.9);
 
       if ($scope.requestedShares) {
         TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares; 
+          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
           TransactionHist.closeTransactionRequest(transaction, newScore);
         })
 
       } else {
         transaction.numberShares = $scope.sharesToSell;
-        TransactionHist.closeTransactionRequest(transaction, newScore); 
+        TransactionHist.closeTransactionRequest(transaction, newScore);
       }
-      $scope.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+      $scope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
 
-      $mdDialog.hide(); 
+      $mdDialog.hide();
     }
 
 
