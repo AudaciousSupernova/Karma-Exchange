@@ -1,4 +1,5 @@
 var mainController = require('../db/dbControllers/mainController')
+var transactionQueue = require('../db/dbControllers/transactionQueue')
 var _ = require('underscore')
 var usefullVariables = require('./usefullVariables.js')
 
@@ -125,6 +126,9 @@ var newSocialInvestmentScore = function(target_id) {
 	var sharesOnMarket = 0;
 	var numTransactionsMade = 0;
 	var newSocialInvestmentScore;
+	var supply;
+	var demand;
+	var SD;
 	mainController.findUserById(target_id, function(err, user) {
 		if (err) {
 			console.log('This is an error', err);
@@ -146,19 +150,40 @@ var newSocialInvestmentScore = function(target_id) {
 									console.log("There was an error", err);
 								} else {
 
-									// if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
-									// 	velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
-									// } else {
-									// 	velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
-									// }
-									// if (numInvestors === 0) {
-									// 	numInvestors = 1;
-									// }
-									// if (sharesOnMarket === 0) {
-									// 	sharesOnMarket = 1;
-									// }
-									// newSocialInvestmentScore = (numInvestors * velocity)/(sharesOnMarket * 5);
-									// console.log("here is my new social investment score", newSocialInvestmentScore)
+									if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
+										velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
+									} else {
+										velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
+									}
+									console.log(velocity,'velocity')
+									if (numInvestors === 0) {
+										numInvestors = 1;
+									}
+									if (sharesOnMarket === 0) {
+										sharesOnMarket = 1;
+									}
+									transactionQueue.findOpenTransaction(target_id, 'buy', function (err, buyRequests) {
+										if (err) {
+											console.log("There was an error calculating the social investment score due to an error finding open transactions");
+										} else {
+											demand = buyRequests.length;
+										}
+									});
+									transactionQueue.findOpenTransaction(target_id, 'sell', function (err, sellRequests) {
+										if (err) {
+											console.log("There was an error calculating the social investment score due to an error finding open transactions");
+										} else {
+											supply = sellRequests.length;
+										}
+									});
+									if (demand) {
+										SD = demand;
+									}
+									else if (supply) {
+										SD = 1/supply;
+									}
+									newSocialInvestmentScore = (sharesOnMarket*(velocity)/(SD));
+									console.log("here is my new social investment score", newSocialInvestmentScore)
 									// // newSocialInvestmentScore = 100;
 									// updateScores(newSocialInvestmentScore, user[0]);
 								}

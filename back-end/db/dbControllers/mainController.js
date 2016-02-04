@@ -277,7 +277,7 @@ var addScore = function(scoreObj, callback){
 		if(err){
 			console.log("error inserting into scoresHist", err)
 			callback(err, null)
-		} else{
+		} else {
 			console.log("last inserted Id: ", res.insertId);
 			scoreObj.id = scoreObj.user_id;
 			delete scoreObj.user_id;
