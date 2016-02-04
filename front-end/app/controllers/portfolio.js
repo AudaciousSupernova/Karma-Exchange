@@ -27,7 +27,6 @@ angular.module('app.portfolio', ["chart.js"])
 
 //gets all current investments for the user
 //properties on an investment object
-// $$hashKey: "object:37"
 // currentScore: 45
 // data: Array[1]
 // id: 3220
@@ -40,7 +39,6 @@ angular.module('app.portfolio', ["chart.js"])
     Portfolio.getInvestments(id)
     .then(function(results) {
       $scope.investments = results;
-      console.log("here i am", $scope.investments); 
     })
   }
 
@@ -127,12 +125,10 @@ angular.module('app.portfolio', ["chart.js"])
         if(shares - transaction.numberShares > 0){
           profit += (transaction.numberShares * investment.currentScore - transaction.karma)
           shares -= transaction.numberShares
-          console.log(transaction.target_id, transaction.numberShares, investment.currentScore, transaction.karma, profit)
           // <= 0 
         } else {
           var transactionScore = Math.round(transaction.karma / transaction.numberShares)
           profit += (shares * investment.currentScore - shares * transactionScore)
-          console.log("else", transaction.target_id, shares, investment.currentScore, transaction.karma, profit)
           shares = 0
           investment.profit = profit;
           break;
@@ -185,15 +181,12 @@ angular.module('app.portfolio', ["chart.js"])
       }
 
       if ($scope.sharesToSell > $scope.investment.numberShares) {
-        console.log('investment', investment); 
         console.log("You are trying to sell more than you have!");
         $mdDialog.hide();
 
       } else {
 
         if ($scope.sharesToSell > $scope.requestedShares) {
-          console.log($scope.sharesToSell,'sharesToSell')
-          console.log($scope.requestedShares,'requestedShares');
           $scope.revealOptions = true;
           console.log("THERE ARE NOT ENOUGH SHARES REQUESTED ON THE MARKET")
 
@@ -266,46 +259,5 @@ angular.module('app.portfolio', ["chart.js"])
       });
     }
   }
-//   .controller("LineCtrl", ['$scope', '$timeout', function ($scope, $timeout) {
 
-//   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-//   $scope.series = ['Series A', 'Series B'];
-//   $scope.data = [
-//     [65, 59, 80, 81, 56, 55, 40],
-//     [28, 48, 40, 19, 86, 27, 90]
-//   ];
-//   $scope.onClick = function (points, evt) {
-//     console.log(points, evt);
-//   };
-
-//   // Simulate async data update
-//   $timeout(function () {
-//     $scope.data = [
-//       [28, 48, 40, 19, 86, 27, 90],
-//       [65, 59, 80, 81, 56, 55, 40]
-//     ];
-//   }, 3000);
-// }]);
-
-
-
-
-  // if (!Auth.isAuth()) {
-  //   $location.path('/signin');
-  // } else {
-  //   $scope.getQuestion();
-  // }
 })
-
-// function DialogController($scope, $mdDialog) {
-//   $scope.hide = function() {
-//     $mdDialog.hide();
-//   };
-//   $scope.cancel = function() {
-//     $mdDialog.cancel();
-//   };
-//   $scope.answer = function(answer) {
-//     $mdDialog.hide(answer);
-//   };
-// }
-
