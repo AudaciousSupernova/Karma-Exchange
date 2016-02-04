@@ -1,6 +1,7 @@
 angular.module('app.index', [])
 
 .controller('IndexController', function($scope, $rootScope, $location, $http, Newsfeed, Root, Auth, User) {
+
   $scope.currentUserInfo = false;
   $scope.searchResults;
   $scope.searchQuery = ""
@@ -14,6 +15,13 @@ angular.module('app.index', [])
 
   $scope.viewPortfolio = function () {
     $location.path('/portfolio/' + $scope.currentUserInfo.id);
+  }
+
+  $scope.getLeaders = function () {
+
+    var userObjects = User.getLeaderData(); 
+
+    console.log(userObjects); 
   }
 
   $scope.logout = function () {
