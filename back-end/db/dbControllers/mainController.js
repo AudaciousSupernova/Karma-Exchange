@@ -270,6 +270,22 @@ var getScores = function(userId, callback){
 	})
 }
 
+//grabs all scores for a target user in the last week
+var getRecentScores = function(userId, callback) {
+	console.log("I am in the get recent scores function");
+	var oneWeekAgo = new Date();
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+	console.log("one week ago looks like", oneWeekAgo);
+	connection.query('SELECT * FROM scoresHist where user_id=? AND ts>? ORDER BY ts', [userId, oneWeekAgo], function(err, rows) {
+		if (err) {
+			console.log("Error getting recent scores of user_id: ", userId, err);
+			callback(err, null);
+		} else {
+			callback(null, rows);
+		}
+	})
+}
+
 
 //<h3>Current Stocks</h3>
 
@@ -375,6 +391,7 @@ module.exports = {
 	//score History methods
 	addScore: addScore,
 	getScores: getScores,
+	getRecentScores: getRecentScores,
 
 	//Current Stock methods
 	getStocks: getStocks,

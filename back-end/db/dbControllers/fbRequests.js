@@ -126,7 +126,8 @@ var updateScores = function(newScore, type, user) {
   // console.log(user.name + "'s social_investment score is: ", user.social_investment);
   // console.log(user.name + "'s total current score is: ", user.currentScore)
   var date = new Date();
-  if (date.getDate() === 3) {
+  if (date.getDate() === 4) {
+    console.log("I am in the update scores function on the thursday logic!")
     var scoreObj = {
       user_id: user.id, 
       social: user.social, 
@@ -144,40 +145,49 @@ var updateScores = function(newScore, type, user) {
         var recentYVals = [];
         var recentXVals = [];
         var velocity;
-
-        mainController.getScores(user.id, function(err, scores) {
+        mainController.getRecentScores(user.id, function(err, recentScores) {
           if (err) {
-            console.log("Unable to retrieve all scores for user", err);
+            console.log("There was an error retrieving the recent scores");
           } else {
-            for (var i = 0; i<scores.length; i++) {
-              if (scores[i].ts = new Date() || scores[i].ts.getDay() !== 3) {
-                recentYVals.push(scores[i].social);
-                recentXVals.push(i);
-              }
-              generalYVals.push(scores[i].social);
-              generalXVals.push(i); 
+            console.log("These are my recent scores", recentScores);
+            for (var i = 0; i<recentScores.length; i++) {
+              recentYVals.push(recentScores[i].social);
+              recentXVals.push(i);
             }
-            if (generalXVals.length < 2) {
-              generalXVals.push(generalXVals[0]);
-              generalYVals.push(generalYVals[0]);
-              recentXVals.push(recentXVals[0]);
-              recentYVals.push(recentYVals[0]);
-            }
-            recentVelocity = linearRegression(recentYVals, recentXVals).slope;
-            generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-            console.log("what is the recent velocity", recentVelocity);
-            console.log("what is the general velocity", generalVelocity);
-            user.last_week_actual_social_change = recentVelocity.toString();
-            user.next_week_expected_social_change = (0.6*recentVelocity + 0.4*generalVelocity).toString();
-            mainController.updateUser(user, function(err, results) {
+            mainController.getScores(user.id, function(err, scores) {
               if (err) {
-                console.log("Unable to update user", err);
+                console.log("Unable to retrieve all scores for user", err);
               } else {
-                console.log("Successfully updated user", results);
+                console.log("here are ALL the scores", scores);
+                for (var i = 0; i<scores.length; i++) {
+                    generalYVals.push(scores[i].social);
+                    generalXVals.push(i); 
+                }
+                if (generalXVals.length < 2) {
+                  generalXVals.push(generalXVals[0]);
+                  generalYVals.push(generalYVals[0]);
+                  recentXVals.push(recentXVals[0]);
+                  recentYVals.push(recentYVals[0]);
+                }
+                recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+                generalVelocity = linearRegression(generalYVals, generalXVals).slope;
+                console.log("what is the recent velocity", recentVelocity);
+                console.log("what is the general velocity", generalVelocity);
+                user.last_week_actual_social_change = recentVelocity.toString();
+                user.next_week_expected_social_change = (0.6*recentVelocity + 0.4*generalVelocity).toString();
+                mainController.updateUser(user, function(err, results) {
+                  if (err) {
+                    console.log("Unable to update user", err);
+                  } else {
+                    console.log("Successfully updated user", results);
+                  }
+                })
               }
             })
+            
           }
         })
+
         
       }
     })
