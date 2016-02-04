@@ -54,13 +54,6 @@ angular.module('app.profile', [])
       if ($scope.user.email === null) {
         $scope.user.email = "No Email Provided"
       }
-      // console.log("What does my user look like?", $scope.user);
-      // console.log("Well here we are", $scope.user);
-      // $scope.getScores();
-      //if id matches logged-in id
-        //then call getLeaders
-      //else
-        //display buy shares button
     })
   }
 
@@ -78,7 +71,6 @@ angular.module('app.profile', [])
         $scope.scores[0].unshift(0)
         $scope.scores[1].unshift(0)
       }
-      console.log($scope.series,$scope.labels,$scope.scores)
     })
   }
   $scope.addLabels = function(daysInPast){
@@ -222,14 +214,4 @@ angular.module('app.profile', [])
       $scope.getScores();
     }
   })
-
-
-
-
-
-  // if (!Auth.isAuth()) {
-  //   $location.path('/signin');
-  // } else {
-  //   $scope.getQuestion();
-  // }
 });
