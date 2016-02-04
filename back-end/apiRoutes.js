@@ -180,6 +180,10 @@ module.exports = function (app, express) {
 
 
   app.get('/trending', function(req, res) {
+
+    //Call mainController for counting users
+        //on success call main controller for transaction count
+          //on success call for karma (write this in mainController)
     var test = {
       data: [
         {
