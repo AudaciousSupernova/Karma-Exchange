@@ -416,11 +416,8 @@ module.exports = {
 	//score History methods
 	addScore: addScore,
 	getScores: getScores,
-<<<<<<< HEAD
 	getRecentScores: getRecentScores,
-=======
 	getTopScores: getTopScores,
->>>>>>> added top 1% logic to apiRoutes, mainController, index.js, services.js
 
 	//Current Stock methods
 	getStocks: getStocks,
