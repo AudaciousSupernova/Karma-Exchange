@@ -147,7 +147,7 @@ module.exports = function (app, express) {
     var user_id = req.params.user_id
     transactionQueue.findOpenUserTransactions(user_id, function(err, results) {
       if(err){
-        console.log("Error in API routes looking for user transaction queue")
+        console.log("Error in API routes looking for user transaction queue", err)
       } else {
         res.send(results)
       }

@@ -10,6 +10,9 @@ angular.module('app.portfolio', ["chart.js"])
   //call getInvestments, pass the userId on the function call
   $scope.labels = [];
   $scope.transactions = []
+  $scope.currentInvestments = true;
+  $scope.openTransactionsView = false;
+  $scope.transactionHistory = false;
 
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
@@ -61,6 +64,50 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
+//gets the transaction history for the current user
+//sample properties on a transaction object
+// id: 1729
+// karma: 4576
+// numberShares: 44
+// target_id: 64
+// target_name: "Rosie Bergnaum"
+// type: "sell"
+// user_id: 1
+  $scope.getTransactionHist = function(callback) {
+    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
+    .then(function(results) {
+      $scope.transactions = results.reverse();
+      callback()
+    })
+  }
+//gets all open user transactions for the logged in user.
+//sample properties on an open transaction
+  $scope.getOpenUserTransactions = function(){
+    var user_id = $scope.loggedinUserInfo.id
+    TransactionHist.getOpenUserTransactions(user_id)
+    .then(function(openTransactions){
+      $scope.openTransactions = openTransactions;
+    })
+  } 
+
+
+//<h3>View getters</h3>
+//the following functions return values for the various views to help trigger the correct ones.
+
+//returns the currentInvestment value
+$scope.getCurrentInvestmentsView = function(){
+  return $scope.currentInvestments
+}
+//returns the transactionHistory value
+$scope.getTransactionHistoryView = function(){
+  return $scope.transactionHistory
+}
+//returns openTrasactions value
+$scope.getOpenTransactionsView = function(){
+  return $scope.openTransactionsView
+}
+
+
 //generates lables for the graph. Initially to 30 days in the past however that can be modified in the future
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
@@ -87,23 +134,6 @@ angular.module('app.portfolio', ["chart.js"])
         // console.log(clickedItem, "this was clicked");
       })
   }
-
-//gets the transaction history for the current user
-//sample properties on a transaction object
-// id: 1729
-// karma: 4576
-// numberShares: 44
-// target_id: 64
-// target_name: "Rosie Bergnaum"
-// type: "sell"
-// user_id: 1
-  $scope.getTransactionHist = function(callback) {
-    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
-    .then(function(results) {
-      $scope.transactions = results.reverse();
-      callback()
-    })
-  } 
 
 //turns a transaction into a human friendly string
   $scope.buildHistString = function(transaction){
@@ -136,6 +166,30 @@ angular.module('app.portfolio', ["chart.js"])
       }
     }
   }
+
+  var toggleViews = function(viewToShow){
+    if(viewToShow === "transactionHistory"){
+    console.log("stuff")      
+      $scope.transactionHistory = true;
+      $scope.currentInvestments = false;
+      $scope.openTransactionsView = false;
+    } else if (viewToShow === "currentInvestments"){
+      $scope.currentInvestments = true;
+      $scope.transactionHistory = false;
+      $scope.openTransactionsView = false;
+    } else {
+      $scope.openTransactionsView = true;
+      $scope.currentInvestments = false;
+      $scope.transactionHistory = false;
+    }
+  }
+
+  var toggleOpenTransactions = function(){
+    $scope.getOpenUserTransactions()
+    toggleViews('openTransactions')
+  }
+
+
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 

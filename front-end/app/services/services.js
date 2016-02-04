@@ -115,12 +115,21 @@ angular.module('app.services', [])
         data: {transactionObj: transactionObj}
       })
     },
-    //get all transactions for given user_id
+    //get all past transactions for given user_id
     getTransactions: function(user_id) {
-      console.log("here is the user id", user_id);
       return $http({
         method: 'GET', 
         url: '/transaction/get/' + user_id
+      })
+      .then(function(res) {
+        return res.data;
+      })
+    },
+    //gets all of the open transactions for a specific user, used in the portfolio to help close those transactions
+    getOpenUserTransactions: function(user_id){
+      return $http({
+        method: 'GET', 
+        url: '/transaction/queue/' + user_id
       })
       .then(function(res) {
         return res.data;
