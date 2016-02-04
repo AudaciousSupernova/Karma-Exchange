@@ -15,6 +15,7 @@ module.exports = function (app, express) {
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
 
+  //Get request on login attempt
   app.get('/api/loggedin',
     function (req, res) {
       if (req.isAuthenticated()) {
@@ -24,12 +25,14 @@ module.exports = function (app, express) {
       }
     });
 
+  //Get request on logout
   app.get('/api/logout',
     function (req,res) {
       req.logout();
       res.redirect('/#/')
     })
 
+  //Get request to access certain user's profile
   app.get('/profile/:id', function(req, res) {
     var id = req.params.id;
     mainController.findUserById(id, function(error, response) {
@@ -53,6 +56,8 @@ module.exports = function (app, express) {
     })
   });  
 
+
+  //Post request to complete buy transaction from certain user's profile
   app.post('/profile/buy', function(req, res) {
     var investment = req.body.investment;
     mainController.addStock(investment, function(err, results) {
@@ -93,6 +98,7 @@ module.exports = function (app, express) {
     res.send(test);
   })
 
+  //Post request to add transaction to transaction history table
   app.post('/transaction/add', function(req, res) {
     var transactionObj = req.body.transactionObj;
     mainController.addTransaction(transactionObj, function(err, results) {
@@ -104,7 +110,7 @@ module.exports = function (app, express) {
     })
   })
   
-
+  //Get request to retrieve transactions associated with a certain user
   app.get('/transaction/get/:id', function(req, res) {
     var user_id = req.params.id;
     transactionUtil.getHistWithNames(user_id, function(err, results) {
@@ -129,6 +135,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Post request to make a transaction, buy or sell: will also update user and add to scores' history table
   app.post('/transaction/make', function(req, res) {
     console.log('transactionObject', req.body.transactionObj); 
     var transactionObj = req.body.transactionObj;
@@ -136,6 +143,7 @@ module.exports = function (app, express) {
     res.send(201); 
   })
 
+  //Post request to add a transaction to a transaction queue (buy or sell, when matching requests are unavailable)
   app.post('/transaction/queue', function(req, res) {
     var transactionObj = req.body.transactionObj;
     transactionQueue.addTransactionToQueue(transactionObj, function(err, results) {
@@ -154,6 +162,7 @@ module.exports = function (app, express) {
     transactionUtil.closeTransactionRequest(transactionObj, shareValue); 
   })
 
+  //Get request to retrieve all current stocks for logged-in user
   app.get('/portfolio/:id', function(req, res) {
     var id = req.params.id;
     console.log(id);
@@ -179,9 +188,9 @@ module.exports = function (app, express) {
         subRoutine(0, results);
       }
     })
-
   })
 
+  //Get request to update user's social score - links to facebook graph api requests
   app.get('/facebook/:id', function(req, res) {
     var id = req.params.id;
     fbRequests.getFacebookUserData(id);

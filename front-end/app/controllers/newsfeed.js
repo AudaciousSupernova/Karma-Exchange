@@ -6,6 +6,12 @@ angular.module('app.newsfeed', [])
   console.log("in the newsfeed controller", $rootScope.user)
   //trending data will be the same data for every user
   //call the function and store results in $scope.trending
+
+  //get number of users
+  //get number of transactions
+  //get total karma
+  //get richest users
+  //get highest scores
   $scope.getTrending = function() {
     Newsfeed.getTrending()
       .then(function(results) {
@@ -18,8 +24,7 @@ angular.module('app.newsfeed', [])
     if (loggedIn === false) {
       $location.path('/')
     } else {
-      $scope.getTrending();
-      // $scope.fbTest();
+      console.log("I made it in here");
     }
   })
   

@@ -9,6 +9,11 @@
             Buy Shares
           </md-button>
         </md-content>
+        <md-content>
+          <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised">
+            View Report
+          </md-button>
+        </md-content>
       </span>
       <h4> Name: {{user.name}} </h4>
       <h4> Email: {{user.email}} </h4>

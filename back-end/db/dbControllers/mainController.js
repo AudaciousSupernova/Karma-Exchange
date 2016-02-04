@@ -166,7 +166,7 @@ var updatePhoto = function (userId, newPhoto, callback){
 	);
 }
 
-
+//deletes user
 var deleteUser = function(userId, callback){
 	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, response) {
     if (err) {
@@ -194,6 +194,7 @@ var deleteUser = function(userId, callback){
 // }
 // addTransaction(sampleTransaction)
 
+//takes a transaction object and adds it to the transaction history table
 var addTransaction = function(transactionObj, callback){
 	connection.query('INSERT INTO transactionHist SET ?', transactionObj, function(err, res){
 		if(err){
@@ -219,8 +220,8 @@ var getTransactionHist = function(userId, callback){
 	})
 };
 
+//takes a targetId and returns a transaction history including that targetId
 var targetTransactionHist = function(targetId, callback) {
-
 	connection.query('SELECT * FROM transactionHist where target_id=?', targetId, function(err, rows) {
 		if (err) {
 			console.log('Error finding transactionHist with target_id :' + targetId, err);
@@ -242,6 +243,8 @@ var targetTransactionHist = function(targetId, callback) {
 // 	type: "social-investment",
 // 	score: 95
 // }
+
+//takes a score object and adds it to the scores' history table
 var addScore = function(scoreObj, callback){
 	connection.query('INSERT INTO scoresHist SET ?', scoreObj, function(err, res){
 		if(err){
@@ -262,6 +265,22 @@ var getScores = function(userId, callback){
 			callback(err, null);
 		} else{
 			// console.log(rows)
+			callback(null, rows);
+		}
+	})
+}
+
+//grabs all scores for a target user in the last week
+var getRecentScores = function(userId, callback) {
+	console.log("I am in the get recent scores function");
+	var oneWeekAgo = new Date();
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+	console.log("one week ago looks like", oneWeekAgo);
+	connection.query('SELECT * FROM scoresHist where user_id=? AND ts>? ORDER BY ts', [userId, oneWeekAgo], function(err, rows) {
+		if (err) {
+			console.log("Error getting recent scores of user_id: ", userId, err);
+			callback(err, null);
+		} else {
 			callback(null, rows);
 		}
 	})
@@ -302,6 +321,7 @@ var getStocks = function(userId, callback){
   })
 }
 
+// Get all stocks that include the inputted targetId as the target user
 var getTargetStocks = function(targetId, callback) {
 	connection.query('SELECT * from currentStocks WHERE target_id=?', [targetId], function(err, rows) {
 		if (err) {
@@ -337,7 +357,6 @@ var updateStock = function(userId, targetId, changeShares, callback) {
 	})
 }
 
-
 // Deletes the stock of a specified user
 var deleteStock = function(userId, targetId, callback) {
 	connection.query('DELETE FROM currentStocks WHERE target_id=? AND user_id=?', [targetId, userId], function(err, response) {
@@ -372,6 +391,7 @@ module.exports = {
 	//score History methods
 	addScore: addScore,
 	getScores: getScores,
+	getRecentScores: getRecentScores,
 
 	//Current Stock methods
 	getStocks: getStocks,

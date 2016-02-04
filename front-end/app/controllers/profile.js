@@ -12,7 +12,7 @@ angular.module('app.profile', [])
   $scope.loggedinUserInfo.currentScore = "No score currently";
   $scope.scores = [[],[]];
   $scope.labels = [];
-
+  $scope.wednesday = false;
   //Save the user id, included in the location path
 
   //Pass this userId to $scope.getUserData in order to get all data associated with user
@@ -53,6 +53,19 @@ angular.module('app.profile', [])
       }
       if ($scope.user.email === null) {
         $scope.user.email = "No Email Provided"
+      }
+      // console.log("What does my user look like?", $scope.user);
+      // console.log("Well here we are", $scope.user);
+      // $scope.getScores();
+      //if id matches logged-in id
+        //then call getLeaders
+      //else
+        //display buy shares button
+      var date = new Date();
+      if (date.getDay() === 2) {
+        $scope.wednesday = true;
+      } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
+        $scope.wednesday = true;
       }
     })
   }
@@ -103,11 +116,33 @@ angular.module('app.profile', [])
       })
   }
 
+  //Click on report function that takes user to the report modal
+  //Add in ng-show logic for the report button on the profile view
+    //if your on someone elses profile and one week has not gone by
+      //hide button
+    //otherwise if your on your profile
+      //show button
+    //otherwise if one week has gone by
+      //show button
+  $scope.clickReport = function() {
+    $mdDialog.show({
+      templateUrl: '../app/views/report.html',
+      locals: {
+        user: $scope.user
+      },
+      controller: ReportModalController
+    })
+      .then(function(clickedItem) {
+      })
+  }
+
   function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio) {
 
     $scope.profile = profile;
     $scope.score = loggedinUserInfo.currentScore;
+    console.log("$scope.score", $scope.score);
     $scope.loggedinUserInfo = loggedinUserInfo;
+    console.log("logged in user karma", $scope.loggedinUserInfo.karma);
     $scope.sharesToBuy;
     $scope.availableShares;
     $scope.revealOptions = false;
@@ -128,7 +163,7 @@ angular.module('app.profile', [])
         numberShares: $scope.sharesToBuy
       }
 
-      if ($scope.loggedinUserInfo.karma < $scope.score*transaction.numberShares) {
+      if ($scope.loggedinUserInfo.karma < $scope.score* $scope.sharesToBuy) {
         console.log("NOT ENOUGH MONEY")
         $mdDialog.hide();
       } else {
@@ -199,6 +234,27 @@ angular.module('app.profile', [])
       $mdDialog.hide();
     }
   }
+
+  //<h3> ReportModalController Function </h3>
+  //This will include the logic to display all profile report details. These include: 
+    //Current Score
+    //Social Score
+    //Expected Social Score Trend
+    //Current Social Score Trend
+    //Future Expected Social Score Trend
+    //# of Shareholders
+    //# of shares on market
+    //Supply and demand ratio
+    //Close button, on click should exit
+
+  function ReportModalController($scope, $mdDialog, user) {
+    $scope.user = user;
+    console.log($scope.user);
+    $scope.exit = function() {
+      $mdDialog.hide();
+    }
+  }
+
 
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
