@@ -83,7 +83,7 @@ module.exports = function (app, express) {
   app.get('/leaders', function(req, res) {
     mainController.getTopUsers(2, function(err, results) {
       if (err) {
-        console.log('error on leaders/top scores', err);
+        console.log('error on leaders/top users', err);
       } else {
         res.send(results); 
       }
