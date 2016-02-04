@@ -140,7 +140,9 @@ angular.module('app.profile', [])
 
     $scope.profile = profile;
     $scope.score = loggedinUserInfo.currentScore;
+    console.log("$scope.score", $scope.score);
     $scope.loggedinUserInfo = loggedinUserInfo;
+    console.log("logged in user karma", $scope.loggedinUserInfo.karma);
     $scope.sharesToBuy;
     $scope.availableShares;
     $scope.revealOptions = false;
@@ -161,7 +163,7 @@ angular.module('app.profile', [])
         numberShares: $scope.sharesToBuy
       }
 
-      if ($scope.loggedinUserInfo.karma < $scope.score*transaction.numberShares) {
+      if ($scope.loggedinUserInfo.karma < $scope.score* $scope.sharesToBuy) {
         console.log("NOT ENOUGH MONEY")
         $mdDialog.hide();
       } else {

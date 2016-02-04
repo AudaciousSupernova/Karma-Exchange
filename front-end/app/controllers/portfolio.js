@@ -193,6 +193,7 @@ angular.module('app.portfolio', ["chart.js"])
         } else {
 
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
+          console.log("what is shares to sell", $scope.sharesToSell);
           $scope.investment.numberShares -= $scope.sharesToSell;
           TransactionHist.makeTransaction(transaction)
             .then(function () {
