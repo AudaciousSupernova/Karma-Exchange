@@ -137,13 +137,23 @@ module.exports = function (app, express) {
 
   //Post request to make a transaction, buy or sell: will also update user and add to scores' history table
   app.post('/transaction/make', function(req, res) {
-    console.log('transactionObject', req.body.transactionObj); 
     var transactionObj = req.body.transactionObj;
     transactionUtil.makeTransaction(transactionObj)
     res.send(201); 
   })
 
   //Post request to add a transaction to a transaction queue (buy or sell, when matching requests are unavailable)
+  app.get('/transaction/queue/:user_id', function(req, res){
+    var user_id = req.params.user_id
+    transactionQueue.findOpenUserTransactions(user_id, function(err, results) {
+      if(err){
+        console.log("Error in API routes looking for user transaction queue")
+      } else {
+        res.send(results)
+      }
+    })
+  })
+
   app.post('/transaction/queue', function(req, res) {
     var transactionObj = req.body.transactionObj;
     transactionQueue.addTransactionToQueue(transactionObj, function(err, results) {

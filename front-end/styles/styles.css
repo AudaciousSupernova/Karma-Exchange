@@ -80,7 +80,7 @@ span.logout:hover{
 
 span.currentUserNavBar{
 	opacity: .5;
-	padding:10px 0 9px 0;
+	padding:10px 0 10px 0;
 	background-color: black;
 	border-right: 2px solid gray;
 }
