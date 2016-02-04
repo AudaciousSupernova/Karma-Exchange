@@ -21,6 +21,9 @@ angular.module('app.index', [])
 
     var userObjects = User.getLeaderData(); 
 
+    // post 2 names
+      // enable scrolling across screen 
+
     console.log(userObjects); 
   }
 

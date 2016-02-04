@@ -112,6 +112,19 @@ var getAllUsers = function(callback){
 
 }
 
+// returns array of top n users, ranked by current score 
+var getTopUsers = function(limit, callback) {
+	connection.query('SELECT * FROM users ORDER BY currentScore LIMIT=?',limit, function(err, res) {
+		if (err) {
+			console.log('Error finding all users sorted by current score');
+			callback(err, null);
+		} else {
+			callback(null, res); 
+		}
+	})
+}
+
+
 
 //even though this leverages two controller methods since it is
 //essentially just an update it is here
@@ -295,6 +308,7 @@ var getTopScores = function(limit, callback) {
 		}
 	})
 }
+
 
 
 
