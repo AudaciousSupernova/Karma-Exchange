@@ -119,8 +119,9 @@ var newSocialInvestmentScore = function(target_id) {
 
 	var originTime = 0;
 	var latestTime = 0;
+	//timeOnMarket is the difference between latestTime and originTime and will be used to determine velocity of the stock
 	var timeOnMarket;
-	var numShareHolders;
+	var numInvestors;
 	var sharesOnMarket = 0;
 	var numTransactionsMade = 0;
 	var newSocialInvestmentScore;
@@ -136,7 +137,7 @@ var newSocialInvestmentScore = function(target_id) {
 					mainController.getTargetStocks(target_id, function(err, stocks) {
 						if (err) {
 						} else {
-							numShareHolders = stocks.length;
+							numInvestors = stocks.length;
 							stocks.forEach(function(investment) {
 								sharesOnMarket+= investment.numberShares;
 							})
@@ -144,50 +145,19 @@ var newSocialInvestmentScore = function(target_id) {
 								if (err) {
 									console.log("There was an error", err);
 								} else {
-									// newSocialInvestmentScore = 100;
-									// var generalYVals = [];
-									// var generalXVals = [];
-									// var recentYVals = [];
-									// var recentXVals = [];
-									// var velocity;
-
-
-									// var recentNumScores = Math.floor(scores.length * 0.8);
-									// if (recentNumScores < 1) {
-									// 	recentNumScores = 1;
-									// }
-									// for (var i = scores.length - 1; i>=0; i--) {
-									// 	if (i >= recentNumScores) {
-									// 		recentYVals.push(scores[i].social_investment);
-									// 		recentXVals.push(i);
-									// 	}
-									// 	generalYVals.push(scores[i].social_investment);
-									// 	generalXVals.push(i);
-									// }
-									// if (generalXVals.length < 2) {
-									// 	generalXVals.push(generalXVals[0])
-									// }
-
-									// console.log("general scores", generalYVals);
-									// console.log("general time", generalXVals);
-									// console.log("recent scores", recentYVals);
-									// console.log("recent time", recentXVals);
-									// recentVelocity = linearRegression(recentYVals, recentXVals).slope;
-									// generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-									// console.log("my recent vel", recentVelocity, "my general vel", generalVelocity);
 
 									// if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
 									// 	velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
 									// } else {
 									// 	velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
 									// }
-									// if (numShareHolders === 0) {
-									// 	numShareHolders = 1;
+									// if (numInvestors === 0) {
+									// 	numInvestors = 1;
 									// }
 									// if (sharesOnMarket === 0) {
 									// 	sharesOnMarket = 1;
 									// }
-									// newSocialInvestmentScore = (numShareHolders * velocity)/(sharesOnMarket * 5);
+									// newSocialInvestmentScore = (numInvestors * velocity)/(sharesOnMarket * 5);
 									// console.log("here is my new social investment score", newSocialInvestmentScore)
 									// // newSocialInvestmentScore = 100;
 									// updateScores(newSocialInvestmentScore, user[0]);
@@ -201,7 +171,7 @@ var newSocialInvestmentScore = function(target_id) {
 	})
 }
 
-// newSocialInvestmentScore(1)
+newSocialInvestmentScore(4)
 
 
 var updateScores = function(newSocialInvestmentScore, user) {
@@ -210,30 +180,28 @@ var updateScores = function(newSocialInvestmentScore, user) {
 	var gap = user.social - user.social_investment;
 	var soc_weight = (user.social/(user.social + user.social_investment));
 	var social_investment_weight = (1 - soc_weight);
+<<<<<<< dd24e550ed1cd56c0632dcae39dd065c07ce6ba4
 
 
 	user.currentScore = Math.round(Math.sqrt(Math.abs(user.social_investment * user.social)) + user.social);
+=======
+	user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
+>>>>>>> More work on social_investment. Adjusting time stamps on linear regression
 
 	console.log("here are my stats", user.social, user.social_investment, user.currentScore)
-	mainController.updateUser(user, function(err, results) {
+	console.log("here is the new userObj", results);
+	//add score to scores history
+	var scoreObj = {
+		user_id: user.id,
+		social: user.social,
+		social_investment: user.social_investment,
+		currentScore: user.currentScore
+	}
+	mainController.addScore(scoreObj, function(err, results) {
 		if (err) {
-			console.log("There was an error", err);
+			console.log("There was an error adding the score to scores' history", err);
 		} else {
-			console.log("here is the new userObj", results);
-			//add score to scores history
-			var scoreObj = {
-				user_id: user.id,
-				social: user.social,
-				social_investment: user.social_investment,
-				currentScore: user.currentScore
-			}
-			mainController.addScore(scoreObj, function(err, results) {
-				if (err) {
-					console.log("There was an error adding the score to scores' history", err);
-				} else {
-					console.log("Score was successfully added to scores' history");
-				}
-			})
+			console.log("Score was successfully added to scores' history");
 		}
 	})
 
