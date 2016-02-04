@@ -12,7 +12,7 @@ angular.module('app.profile', [])
   $scope.loggedinUserInfo.currentScore = "No score currently";
   $scope.scores = [[],[]];
   $scope.labels = [];
-
+  $scope.wednesday = false;
   //Save the user id, included in the location path
 
   //Pass this userId to $scope.getUserData in order to get all data associated with user
@@ -53,6 +53,19 @@ angular.module('app.profile', [])
       }
       if ($scope.user.email === null) {
         $scope.user.email = "No Email Provided"
+      }
+      // console.log("What does my user look like?", $scope.user);
+      // console.log("Well here we are", $scope.user);
+      // $scope.getScores();
+      //if id matches logged-in id
+        //then call getLeaders
+      //else
+        //display buy shares button
+      var date = new Date();
+      if (date.getDay() === 2) {
+        $scope.wednesday = true;
+      } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
+        $scope.wednesday = true;
       }
     })
   }

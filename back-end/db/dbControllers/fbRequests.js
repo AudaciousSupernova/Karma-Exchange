@@ -121,33 +121,138 @@ var updateScores = function(newScore, type, user) {
   var soc_weight = (user.social/(user.social + user.social_investment));
   var social_investment_weight = (1 - soc_weight);
   user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
-  console.log(user.name + "'s social score is: ", user.social);
-  console.log(user.name + "'s social_investment score is: ", user.social_investment);
-  console.log(user.name + "'s total current score is: ", user.currentScore)
-  mainController.updateUser(user, function(err, results) {
-    if (err) {
-      console.log("Unable to update user", err);
-    } else {
-      console.log("Successfully updated user", results);
-      var scoreObj = {
-        user_id: user.id, 
-        social: user.social, 
-        social_investment: user.social_investment, 
-        currentScore: user.currentScore
-      }
-      mainController.addScore(scoreObj, function(err, results) {
-        if (err) {
-          console.log("Unable to add score to scores' history", err);
-        } else {
-          console.log("Successfully added new score to scores' history");
-        }
-      })
+  //change the social_subScores
+  // console.log(user.name + "'s social score is: ", user.social);
+  // console.log(user.name + "'s social_investment score is: ", user.social_investment);
+  // console.log(user.name + "'s total current score is: ", user.currentScore)
+  var date = new Date();
+  if (date.getDate() === 3) {
+    var scoreObj = {
+      user_id: user.id, 
+      social: user.social, 
+      social_investment: user.social_investment, 
+      currentScore: user.currentScore
     }
-  })
+    mainController.addScore(scoreObj, function(err, results) {
+      if (err) {
+        console.log("Unable to add score to scores' history", err);
+      } else {
+        console.log("Successfully added new score to scores' history");
+        user.last_week_expected_social_change = user.next_week_expected_social_change;
+        var generalYVals = [];
+        var generalXVals = [];
+        var recentYVals = [];
+        var recentXVals = [];
+        var velocity;
+
+        mainController.getScores(user.id, function(err, scores) {
+          if (err) {
+            console.log("Unable to retrieve all scores for user", err);
+          } else {
+            for (var i = 0; i<scores.length; i++) {
+              if (scores[i].ts = new Date() || scores[i].ts.getDay() !== 3) {
+                recentYVals.push(scores[i].social);
+                recentXVals.push(i);
+              }
+              generalYVals.push(scores[i].social);
+              generalXVals.push(i); 
+            }
+            if (generalXVals.length < 2) {
+              generalXVals.push(generalXVals[0]);
+              generalYVals.push(generalYVals[0]);
+              recentXVals.push(recentXVals[0]);
+              recentYVals.push(recentYVals[0]);
+            }
+            recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+            generalVelocity = linearRegression(generalYVals, generalXVals).slope;
+            console.log("what is the recent velocity", recentVelocity);
+            console.log("what is the general velocity", generalVelocity);
+            user.last_week_actual_social_change = recentVelocity.toString();
+            user.next_week_expected_social_change = (0.6*recentVelocity + 0.4*generalVelocity).toString();
+            mainController.updateUser(user, function(err, results) {
+              if (err) {
+                console.log("Unable to update user", err);
+              } else {
+                console.log("Successfully updated user", results);
+              }
+            })
+          }
+        })
+        
+      }
+    })
+  } else {
+    mainController.updateUser(user, function(err, results) {
+      if (err) {
+        console.log("Unable to update user", err);
+      } else {
+        console.log("Successfully updated user", results);
+        var scoreObj = {
+          user_id: user.id, 
+          social: user.social, 
+          social_investment: user.social_investment, 
+          currentScore: user.currentScore
+        }
+        mainController.addScore(scoreObj, function(err, results) {
+          if (err) {
+            console.log("Unable to add score to scores' history", err);
+          } else {
+            console.log("Successfully added new score to scores' history");
+          }
+        })
+      }
+    })
+  }
 }
+
+// getFacebookUserData(179);
 //The getFacebookData function should be called using a set interval every day at 3 AM
 //Sample setInterval implementation: setInterval(getFacebookData, 3.6e+6);
 //Note: getFacebookData function should also include a setTimeout at the end of each user's update score
+
+//Add logic to the updateScores function
+//Upon successfully adding the score to the scores' history table
+//if the day is Tuesday
+  //Reference the social_subScores
+  //Reference the social_investment_subScores
+  //Reference the last_week_expected_social_trend
+  //Reference the last_week_actual_social_trend
+  //Reference the next_week_expected_social_trend
+  //change the social_subScores
+  //change the last_week_expected_social_trend to what next_week's value was
+
+  //get all social scores for users
+    //look at actual trend for last week (including latest social score)
+    //set that to actual last_week_actual_social_trend
+    //compare to linear regression of all social scores for users
+    //create a next_week_expected_social_trend value
+    //update user
+      //addScore
+
+function linearRegression(y,x){
+  var lr = {};
+  var n = y.length;
+  var sum_x = 0;
+  var sum_y = 0;
+  var sum_xy = 0;
+  var sum_xx = 0;
+  var sum_yy = 0;
+
+  for (var i = 0; i < y.length; i++) {
+
+    sum_x += x[i];
+    sum_y += y[i];
+    sum_xy += (x[i]*y[i]);
+    sum_xx += (x[i]*x[i]);
+    sum_yy += (y[i]*y[i]);
+  }
+
+  lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+  lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+  lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+
+  return lr;
+}
 
 module.exports = {
   getFacebookData: getFacebookData, 
