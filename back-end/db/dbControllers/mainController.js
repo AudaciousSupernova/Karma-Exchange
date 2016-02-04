@@ -405,6 +405,7 @@ module.exports = {
 	deleteUser: deleteUser,
 	countUsers: countUsers,
 	getAllUsers:getAllUsers,
+	getTopUsers: getTopUsers,
 	findUserByFbKey: findUserByFbKey,
 	updatePhoto:updatePhoto,
 
@@ -427,5 +428,5 @@ module.exports = {
 	getStockRow: getStockRow,
 	updateStock: updateStock,
 	deleteStock: deleteStock,
-	findUsersByPartial: findUsersByPartial,
-}
+	findUsersByPartial: findUsersByPartial
+};
