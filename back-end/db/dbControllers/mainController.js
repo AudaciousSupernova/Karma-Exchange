@@ -112,6 +112,19 @@ var getAllUsers = function(callback){
 
 }
 
+// returns array of top n users, ranked by current score 
+var getTopUsers = function(limit, callback) {
+	connection.query('SELECT * FROM users ORDER BY currentScore DESC LIMIT ?',limit, function(err, res) {
+		if (err) {
+			console.log('Error finding all users sorted by current score');	
+			callback(err, null);
+		} else {
+			callback(null, res); 
+		}
+	})
+}
+
+
 
 //even though this leverages two controller methods since it is
 //essentially just an update it is here
@@ -270,6 +283,7 @@ var getScores = function(userId, callback){
 	})
 }
 
+
 //grabs all scores for a target user in the last week
 var getRecentScores = function(userId, callback) {
 	console.log("I am in the get recent scores function");
@@ -285,6 +299,20 @@ var getRecentScores = function(userId, callback) {
 		}
 	})
 }
+
+// grabs all users, sorted by current score
+var getTopScores = function(limit, callback) {
+	connection.query('SELECT * FROM users ORDER BY currentScore LIMIT=?',limit, function(err, res) {
+		if (err) {
+			console.log('Error finding all users sorted by current score');
+			callback(err, null);
+		} else {
+			callback(null, res); 
+		}
+	})
+}
+
+
 
 
 //<h3>Current Stocks</h3>
@@ -380,6 +408,7 @@ module.exports = {
 	deleteUser: deleteUser,
 	countUsers: countUsers,
 	getAllUsers:getAllUsers,
+	getTopUsers: getTopUsers,
 	findUserByFbKey: findUserByFbKey,
 	updatePhoto:updatePhoto,
 
@@ -392,6 +421,7 @@ module.exports = {
 	addScore: addScore,
 	getScores: getScores,
 	getRecentScores: getRecentScores,
+	getTopScores: getTopScores,
 
 	//Current Stock methods
 	getStocks: getStocks,
@@ -401,5 +431,5 @@ module.exports = {
 	getStockRow: getStockRow,
 	updateStock: updateStock,
 	deleteStock: deleteStock,
-	findUsersByPartial: findUsersByPartial,
-}
+	findUsersByPartial: findUsersByPartial
+};

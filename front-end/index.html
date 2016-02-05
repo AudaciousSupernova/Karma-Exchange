@@ -27,6 +27,10 @@
     <div class = "spaceHolder">s</div>
     <script src="libs/angular/angular.min.js"> </script>
     <div class = "view" ui-view> </div>
+    <div class="leaders" ng-init='getLeaders()'>Top Leaders on Karma Exchange: 
+      <span>{{userOne}}, </span>
+      <span>{{userTwo}}</span>
+    </div>
     <!-- dependancies -->
     <script src="libs/angular-route/angular-route.min.js"> </script>
     <script src="libs/angular-ui-router/release/angular-ui-router.min.js"> </script>

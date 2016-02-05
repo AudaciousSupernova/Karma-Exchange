@@ -81,21 +81,14 @@ module.exports = function (app, express) {
   })
 
   app.get('/leaders', function(req, res) {
-    var test = [
-    {
-      name: 'Kyle Morehead',
-      score: 95
-    },
-    {
-      name: 'Ranjit Rao',
-      score: 99
-    },
-    {
-      name: 'Karthik Vempathy',
-      score: 99
-    }
-  ];
-    res.send(test);
+    mainController.getTopUsers(2, function(err, results) {
+      if (err) {
+        console.log('error on leaders/top users', err);
+      } else {
+        // console.log("These are my results", results);
+        res.send(results); 
+      }
+    })
   })
 
   //Post request to add transaction to transaction history table
@@ -220,10 +213,6 @@ module.exports = function (app, express) {
 
 
   app.get('/trending', function(req, res) {
-
-    //Call mainController for counting users
-        //on success call main controller for transaction count
-          //on success call for karma (write this in mainController)
     var test = {
       data: [
         {

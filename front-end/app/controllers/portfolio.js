@@ -276,13 +276,14 @@ angular.module('app.portfolio', ["chart.js"])
         user_id: $scope.investment.user_id,
         target_id: $scope.investment.target_id,
         type: "sell",
-        numberShares: $scope.sharesToSell,
+        numberShares: $scope.requestedShares,
         //reference logged in user's karma
         karma: $scope.sharesToSell * $scope.investment.currentScore
       };
 
       TransactionHist.makeTransaction(transaction).then(function() {
         transaction.numberShares = $scope.sharesToSell - transaction.numberShares;
+        delete transaction.karma;
         TransactionHist.addTransactionToQueue(transaction);
       });
       $mdDialog.hide();
