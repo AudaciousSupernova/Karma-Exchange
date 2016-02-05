@@ -1,13 +1,17 @@
 <div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
 
- <h2 ng-hide = "investmentHistory"> Your Current Investments </h2>
- <h2 ng-show = "investmentHistory"> Your Transaction History </h2>
-    <md-button class="md-raised" ng-hide = "investmentHistory" ng-click = "investmentHistory = true">Show Transaction History</md-button><md-button class="md-raised" ng-show = "investmentHistory"  ng-click = "investmentHistory = false">Show Current Investments</md-button>
+ <h2 ng-show = "currentInvestmentsView"> Your Current Investments </h2>
+ <h2 ng-show = "transactionHistoryView"> Your Transaction History </h2>
+ <h2 ng-show = "openTransactionsView"> Your Open Transactions </h2>
+    <md-button class="md-raised" ng-hide = "currentInvestmentsView"  ng-click = "toggleViews('currentInvestments')">Show Current Investments</md-button> 
+    <md-button class="md-raised" ng-hide = "transactionHistoryView" ng-click = "toggleViews('transactionHistory')">Show Transaction History</md-button>
+    <md-button class="md-raised" ng-hide = "openTransactionsView" ng-click = "toggleOpenTransactions()">Show Open Transactions</md-button>
  <br/>
  <br/>
  <br/>
-    <table ng-hide = "investmentHistory">
+     <!-- Current Investments View -->
+    <table ng-show  = "currentInvestmentsView">
       <tr>
         <th> Name </th>
         <th> Current Market Value
@@ -33,12 +37,16 @@
       </tr>
 
     </table>
-  <div ng-show = "investmentHistory"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
-    <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)" ng-hide = "tableVersion">
+  <div ng-show = "transactionHistoryView"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
+  </div>
+  
+    <!-- Transaction History View -->
+    <table>
+    <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)" ng-show = "transactionHistoryView && !tableVersion">
       <p>{{transaction.string}}</p>
     </div>
 
-    <table ng-show = 'tableVersion'>
+    <table ng-show = 'transactionHistoryView &&tableVersion'>
       <tr>
         <th> Name </th>
         <th> Type of Transaction </th>
@@ -54,7 +62,35 @@
 
     </table>
 
-  </div>
+    <!-- Open Transactions View -->
+<!--   <div ng-repeat="openTransaction in openTransactions" ng-init = "" ng-show = "openTransactionsView && !tableVersion">
+      <p>{{openTransaction.string}</p>
+      <p>openTransaction</p>
+    </div>
+ -->
+    <table ng-show = 'openTransactionsView'>
+      <tr>
+        <th> Name </th>
+        <th> Current Market Value </th>
+        <th> Type of Transaction </th>
+        <th> Number of Shares </th>
+      </tr>
+      <tr ng-repeat="openTransaction in openTransactions track by $index">
+        <td> {{openTransaction.target_name}} </td>
+        <td> {{openTransaction.currentScore}} </td>
+        <td> {{openTransaction.type}} </td>
+        <td> {{openTransaction.numberShares}}</td>
+        <td>  <div layout="column" ng-cloak>
+            <md-content>
+              <md-button ng-click="clickCancel(openTransaction.id, $index)" class="md-raised">Cancel Transaction
+              </md-button>
+            </md-content>
+          </div>
+        </td>
+      </tr>
+
+    </table>
+
   <br/>
   <br/>
   <br/>

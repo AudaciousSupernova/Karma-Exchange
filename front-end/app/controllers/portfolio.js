@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
@@ -10,6 +10,10 @@ angular.module('app.portfolio', ["chart.js"])
   //call getInvestments, pass the userId on the function call
   $scope.labels = [];
   $scope.transactions = []
+  $scope.openTransactions = [];
+  $scope.currentInvestmentsView = true;
+  $scope.openTransactionsView = false;
+  $scope.transactionHistoryView = false;
 
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
@@ -61,6 +65,52 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
+//gets the transaction history for the current user
+//sample properties on a transaction object
+// id: 1729
+// karma: 4576
+// numberShares: 44
+// target_id: 64
+// target_name: "Rosie Bergnaum"
+// type: "sell"
+// user_id: 1
+  $scope.getTransactionHist = function(callback) {
+    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
+    .then(function(results) {
+      $scope.transactions = results.reverse();
+      callback()
+    })
+  }
+//gets all open user transactions for the logged in user.
+//sample properties on an open transaction
+  $scope.getOpenUserTransactions = function(){
+    var user_id = $scope.loggedinUserInfo.id
+    //using a hash table to keep track of the openTransaction index of the user in question because of the asynch call below
+    var hashedTransactions = {};
+    TransactionHist.getOpenUserTransactions(user_id)
+    .then(function(openTransactions){
+      for(var i = 0; i < openTransactions.length; i++){
+        var target_id = openTransactions[i].target_id
+        if(hashedTransactions[target_id]){
+          hashedTransactions[target_id].push(openTransactions[i])
+        } else {
+          hashedTransactions[target_id] = [openTransactions[i]]
+        }
+        User.getUser(openTransactions[i].target_id)
+        .then(function (userInfo) {
+          userInfo = userInfo[0]
+          var openTransactionForTarget = hashedTransactions[userInfo.id]
+          for(var subI = 0; subI < openTransactionForTarget.length; subI++){
+            var openTransaction = openTransactionForTarget[subI]
+            openTransaction.target_name = userInfo.name
+            openTransaction.currentScore = userInfo.currentScore
+          }
+        })
+      }
+      $scope.openTransactions = openTransactions;
+    })
+  } 
+
 //generates lables for the graph. Initially to 30 days in the past however that can be modified in the future
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
@@ -87,23 +137,14 @@ angular.module('app.portfolio', ["chart.js"])
         // console.log(clickedItem, "this was clicked");
       })
   }
-
-//gets the transaction history for the current user
-//sample properties on a transaction object
-// id: 1729
-// karma: 4576
-// numberShares: 44
-// target_id: 64
-// target_name: "Rosie Bergnaum"
-// type: "sell"
-// user_id: 1
-  $scope.getTransactionHist = function(callback) {
-    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
-    .then(function(results) {
-      $scope.transactions = results.reverse();
-      callback()
+//Cancels an open transaction, removing it from the queue
+  $scope.clickCancel = function(transactionId, index){
+    TransactionHist.deleteOpenTransaction(transactionId).then(function(response){
+      if(response.status === 204){
+        $scope.openTransactions.splice(index,1)
+      }
     })
-  } 
+  }
 
 //turns a transaction into a human friendly string
   $scope.buildHistString = function(transaction){
@@ -127,7 +168,7 @@ angular.module('app.portfolio', ["chart.js"])
           shares -= transaction.numberShares
           // <= 0 
         } else {
-          var transactionScore = Math.round(transaction.karma / transaction.numberShares)
+          var transactionScore = Math.abs(Math.round(transaction.karma / transaction.numberShares))
           profit += (shares * investment.currentScore - shares * transactionScore)
           shares = 0
           investment.profit = profit;
@@ -135,6 +176,27 @@ angular.module('app.portfolio', ["chart.js"])
         }
       }
     }
+  }
+
+  $scope.toggleViews = function(viewToShow){
+    if(viewToShow === "transactionHistory"){
+      $scope.transactionHistoryView = true;
+      $scope.currentInvestmentsView = false;
+      $scope.openTransactionsView = false;
+    } else if (viewToShow === "currentInvestments"){
+      $scope.currentInvestmentsView = true;
+      $scope.transactionHistoryView = false;
+      $scope.openTransactionsView = false;
+    } else {
+      $scope.openTransactionsView = true;
+      $scope.currentInvestmentsView = false;
+      $scope.transactionHistoryView = false;
+    }
+  }
+
+  $scope.toggleOpenTransactions = function(){
+    $scope.getOpenUserTransactions()
+    $scope.toggleViews('openTransactions')
   }
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {

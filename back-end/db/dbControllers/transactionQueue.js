@@ -19,10 +19,10 @@ connection.connect(function(err){
 // adds a transaction to the queue
 // example transactionQueue obj
 var transactionObj = {
-	user_id: 56,
+	user_id: 1,
 	type: "sell",
-	target_id: 101,
-	numberShares: 8
+	target_id: 100,
+	numberShares: 9
 }
 
 var addTransactionToQueue = function(transactionObj, callback){
@@ -49,7 +49,6 @@ var addTransactionToQueue = function(transactionObj, callback){
 var findOpenTransaction = function(target_id, type, callback){
 	callback = arguments[arguments.length - 1]
 	connection.query('SELECT * FROM openTransactions where target_id=? and type=?', [target_id,type], function(err, rows){
-		// just do callback(err, user)
 		if(err){
 			console.log("Error finding transactions for target " + target_id, err)
 			callback(err, null);
@@ -59,6 +58,18 @@ var findOpenTransaction = function(target_id, type, callback){
 	})
 }
 
+var findOpenUserTransactions = function(user_id, callback){
+	connection.query('SELECT * FROM openTransactions where user_id=?', user_id, function(err, rows){
+		if(err){
+			console.log("Error finding transactions for user " + user_id, err)
+			callback(err, null);
+		} else{
+			callback(null, rows);
+		}
+	})
+}
+
+
 //removes an open transaction from the Queue
 var deleteOpenTransaction = function(transactionId, callback){
 	connection.query('DELETE FROM openTransactions WHERE id = ?',transactionId, function (err, response) {
@@ -66,7 +77,7 @@ var deleteOpenTransaction = function(transactionId, callback){
     	console.log("error deleting transaction " + transactionId, err)
     	callback(err, null)
     }else{
-	    console.log('Deleted user number ' + transactionId);
+	    console.log('Deleted transaction number ' + transactionId);
 	    callback(null, response);
     }
   });
@@ -92,4 +103,5 @@ module.exports = {
 	findOpenTransaction: findOpenTransaction,
 	deleteOpenTransaction: deleteOpenTransaction,
 	updateOpenTransaction: updateOpenTransaction,
+	findOpenUserTransactions: findOpenUserTransactions,
 }

@@ -46,7 +46,6 @@ angular.module('app.index', [])
     } else {
       Root.addUserInfo($rootScope.user);
       $scope.currentUserInfo = Root.currentUserInfo.data;
-      console.log("check it out", $scope.currentUserInfo);
     }
   })
 
