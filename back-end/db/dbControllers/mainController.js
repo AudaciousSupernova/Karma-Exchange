@@ -53,7 +53,7 @@ var findUsersByPartial = function(string, callback){
 		} else{
 			callback(null, rows);
 		}
-	})	
+	})
 }
 
 //finds the user by id, useful for buy/sell events
@@ -112,14 +112,14 @@ var getAllUsers = function(callback){
 
 }
 
-// returns array of top n users, ranked by current score 
+// returns array of top n users, ranked by current score
 var getTopUsers = function(limit, callback) {
 	connection.query('SELECT * FROM users ORDER BY currentScore DESC LIMIT ?',limit, function(err, res) {
 		if (err) {
-			console.log('Error finding all users sorted by current score');	
+			console.log('Error finding all users sorted by current score');
 			callback(err, null);
 		} else {
-			callback(null, res); 
+			callback(null, res);
 		}
 	})
 }
@@ -322,11 +322,22 @@ var getScores = function(userId, callback){
 
 //grabs all scores for a target user in the last week
 var getRecentScores = function(userId, callback) {
-	console.log("I am in the get recent scores function");
 	var oneWeekAgo = new Date();
 	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-	console.log("one week ago looks like", oneWeekAgo);
 	connection.query('SELECT * FROM scoresHist where user_id=? AND ts>? ORDER BY ts', [userId, oneWeekAgo], function(err, rows) {
+		if (err) {
+			console.log("Error getting recent scores of user_id: ", userId, err);
+			callback(err, null);
+		} else {
+			callback(null, rows);
+		}
+	})
+}
+
+var getScoresLastThreeMonths = function(userId, callback) {
+	var threeMonthsAgo = new Date();
+	threeMonthsAgo.setDate(threeMonthsAgo.getDate() - 90);
+	connection.query('SELECT * FROM scoresHist where user_id=? AND ts>? ORDER BY ts', [userId, threeMonthsAgo], function(err, rows) {
 		if (err) {
 			console.log("Error getting recent scores of user_id: ", userId, err);
 			callback(err, null);
@@ -343,7 +354,7 @@ var getTopScores = function(limit, callback) {
 			console.log('Error finding all users sorted by current score');
 			callback(err, null);
 		} else {
-			callback(null, res); 
+			callback(null, res);
 		}
 	})
 }
@@ -458,6 +469,7 @@ module.exports = {
 	addScore: addScore,
 	getScores: getScores,
 	getRecentScores: getRecentScores,
+	getScoresLastThreeMonths, getScoresLastThreeMonths,
 	getTopScores: getTopScores,
 
 	//Current Stock methods
