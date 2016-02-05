@@ -8,6 +8,7 @@ angular.module('app.index', [])
   $scope.searchQuery = ""
   var test = "Hello Neeraj Kohirkar";
 
+
   Socket.emit('test', {test: test});
 
   $scope.viewHome = function () {

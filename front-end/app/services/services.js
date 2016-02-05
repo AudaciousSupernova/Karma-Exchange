@@ -218,14 +218,16 @@ angular.module('app.services', [])
 
 .factory('Socket', function($rootScope) {
   var socket = io.connect();
+  // socket.on('test', function(results) {
+  //   console.log("hello", results);
+  // })
   return {
 
     on: function(eventName, callback) {
       socket.on(eventName, function() {
+        console.log('hello');
         var args = arguments;
-        $rootScope.$apply(function() {
           callback.apply(socket, args);
-        })
         // var args = arguments;
         // callback(socket, args);
       });
