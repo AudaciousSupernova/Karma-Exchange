@@ -166,16 +166,25 @@ module.exports = function (app, express) {
   })
 
   app.post('/transaction/close', function(req, res) {
-    console.log(req.body,'req to /transaction/close');
     var transactionObj = req.body.transactionObj;
     var shareValue = req.body.shareValue
     transactionUtil.closeTransactionRequest(transactionObj, shareValue); 
   })
 
+  app.delete('/transaction/queue/delete/:transactionId', function(req,res){
+    var transactionId = req.params.transactionId;
+    transactionQueue.deleteOpenTransaction(transactionId, function(err, response){
+      if(err){
+        console.log("Error in api routes deleting transaction of id: " + transactionId)
+      } else {
+        res.send(204)
+      }
+    })    
+  })
+
   //Get request to retrieve all current stocks for logged-in user
   app.get('/portfolio/:id', function(req, res) {
     var id = req.params.id;
-    console.log(id);
     mainController.getStocks(id, function(err, results) {
       if (err) {
         console.log("here is the error", err);

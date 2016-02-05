@@ -37,7 +37,7 @@
       </tr>
 
     </table>
-  <div ng-show = "openTransactionsView || transactionHistoryView"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
+  <div ng-show = "transactionHistoryView"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
   </div>
   
     <!-- Transaction History View -->
@@ -63,23 +63,30 @@
     </table>
 
     <!-- Open Transactions View -->
-  <div ng-repeat="openTransaction in openTransactions" ng-init = "associateData(openTransaction)" ng-show = "openTransactionsView && !tableVersion">
+<!--   <div ng-repeat="openTransaction in openTransactions" ng-init = "" ng-show = "openTransactionsView && !tableVersion">
       <p>{{openTransaction.string}</p>
       <p>openTransaction</p>
     </div>
-
-    <table ng-show = 'openTransactionsView && tableVersion'>
+ -->
+    <table ng-show = 'openTransactionsView'>
       <tr>
         <th> Name </th>
+        <th> Current Market Value </th>
         <th> Type of Transaction </th>
         <th> Number of Shares </th>
-        <th> Karma </th>
       </tr>
-      <tr ng-repeat="transaction in transactions">
-        <td> {{transaction.target_name}} </td>
-        <td> {{transaction.type}} </td>
-        <td> {{transaction.numberShares}}</td>
-        <td> {{transaction.karma}} </td>
+      <tr ng-repeat="openTransaction in openTransactions track by $index">
+        <td> {{openTransaction.target_name}} </td>
+        <td> {{openTransaction.currentScore}} </td>
+        <td> {{openTransaction.type}} </td>
+        <td> {{openTransaction.numberShares}}</td>
+        <td>  <div layout="column" ng-cloak>
+            <md-content>
+              <md-button ng-click="clickCancel(openTransaction.id, $index)" class="md-raised">Cancel Transaction
+              </md-button>
+            </md-content>
+          </div>
+        </td>
       </tr>
 
     </table>

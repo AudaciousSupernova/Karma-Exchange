@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
@@ -10,6 +10,7 @@ angular.module('app.portfolio', ["chart.js"])
   //call getInvestments, pass the userId on the function call
   $scope.labels = [];
   $scope.transactions = []
+  $scope.openTransactions = [];
   $scope.currentInvestmentsView = true;
   $scope.openTransactionsView = false;
   $scope.transactionHistoryView = false;
@@ -84,8 +85,28 @@ angular.module('app.portfolio', ["chart.js"])
 //sample properties on an open transaction
   $scope.getOpenUserTransactions = function(){
     var user_id = $scope.loggedinUserInfo.id
+    //using a hash table to keep track of the openTransaction index of the user in question because of the asynch call below
+    var hashedTransactions = {};
     TransactionHist.getOpenUserTransactions(user_id)
     .then(function(openTransactions){
+      for(var i = 0; i < openTransactions.length; i++){
+        var target_id = openTransactions[i].target_id
+        if(hashedTransactions[target_id]){
+          hashedTransactions[target_id].push(openTransactions[i])
+        } else {
+          hashedTransactions[target_id] = [openTransactions[i]]
+        }
+        User.getUser(openTransactions[i].target_id)
+        .then(function (userInfo) {
+          userInfo = userInfo[0]
+          var openTransactionForTarget = hashedTransactions[userInfo.id]
+          for(var subI = 0; subI < openTransactionForTarget.length; subI++){
+            var openTransaction = openTransactionForTarget[subI]
+            openTransaction.target_name = userInfo.name
+            openTransaction.currentScore = userInfo.currentScore
+          }
+        })
+      }
       $scope.openTransactions = openTransactions;
     })
   } 
@@ -115,6 +136,14 @@ angular.module('app.portfolio', ["chart.js"])
       .then(function(clickedItem) {
         // console.log(clickedItem, "this was clicked");
       })
+  }
+//Cancels an open transaction, removing it from the queue
+  $scope.clickCancel = function(transactionId, index){
+    TransactionHist.deleteOpenTransaction(transactionId).then(function(response){
+      if(response.status === 204){
+        $scope.openTransactions.splice(index,1)
+      }
+    })
   }
 
 //turns a transaction into a human friendly string
@@ -169,11 +198,6 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.getOpenUserTransactions()
     $scope.toggleViews('openTransactions')
   }
-
-  $scope.associateData = function(openTransaction){
-    
-  }
-
 
   function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
 

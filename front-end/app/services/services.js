@@ -174,7 +174,16 @@ angular.module('app.services', [])
         url: '/transaction/close',
         data: {transactionObj: transactionObj, shareValue: shareValue}
       })
+    },
+
+    //deletes an open transaction from the queue. Used in portfolio view to cancel a transaction
+    deleteOpenTransaction: function(transactionId){
+      return $http({
+        method: 'DELETE',
+        url: '/transaction/queue/delete/' + transactionId
+      })
     }
+
   }
 })
 

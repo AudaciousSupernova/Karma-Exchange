@@ -19,10 +19,10 @@ connection.connect(function(err){
 // adds a transaction to the queue
 // example transactionQueue obj
 var transactionObj = {
-	user_id: 56,
+	user_id: 1,
 	type: "sell",
-	target_id: 101,
-	numberShares: 8
+	target_id: 100,
+	numberShares: 9
 }
 
 var addTransactionToQueue = function(transactionObj, callback){
@@ -77,7 +77,7 @@ var deleteOpenTransaction = function(transactionId, callback){
     	console.log("error deleting transaction " + transactionId, err)
     	callback(err, null)
     }else{
-	    console.log('Deleted user number ' + transactionId);
+	    console.log('Deleted transaction number ' + transactionId);
 	    callback(null, response);
     }
   });
