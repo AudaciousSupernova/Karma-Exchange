@@ -149,9 +149,9 @@ var newSocialInvestmentScore = function(target_id) {
 								if (err) {
 									console.log("There was an error", err);
 								} else {
-
 									if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
 										velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
+
 									} else {
 										velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
 									}
@@ -167,25 +167,28 @@ var newSocialInvestmentScore = function(target_id) {
 											console.log("There was an error calculating the social investment score due to an error finding open transactions");
 										} else {
 											demand = buyRequests.length;
+											console.log('numDemands=',demand)
+											transactionQueue.findOpenTransaction(target_id, 'sell', function (err, sellRequests) {
+												if (err) {
+													console.log("There was an error calculating the social investment score due to an error finding open transactions");
+												} else {
+													supply = sellRequests.length;
+													console.log('numSupplies=',supply)
+													newSocialInvestmentScore = (Math.sqrt(sharesOnMarket + demand - supply)*(velocity+1));
+													if (Math.round(newSocialInvestmentScore) === scores[scores.length-1].social_investment) {
+														console.log('same score')
+													}
+													else {
+														console.log("here is my new social investment score", newSocialInvestmentScore)
+														console.log('numShares',sharesOnMarket)
+														// // newSocialInvestmentScore = 100;
+														updateScores(newSocialInvestmentScore, user[0]);
+													}
+												}
+											});
 										}
 									});
-									transactionQueue.findOpenTransaction(target_id, 'sell', function (err, sellRequests) {
-										if (err) {
-											console.log("There was an error calculating the social investment score due to an error finding open transactions");
-										} else {
-											supply = sellRequests.length;
-										}
-									});
-									if (demand) {
-										SD = demand;
-									}
-									else if (supply) {
-										SD = 1/supply;
-									}
-									newSocialInvestmentScore = (sharesOnMarket*(velocity)/(SD));
-									console.log("here is my new social investment score", newSocialInvestmentScore)
-									// // newSocialInvestmentScore = 100;
-									// updateScores(newSocialInvestmentScore, user[0]);
+
 								}
 							})
 						}
@@ -214,7 +217,6 @@ var updateScores = function(newSocialInvestmentScore, user) {
 >>>>>>> More work on social_investment. Adjusting time stamps on linear regression
 
 	console.log("here are my stats", user.social, user.social_investment, user.currentScore)
-	console.log("here is the new userObj", results);
 	//add score to scores history
 	var scoreObj = {
 		user_id: user.id,
