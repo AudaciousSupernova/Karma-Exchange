@@ -5,8 +5,11 @@ var passport = require('./Auth/passport.facebook.js');
 var port = process.env.PORT || 3000;
 var mainController = require('./db/dbControllers/mainController')
 var session = require('express-session');
-var transactionUtil = require('./utils/transactionUtil')
-var scoresUtil = require('./utils/scoresUtil')
+var transactionUtil = require('./utils/transactionUtil');
+var scoresUtil = require('./utils/scoresUtil');
+var socket = require('./socket.js');
+//adding in socket.io dependency
+
 
 // var transactionQueueController = require('./db/dbControllers/transactionQueue')
 //<h3>Main Controller examples</h3>
@@ -15,11 +18,11 @@ var scoresUtil = require('./utils/scoresUtil')
 
 // example user obj
 // var userObj = {
-// 	name: "Bobo",
-// 	password: "thisIsASaltyHash",
-// 	email: "bob@bob.bobob",
-// 	karma: 8080,
-// 	facebookKey: "bobobobob"
+//  name: "Bobo",
+//  password: "thisIsASaltyHash",
+//  email: "bob@bob.bobob",
+//  karma: 8080,
+//  facebookKey: "bobobobob"
 //  profile_photo: "https://s3.amazonaws.com/uifaces/faces/twitter/pifagor/128.jpg"
 // }
 // mainController.addUser(userObj, callback)
@@ -31,11 +34,11 @@ var scoresUtil = require('./utils/scoresUtil')
 // mainController.getAllUsers(console.log)
 
 // var sampleTransaction = {
-// 	user_id: 3,
-// 	target_id: 5,
-// 	type: "sell",
-// 	numberShares: 5,
-// 	karma: 400
+//  user_id: 3,
+//  target_id: 5,
+//  type: "sell",
+//  numberShares: 5,
+//  karma: 400
 // }
 
 // transactionUtil.makeTransaction(sampleTransaction)
@@ -43,9 +46,9 @@ var scoresUtil = require('./utils/scoresUtil')
 // mainController.getTransactionHist(5, console.log)
 
 // var sampleScoreObj = {
-// 	user_id: 243,
-// 	type: "social-investment",
-// 	score: 95
+//  user_id: 243,
+//  type: "social-investment",
+//  score: 95
 // }
 
 // mainController.addScore(sampleScoreObj, console.log)
@@ -57,7 +60,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/../front-end'));
 
-app.listen(port);
+//this listens to all socket events from socket.js on connection
+
+
+var server = app.listen(port);
+var io = require('socket.io')(server);
+io.on('connection', socket);
 
 app.use(passport.initialize());
 app.use(passport.session());

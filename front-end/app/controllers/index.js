@@ -1,10 +1,14 @@
 angular.module('app.index', [])
 
-.controller('IndexController', function($scope, $rootScope, $location, $http, Newsfeed, Root, Auth, User) {
+
+.controller('IndexController', function($scope, Socket, $rootScope, $location, $http, Newsfeed, Root, Auth, User) {
 
   $scope.currentUserInfo = false;
   $scope.searchResults;
   $scope.searchQuery = ""
+  var test = "Hello Neeraj Kohirkar";
+
+  Socket.emit('test', {test: test});
 
   $scope.viewHome = function () {
     $location.path('/newsfeed');
@@ -54,6 +58,11 @@ angular.module('app.index', [])
     } else {
       Root.addUserInfo($rootScope.user);
       $scope.currentUserInfo = Root.currentUserInfo.data;
+      console.log("check it out", $scope.currentUserInfo);
+
+      Socket.on('test', function(data) {
+        console.log("here are my results", data);
+      })
     }
   })
 
