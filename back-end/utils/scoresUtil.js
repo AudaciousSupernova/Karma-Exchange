@@ -198,7 +198,7 @@ var newSocialInvestmentScore = function(target_id) {
                           _.each(sellRequests, function (sellRequest) {
                             supply += sellRequest.numberShares;
                           })
-                          newSocialInvestmentScore = Math.sqrt(sharesOnMarket+demand-supply) * ((Math.atan(velocity) + Math.PI)*1.1);
+                          newSocialInvestmentScore = Math.sqrt(sharesOnMarket+demand-supply) * ((Math.atan(velocity) + Math.PI/2)*1.1);
                           console.log(newSocialInvestmentScore, "this is the newSocialInvestmentScore")
                           updateScores(newSocialInvestmentScore, user)
                         })
