@@ -112,3 +112,47 @@ table{
 tr, td, th{
 	outline: thin solid;
 }
+
+/* Enables Top Leaders (ranked by current score) to scroll across each pg */
+.leaders {
+ height: 50px;	
+ overflow: hidden;
+ position: relative;
+}
+.leaders {
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ line-height: 50px;
+ text-align: center;
+ /* Starting position */
+ -moz-transform:translateX(-100%);
+ -webkit-transform:translateX(-100%);	
+ transform:translateX(-100%);
+ /* Apply animation to this element */	
+ -moz-animation: example2 12s linear infinite;
+ -webkit-animation: example2 12s linear infinite;
+ animation: example2 12s linear infinite;
+}
+/* Move it (define the animation) */
+@-moz-keyframes example2 {
+ 0%   { -moz-transform: translateX(-100%); }
+ 100% { -moz-transform: translateX(100%); }
+}
+@-webkit-keyframes example2 {
+ 0%   { -webkit-transform: translateX(-100%); }
+ 100% { -webkit-transform: translateX(100%); }
+}
+@keyframes example2 {
+ 0%   { 
+ -moz-transform: translateX(-100%); /* Firefox bug fix */
+ -webkit-transform: translateX(-100%); /* Firefox bug fix */
+ transform: translateX(-100%); 		
+ }
+ 100% { 
+ -moz-transform: translateX(100%); /* Firefox bug fix */
+ -webkit-transform: translateX(100%); /* Firefox bug fix */
+ transform: translateX(100%); 
+ }
+}

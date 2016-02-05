@@ -31,6 +31,7 @@ angular.module('app.services', [])
         url: '/leaders',
       })
       .then(function(res) {
+        console.log(res.data, 'res.data'); 
         return res.data;
       })
     }

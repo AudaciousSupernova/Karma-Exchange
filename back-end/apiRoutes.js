@@ -85,6 +85,7 @@ module.exports = function (app, express) {
       if (err) {
         console.log('error on leaders/top users', err);
       } else {
+        // console.log("These are my results", results);
         res.send(results); 
       }
     })

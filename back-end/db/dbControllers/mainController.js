@@ -114,9 +114,9 @@ var getAllUsers = function(callback){
 
 // returns array of top n users, ranked by current score 
 var getTopUsers = function(limit, callback) {
-	connection.query('SELECT * FROM users ORDER BY currentScore LIMIT=?',limit, function(err, res) {
+	connection.query('SELECT * FROM users ORDER BY currentScore DESC LIMIT ?',limit, function(err, res) {
 		if (err) {
-			console.log('Error finding all users sorted by current score');
+			console.log('Error finding all users sorted by current score');	
 			callback(err, null);
 		} else {
 			callback(null, res); 
@@ -296,6 +296,9 @@ var getRecentScores = function(userId, callback) {
 			callback(err, null);
 		} else {
 			callback(null, rows);
+		}
+	})
+}
 
 // grabs all users, sorted by current score
 var getTopScores = function(limit, callback) {

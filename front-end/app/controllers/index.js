@@ -18,13 +18,10 @@ angular.module('app.index', [])
   }
 
   $scope.getLeaders = function () {
-
-    var userObjects = User.getLeaderData(); 
-
-    // post 2 names
-      // enable scrolling across screen 
-
-    console.log(userObjects); 
+    User.getLeaderData().then(function(result) {
+      $scope.userOne = result[0].name;
+      $scope.userTwo = result[1].name; 
+    });
   }
 
   $scope.logout = function () {
