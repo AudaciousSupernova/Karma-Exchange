@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist, User) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, $rootScope, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
@@ -19,18 +19,24 @@ angular.module('app.portfolio', ["chart.js"])
     if (boolean === false) {
       $location.path('/')
     } else {
-      $scope.loggedinUserInfo = Root.currentUserInfo.data;
-      // console.log("Is the id correct", $scope.loggedinUserInfo);
-      $scope.getTransactionHist(function(){
-        $scope.getInvestments($scope.loggedinUserInfo.id);
-      });
+      $scope.getUserById($rootScope.user.data.id);
+
       $scope.addLabels(30)
     }
   })
 
+  $scope.getUserById = function(id) {
+    User.getUser(id)
+      .then(function(user) {
+        $scope.loggedinUserInfo = user[0];
+        console.log("This is the user");
+        $scope.getTransactionHist();
+      })
+  }
+
 
 //gets all current investments for the user
-//properties on an investment object
+//properties on an investment object4
 // currentScore: 45
 // data: Array[1]
 // id: 3220
@@ -74,11 +80,12 @@ angular.module('app.portfolio', ["chart.js"])
 // target_name: "Rosie Bergnaum"
 // type: "sell"
 // user_id: 1
-  $scope.getTransactionHist = function(callback) {
+  $scope.getTransactionHist = function() {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {
       $scope.transactions = results.reverse();
-      callback()
+      $scope.getInvestments($scope.loggedinUserInfo.id);
+
     })
   }
 //gets all open user transactions for the logged in user.
@@ -199,7 +206,7 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.toggleViews('openTransactions')
   }
 
-  function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
+  function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Socket, Scores, User) {
 
 
     $scope.investment = investment;
@@ -308,6 +315,10 @@ angular.module('app.portfolio', ["chart.js"])
         transaction.numberShares = $scope.sharesToSell;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
+      transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+      Socket.emit('sell', {
+        transaction: transaction
+      })
       $scope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
 
       $mdDialog.hide();

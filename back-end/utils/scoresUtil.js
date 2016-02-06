@@ -151,17 +151,18 @@ var newSocialInvestmentScore = function(target_id) {
 									console.log("There was an error getting recent scores", err);
 								}
 								else {
+									console.log(recentScores,'recentScores');
 									var recentXVals = [];
 									var recentYVals = [];
 									_.each(recentScores,function (recentScore, index) {
 										recentXVals.push(index);
                     recentYVals.push(recentScore.social_investment);
                   })
-
                   if (recentXVals.length <2) {
                     recentXVals.push(recentXVals[0]);
                     recentYVals.push(recentYVals[0]);
                   }
+                  console.log(recentYVals,'Y', recentXVals,'X');
                   mainController.getScoresLastThreeMonths(target_id, function (err, generalScores) {
                     var generalXVals = [];
                     var generalYVals = [];
@@ -174,6 +175,9 @@ var newSocialInvestmentScore = function(target_id) {
                       generalYVals.push(generalYVals[0]);
                     }
                     var recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+                    if (!recentVelocity) {
+                    	recentVelocity = 0;
+                    }
                     console.log(recentVelocity, "recentVelocity");
                     var generalVelocity = linearRegression(generalYVals, generalXVals).slope;
                     console.log(generalVelocity, "generalVelocity");

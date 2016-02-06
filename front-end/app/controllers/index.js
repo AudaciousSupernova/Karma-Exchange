@@ -3,7 +3,7 @@ angular.module('app.index', [])
 
 .controller('IndexController', function($scope, Socket, $rootScope, $location, $http, Newsfeed, Root, Auth, User, TransactionHist) {
 
-  $scope.currentUserInfo = false;
+  $scope.loggedinUserInfo = false;
   $scope.searchResults;
   $scope.searchQuery = "";
   var test = "Hello Neeraj Kohirkar";
@@ -15,8 +15,8 @@ angular.module('app.index', [])
   $scope.getUserById = function(id) {
 
     User.getUser(id)
-    .then(function(data) {
-      console.log("what is my data", data);
+    .then(function(user) {
+      $scope.loggedinUserInfo = user[0];
       //Data is an array of one user
       //Grab the user
         //set this entire user to Root.currentUserInfo
@@ -27,11 +27,11 @@ angular.module('app.index', [])
     $location.path('/newsfeed');
   }
   $scope.viewProfile = function () {
-    $location.path('/profile/' + $scope.currentUserInfo.id);
+    $location.path('/profile/' + $scope.loggedinUserInfo.id);
   }
 
   $scope.viewPortfolio = function () {
-    $location.path('/portfolio/' + $scope.currentUserInfo.id);
+    $location.path('/portfolio/' + $scope.loggedinUserInfo.id);
   }
 
   $scope.getLeaders = function () {
@@ -46,7 +46,7 @@ angular.module('app.index', [])
     .then(function(results) {
       console.log("I successfully got all transactions", results);
       $scope.transactions = results.reverse();
-      console.log("what are my transacitons", $scope.transactions);
+      console.log("what are my transactions", $scope.transactions);
     })
   }
 
@@ -55,7 +55,7 @@ angular.module('app.index', [])
       method: 'GET',
       url: '/api/logout'
     }).then(function successCallback(response) {
-      $scope.currentUserInfo = false;
+      $scope.loggedinUserInfo = false;
       console.log('loggedOut')
       $location.path('/');
       }, function errorCallback(response) {
@@ -78,9 +78,8 @@ angular.module('app.index', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      Root.addUserInfo($rootScope.user);
-      $scope.currentUserInfo = Root.currentUserInfo.data;
-      console.log("check it out", $scope.currentUserInfo);
+      console.log("this is the id", $rootScope.user.data.id);
+      $scope.getUserById($rootScope.user.data.id)
 
       Socket.on('test', function(data) {
         console.log("here are my results", data);
@@ -90,7 +89,18 @@ angular.module('app.index', [])
         console.log('here is my data', data);
         console.log("here it is", data.transaction.transaction);
         $scope.transactions.unshift(data.transaction.transaction);
-        console.log("These are my transactions after socket event", $scope.transactions);
+        if (data.transaction.transaction.user_id === $scope.loggedinUserInfo.id) {
+          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - data.transaction.transaction.karma;
+          console.log("These are my transactions after socket event", $scope.transactions);
+        }
+      })
+
+      Socket.on('sell', function(data) {
+        console.log("on the sell click here is the transaction", data.transaction.transaction);
+        $scope.transactions.unshift(data.transaction.transaction);
+        if (data.transaction.transaction.user_id === $scope.loggedinUserInfo.id) {
+          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + data.transaction.transaction.karma;
+        }
       })
 
       $scope.getAllTransactions();

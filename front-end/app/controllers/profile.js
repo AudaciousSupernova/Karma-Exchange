@@ -43,29 +43,32 @@ angular.module('app.profile', [])
       })
   }
 
-  $scope.getUserById = function(id) {
+  $scope.getUserById = function(id, type) {
 
     User.getUser(id)
     .then(function(data) {
-      $scope.user = data[0];
-      if ($scope.user.profile_photo === null) {
-        $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
-      }
-      if ($scope.user.email === null) {
-        $scope.user.email = "No Email Provided"
-      }
-      // console.log("What does my user look like?", $scope.user);
-      // console.log("Well here we are", $scope.user);
-      // $scope.getScores();
-      //if id matches logged-in id
-        //then call getLeaders
-      //else
-        //display buy shares button
-      var date = new Date();
-      if (date.getDay() === 2) {
-        $scope.wednesday = true;
-      } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
-        $scope.wednesday = true;
+      if (type === 'loggedinUser') {
+        $scope.loggedinUserInfo = data[0];
+        var currentPath = $location.path();
+        currentPath = currentPath.split("");
+        $scope.profileId = currentPath.splice(9).join("");
+        console.log("what is my profile id", $scope.profileId);
+        $scope.getUserById($scope.profileId, 'profile');
+      } else {
+        $scope.user = data[0];
+        if ($scope.user.profile_photo === null) {
+          $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
+        }
+        if ($scope.user.email === null) {
+          $scope.user.email = "No Email Provided"
+        }
+        var date = new Date();
+        if (date.getDay() === 2) {
+          $scope.wednesday = true;
+        } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
+          $scope.wednesday = true;
+        }
+        $scope.getScores();
       }
     })
   }
@@ -154,8 +157,7 @@ angular.module('app.profile', [])
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares:
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+        numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
       }
 
       var investment = {
@@ -173,8 +175,9 @@ angular.module('app.profile', [])
           $scope.revealOptions = true;
 
         } else {
-
+          transaction.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+
           TransactionHist.makeTransaction(transaction)
             .then(function() {
               $mdDialog.hide();
@@ -219,6 +222,7 @@ angular.module('app.profile', [])
         transaction.numberShares = $scope.sharesToBuy;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
+      transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
       $scope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
       Socket.emit('transaction', {
         transaction: transaction
@@ -262,16 +266,9 @@ angular.module('app.profile', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      console.log($rootScope.user, "this is the root scope user");
-      Root.addUserInfo($rootScope.user.data);
-      $scope.loggedinUserInfo = Root.currentUserInfo.data;
-
-      var currentPath = $location.path();
-      currentPath = currentPath.split("");
-      $scope.profileId = currentPath.splice(9).join("");
-      $scope.getUserById($scope.profileId);
+      console.log("what is the rootscope id", $rootScope.user.data.id);
+      $scope.getUserById($rootScope.user.data.id, 'loggedinUser');
       $scope.addLabels(30);
-      $scope.getScores();
     }
   })
 });
