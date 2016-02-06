@@ -12,6 +12,17 @@ angular.module('app.index', [])
 
   Socket.emit('test', {test: test});
 
+  $scope.getUserById = function(id) {
+
+    User.getUser(id)
+    .then(function(data) {
+      console.log("what is my data", data);
+      //Data is an array of one user
+      //Grab the user
+        //set this entire user to Root.currentUserInfo
+    })
+  }
+
   $scope.viewHome = function () {
     $location.path('/newsfeed');
   }
@@ -26,7 +37,7 @@ angular.module('app.index', [])
   $scope.getLeaders = function () {
     User.getLeaderData().then(function(result) {
       $scope.userOne = result[0].name;
-      $scope.userTwo = result[1].name; 
+      $scope.userTwo = result[1].name;
     });
   }
 
@@ -57,7 +68,7 @@ angular.module('app.index', [])
       User.getUserByPartial($scope.searchQuery)
       .then(function(response){
         $scope.searchResults = response;
-      })    
+      })
     } else {
       $scope.searchResults = [];
     }

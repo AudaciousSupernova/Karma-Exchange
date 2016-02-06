@@ -2,7 +2,7 @@ angular.module('app.profile', [])
 
 	//<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB) {
+.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB, $rootScope) {
 
   $scope.isUser = true;
   $scope.user;
@@ -79,11 +79,12 @@ angular.module('app.profile', [])
         $scope.scores[0].push(scoreObj.social);
         $scope.scores[1].push(scoreObj.currentScore);
       }
-      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length 
+      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length
       for(var i = 0; i < daysBeforeUserJoined; i++){
         $scope.scores[0].unshift(0)
         $scope.scores[1].unshift(0)
       }
+      console.table($scope.scores)
     })
   }
   $scope.addLabels = function(daysInPast){
@@ -153,7 +154,7 @@ angular.module('app.profile', [])
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: 
+        numberShares:
         $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
@@ -177,7 +178,7 @@ angular.module('app.profile', [])
           TransactionHist.makeTransaction(transaction)
             .then(function() {
               $mdDialog.hide();
-            })         
+            })
         }
       }
     }
@@ -188,42 +189,41 @@ angular.module('app.profile', [])
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: 
+        numberShares:
         $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       TransactionHist.makeTransaction(transaction).then(function()  {
-        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
+        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
-      })      
+      })
       $mdDialog.hide();
     }
 
-    $scope.buyDirect = function() { 
+    $scope.buyDirect = function() {
       var transaction = {
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: 
-        $scope.availableShares
+        numberShares: $scope.availableShares
       }
-      var newScore = Math.round($scope.profile.currentScore * 1.1); 
+      var newScore = Math.round($scope.profile.currentScore * 1.1);
 
       if ($scope.availableShares) {
         TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
-          TransactionHist.closeTransactionRequest(transaction, newScore); 
+          transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
         })
 
       } else {
-        transaction.numberShares = $scope.sharesToBuy; 
+        transaction.numberShares = $scope.sharesToBuy;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
       $scope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
       Socket.emit('transaction', {
         transaction: transaction
       })
-      $mdDialog.hide(); 
+      $mdDialog.hide();
     }
 
     $scope.checkSharesAvail = function() {
@@ -238,7 +238,7 @@ angular.module('app.profile', [])
   }
 
   //<h3> ReportModalController Function </h3>
-  //This will include the logic to display all profile report details. These include: 
+  //This will include the logic to display all profile report details. These include:
     //Current Score
     //Social Score
     //Expected Social Score Trend
@@ -262,6 +262,8 @@ angular.module('app.profile', [])
     if (boolean === false) {
       $location.path('/')
     } else {
+      console.log($rootScope.user, "this is the root scope user");
+      Root.addUserInfo($rootScope.user.data);
       $scope.loggedinUserInfo = Root.currentUserInfo.data;
 
       var currentPath = $location.path();

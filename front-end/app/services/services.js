@@ -22,7 +22,7 @@ angular.module('app.services', [])
       })
       .then(function(res) {
         return res.data;
-      })      
+      })
     },
 
     getLeaderData: function() {
@@ -31,7 +31,7 @@ angular.module('app.services', [])
         url: '/leaders',
       })
       .then(function(res) {
-        console.log(res.data, 'res.data'); 
+        console.log(res.data, 'res.data');
         return res.data;
       })
     }
@@ -108,7 +108,7 @@ angular.module('app.services', [])
 
 .factory('TransactionHist', function ($http, $location) {
   return {
-    // calls addTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.  
+    // calls addTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.
     addTransaction: function(transactionObj) {
       return $http({
         method: 'POST',
@@ -119,7 +119,7 @@ angular.module('app.services', [])
     //get all past transactions for given user_id
     getTransactions: function(user_id) {
       return $http({
-        method: 'GET', 
+        method: 'GET',
         url: '/transaction/get/' + user_id
       })
       .then(function(res) {
@@ -139,7 +139,7 @@ angular.module('app.services', [])
     //gets all of the open transactions for a specific user, used in the portfolio to help close those transactions
     getOpenUserTransactions: function(user_id){
       return $http({
-        method: 'GET', 
+        method: 'GET',
         url: '/transaction/queue/' + user_id
       })
       .then(function(res) {
@@ -168,17 +168,17 @@ angular.module('app.services', [])
       })
     },
 
-    // calls addTransactionToQueue, which adds specified transaction to transaction queue 
+    // calls addTransactionToQueue, which adds specified transaction to transaction queue
     addTransactionToQueue: function(transactionObj) {
-      
+
       return $http({
-        method: 'POST', 
-        url: '/transaction/queue', 
+        method: 'POST',
+        url: '/transaction/queue',
         data: {transactionObj: transactionObj}
       })
     },
 
-    // calls closeTransactionRequest, which closes specified transaction request 
+    // calls closeTransactionRequest, which closes specified transaction request
     closeTransactionRequest: function(transactionObj, shareValue) {
       return $http({
         method: 'POST',

@@ -68,7 +68,7 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 			//bellow is an array, the first elements has the current day being checked and the second is all of the scores for that day which will be averaged. The third element in the array will be a saved obj that will be used to store the averaged value and passed back to the user
 			var singleDayValues = [-1,{"social":[],"currentScore":[]}]
 			var scoreObj;
-			for(var i = scoresObjs.length - 1; i > 0 ; i--){
+			for(var i = scoresObjs.length - 1; i >= 0 ; i--){
 				scoreObj = scoresObjs[i];
 
 				var scoreTime = scoreObj.ts.toString().split(" ")
@@ -90,7 +90,7 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 						var sumScore = _.reduce(singleDayValues[1].social, function(a, b){return a + b})
 						yesterdaysScoreObj.social = Math.round(sumScore / singleDayValues[1].social.length)
 						sumScore = _.reduce(singleDayValues[1].currentScore, function(a, b){return a + b})
-						yesterdaysScoreObj.currentScore = Math.round(sumScore / singleDayValues[1].social.length)
+						yesterdaysScoreObj.currentScore = Math.round(sumScore / singleDayValues[1].currentScore.length)
 						arrayOfScores.unshift(yesterdaysScoreObj)
 					} else if(singleDayValues[2]){
 						arrayOfScores.unshift(singleDayValues[2])
@@ -160,7 +160,7 @@ var newSocialInvestmentScore = function(target_id) {
 
                   if (recentXVals.length <2) {
                     recentXVals.push(recentXVals[0]);
-                    recentXYVals.push(recentYVals[0]);
+                    recentYVals.push(recentYVals[0]);
                   }
                   mainController.getScoresLastThreeMonths(target_id, function (err, generalScores) {
                     var generalXVals = [];
