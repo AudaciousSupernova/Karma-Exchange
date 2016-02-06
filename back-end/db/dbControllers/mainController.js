@@ -471,7 +471,7 @@ module.exports = {
 	addScore: addScore,
 	getScores: getScores,
 	getRecentScores: getRecentScores,
-	getScoresLastThreeMonths, getScoresLastThreeMonths,
+	getScoresLastThreeMonths:getScoresLastThreeMonths,
 	getTopScores: getTopScores,
 
 	//Current Stock methods

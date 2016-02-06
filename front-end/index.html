@@ -18,7 +18,7 @@
       <span class="navBar" ng-click="viewProfile()">Profile</span>
       <span class="navBar" ng-click="viewPortfolio()">Your Fortune</span>
       <span class="right"><input type = "text" ng-model = "searchQuery" ng-change = "findUsersByPartial()"/><span class = "dropdown">
-        <div ng-repeat = "user in searchResults"><a href="/#/profile/{{user.id}}">{{user.name}}</a></div></span>
+        <div ng-repeat = "user in searchResults" ng-click = "resetSearch()"><a href="/#/profile/{{user.id}}">{{user.name}}</a></div></span>
       <span class="navBar logout" ng-click="logout()">Logout</span>
       </span>
       <span></span>
