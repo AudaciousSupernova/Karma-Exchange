@@ -14,35 +14,125 @@
 
 // });
 
+// re-comment this back most likely! 
+// describe('Routing', function() {
+
+// 	var $rootScope, $state, $injector, myServiceMock, state = 'myState';
+
+// 	beforeEach(function() {
+
+// 		module('app', function($provide) {
+//       $provide.value('myService', myServiceMock = {});
+//     });
+
+//     inject(function(_$rootScope_, _$state_, _$injector_, $templateCache) {
+//       $rootScope = _$rootScope_;
+//       $state = _$state_;
+//       $injector = _$injector_;
+//       console.log('THIS IS $ROOTSCOPE:', $rootScope);
+//       console.log('THIS IS $STATE:', $state);
+//       console.log('THIS IS $INJECTOR:', $injector); 
+//       // We need add the template entry into the templateCache if we ever
+//       // specify a templateUrl
+//       $templateCache.put('template.html', '');
+//       console.log('THIS IS $TEMPLATECACHE:', $templateCache); 
+//     })
+//   });
+
+// 	it('Should have home route, template, and controller', function () {
+// 	  expect(true).to.equal(true); 
+// 	});
+
+// });
+// end of re-comment section 
+
 describe('Routing', function() {
+  var homeState, newsfeedState, profileState, buyState, sellState, portfolioState, transactionHistState;
 
-	var $rootScope, $state, $injector, myServiceMock, state = 'myState';
+  beforeEach(module('app')); 
 
-	beforeEach(function() {
+  beforeEach(inject(function ($state) {
+    homeState = $state.get('home');
+  }));
 
-		module('app', function($provide) {
-      $provide.value('myService', myServiceMock = {});
-    });
-
-    inject(function(_$rootScope_, _$state_, _$injector_, $templateCache) {
-      $rootScope = _$rootScope_;
-      $state = _$state_;
-      $injector = _$injector_;
-      console.log('$rootScope', $rootScope);
-      console.log('$state', $state);
-      console.log('$injector', $injector); 
-      // We need add the template entry into the templateCache if we ever
-      // specify a templateUrl
-      $templateCache.put('template.html', '');
-      console.log('templateCache', $templateCache); 
-    })
+  it('Should have home route, template, and controller', function () {
+    expect(homeState.name).to.be.defined; 
+    expect(homeState.controller).to.equal('AuthController');
+    expect(homeState.url).to.equal('/');
+    expect(homeState.templateUrl).to.equal('app/views/auth.html');
   });
 
-	it('Should have home route, template, and controller', function () {
-	  expect(true).to.equal(true); 
-	});
+  beforeEach(inject(function ($state) {
+    newsfeedState = $state.get('newsfeed');
+  }));
 
-});
+  it('Should have newsfeed route, template, and controller', function () {
+    expect(newsfeedState.name).to.be.defined; 
+    expect(newsfeedState.controller).to.equal('NewsfeedController');
+    expect(newsfeedState.url).to.equal('/newsfeed');
+    expect(newsfeedState.templateUrl).to.equal('app/views/newsfeed.html');
+  });
+
+  beforeEach(inject(function ($state) {
+    profileState = $state.get('profile');
+  }));
+
+  it('Should have profile route, template, and controller', function () {
+    expect(profileState.name).to.be.defined; 
+    expect(profileState.controller).to.equal('ProfileController');
+    expect(profileState.url).to.equal('/profile/:id');
+    expect(profileState.templateUrl).to.equal('app/views/profile.html'); 
+  });
+
+  beforeEach(inject(function ($state) {
+    buyState = $state.get('buy');
+  }));
+
+  it('Should have buy route, template, and controller', function () {
+    expect(buyState.name).to.be.defined; 
+    expect(buyState.controller).to.equal('BuyController');
+    expect(buyState.url).to.equal('/buy');
+    expect(buyState.templateUrl).to.equal('app/views/buy.html'); 
+  });
+
+  beforeEach(inject(function ($state) {
+    sellState = $state.get('sell');
+  }));
+
+  it('Should have sell route, template, and controller', function () {
+    expect(sellState.name).to.be.defined; 
+    expect(sellState.controller).to.equal('SellController');
+    expect(sellState.url).to.equal('/sell');
+    expect(sellState.templateUrl).to.equal('app/views/sell.html'); 
+  });
+
+  beforeEach(inject(function ($state) {
+    portfolioState = $state.get('portfolio');
+  }));
+
+  it('Should have portfolio route, template, and controller', function () {
+    expect(portfolioState.name).to.be.defined; 
+    expect(portfolioState.controller).to.equal('PortfolioController');
+    expect(portfolioState.url).to.equal('/portfolio/:id');
+    expect(portfolioState.templateUrl).to.equal('app/views/portfolio.html'); 
+  });
+
+  beforeEach(inject(function ($state) {
+    transactionHistState = $state.get('portfolio');
+    console.log('transactionHistState', transactionHistState); 
+  }));
+
+  it('Should have transaction history route, template, and controller', function () {
+    expect(transactionHistState.name).to.be.defined; 
+    expect(transactionHistState.controller).to.equal('TransactionHist');
+    expect(transactionHistState.url).to.equal('/transactionhist/:id');
+    expect(transactionHistState.templateUrl).to.equal('app/views/transactionHist.html'); 
+  });
+
+
+
+}); 
+
 
 
 // describe('myApp/myState', function() {
