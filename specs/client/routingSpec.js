@@ -124,12 +124,10 @@ describe('Routing', function() {
 
   it('Should have transaction history route, template, and controller', function () {
     expect(transactionHistState.name).to.be.defined; 
-    expect(transactionHistState.controller).to.equal('TransactionHist');
-    expect(transactionHistState.url).to.equal('/transactionhist/:id');
-    expect(transactionHistState.templateUrl).to.equal('app/views/transactionHist.html'); 
+    expect(transactionHistState.controller).to.equal('PortfolioController');
+    expect(transactionHistState.url).to.equal('/portfolio/:id');
+    expect(transactionHistState.templateUrl).to.equal('app/views/portfolio.html'); 
   });
-
-
 
 }); 
 
