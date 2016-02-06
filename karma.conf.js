@@ -1,4 +1,4 @@
-// Karma configuration
+// <h3>Karma Configuration</h3>
 // Generated on Tue Jan 26 2016 20:36:33 GMT-0800 (PST)
 
 module.exports = function(config) {
@@ -31,6 +31,10 @@ module.exports = function(config) {
       'front-end/libs/angular-material/angular-material.js',
       'front-end/libs/angular-animate/angular-animate.js',
       'front-end/libs/angular-aria/angular-aria.js',
+      'front-end/libs/Chart.js/Chart.min.js',
+      'front-end/libs/angular-chart.js/angular-chart.js',
+      'front-end/libs/angular-messages/angular-messages.js',
+
 
       // our app code
       'front-end/app/**/*.js',
