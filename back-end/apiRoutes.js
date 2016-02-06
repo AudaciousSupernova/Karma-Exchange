@@ -135,6 +135,16 @@ module.exports = function (app, express) {
     res.send(201); 
   })
 
+  app.get('/transaction/all/', function(req, res) {
+    mainController.getAllTransactions(function(err, transactions) {
+      if (err) {
+        console.log("Was unable to get all transactions", err);
+      } else {
+        res.send(transactions);
+      }
+    })
+  })
+
   //Post request to add a transaction to a transaction queue (buy or sell, when matching requests are unavailable)
   app.get('/transaction/queue/:user_id', function(req, res){
     var user_id = req.params.user_id

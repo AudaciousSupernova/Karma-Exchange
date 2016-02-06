@@ -136,7 +136,7 @@ angular.module('app.profile', [])
       })
   }
 
-  function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio) {
+  function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio, Socket) {
 
     $scope.profile = profile;
     $scope.score = loggedinUserInfo.currentScore;
@@ -220,7 +220,9 @@ angular.module('app.profile', [])
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
       $scope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
-
+      Socket.emit('transaction', {
+        transaction: transaction
+      })
       $mdDialog.hide(); 
     }
 

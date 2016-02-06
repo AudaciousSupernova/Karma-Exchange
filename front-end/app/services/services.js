@@ -126,6 +126,16 @@ angular.module('app.services', [])
         return res.data;
       })
     },
+
+    getAllTransactions: function() {
+      return $http({
+        method: 'GET', 
+        url: '/transaction/all/'
+      })
+      .then(function(res) {
+        return res.data;
+      })
+    },
     //gets all of the open transactions for a specific user, used in the portfolio to help close those transactions
     getOpenUserTransactions: function(user_id){
       return $http({
@@ -215,3 +225,37 @@ angular.module('app.services', [])
     }
   }
 })
+
+.factory('Socket', function($rootScope) {
+
+  // socket.on('test', function(results) {
+  //   console.log("hello", results);
+  // })
+  return {
+
+    on: function(eventName, callback) {
+      window.socket.on(eventName, function() {
+        
+        var args = arguments;
+        $rootScope.$apply(function() {
+          callback.apply(window.socket, args);
+        })
+        // var args = arguments;
+        // callback(socket, args);
+      });
+    }, 
+
+    emit: function(eventName, data, callback) {
+      window.socket.emit(eventName, data, function() {
+        var args = arguments;
+        $rootScope.$apply(function() {
+          if (callback) {
+            callback.apply(window.socket, args);
+          }
+        })
+      });
+    }
+    
+  }
+
+});
