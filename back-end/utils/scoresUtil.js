@@ -118,17 +118,12 @@ var dayOfYear = function(month, day){
 
 var newSocialInvestmentScore = function(target_id) {
 
-	var originTime = 0;
-	var latestTime = 0;
-	//timeOnMarket is the difference between latestTime and originTime and will be used to determine velocity of the stock
-	var timeOnMarket;
 	var numInvestors;
 	var sharesOnMarket = 0;
 	var numTransactionsMade = 0;
 	var newSocialInvestmentScore;
 	var supply=0;
 	var demand=0;
-	var SD;
 	mainController.findUserById(target_id, function(err, user) {
 		if (err) {
 			console.log('This is an error', err);
@@ -151,7 +146,6 @@ var newSocialInvestmentScore = function(target_id) {
 									console.log("There was an error getting recent scores", err);
 								}
 								else {
-									console.log(recentScores,'recentScores');
 									var recentXVals = [];
 									var recentYVals = [];
 									_.each(recentScores,function (recentScore, index) {
@@ -162,7 +156,6 @@ var newSocialInvestmentScore = function(target_id) {
                     recentXVals.push(recentXVals[0]);
                     recentYVals.push(recentYVals[0]);
                   }
-                  console.log(recentYVals,'Y', recentXVals,'X');
                   mainController.getScoresLastThreeMonths(target_id, function (err, generalScores) {
                     var generalXVals = [];
                     var generalYVals = [];
@@ -178,9 +171,7 @@ var newSocialInvestmentScore = function(target_id) {
                     if (!recentVelocity) {
                     	recentVelocity = 0;
                     }
-                    console.log(recentVelocity, "recentVelocity");
                     var generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-                    console.log(generalVelocity, "generalVelocity");
 
                     if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
                       velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
@@ -221,7 +212,7 @@ var newSocialInvestmentScore = function(target_id) {
 
 
 
-newSocialInvestmentScore(4)
+// newSocialInvestmentScore(4)
 
 
 var updateScores = function(newSocialInvestmentScore, user) {
@@ -231,8 +222,6 @@ var updateScores = function(newSocialInvestmentScore, user) {
 	var soc_weight = (user.social/(user.social + user.social_investment));
 	var social_investment_weight = (1 - soc_weight);
 	user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
-
-	console.log("here are my stats", user.social, user.social_investment, user.currentScore)
 	//add score to scores history
 	var scoreObj = {
 		user_id: user.id,
