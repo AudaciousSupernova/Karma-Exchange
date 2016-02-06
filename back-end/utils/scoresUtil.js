@@ -175,7 +175,8 @@ var newSocialInvestmentScore = function(target_id) {
 									console.log("general time", generalXVals);
 									console.log("recent scores", recentYVals);
 									console.log("recent time", recentXVals);
-									recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+									recentVelocity = 1;
+									// recentVelocity = linearRegression(recentYVals, recentXVals).slope;
 									generalVelocity = linearRegression(generalYVals, generalXVals).slope;
 									console.log("my recent vel", recentVelocity, "my general vel", generalVelocity);
 
@@ -215,7 +216,7 @@ var updateScores = function(newSocialInvestmentScore, user) {
 	var social_investment_weight = (1 - soc_weight);
 
 
-	user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
+	user.currentScore = Math.round(Math.sqrt(Math.abs(user.social_investment * user.social)) + user.social);
 
 	console.log("here are my stats", user.social, user.social_investment, user.currentScore)
 	mainController.updateUser(user, function(err, results) {

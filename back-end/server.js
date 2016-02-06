@@ -65,7 +65,13 @@ app.use(express.static(__dirname + '/../front-end'));
 
 var server = app.listen(port);
 var io = require('socket.io')(server);
-io.on('connection', socket);
+io.on('connection', function(socket) {
+  socket.on('transaction', function(transaction) {
+    io.sockets.emit('transaction', {
+      transaction: transaction
+    })
+  })
+});
 
 app.use(passport.initialize());
 app.use(passport.session());

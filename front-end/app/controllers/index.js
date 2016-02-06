@@ -1,12 +1,13 @@
 angular.module('app.index', [])
 
 
-.controller('IndexController', function($scope, Socket, $rootScope, $location, $http, Newsfeed, Root, Auth, User) {
+.controller('IndexController', function($scope, Socket, $rootScope, $location, $http, Newsfeed, Root, Auth, User, TransactionHist) {
 
   $scope.currentUserInfo = false;
   $scope.searchResults;
-  $scope.searchQuery = ""
+  $scope.searchQuery = "";
   var test = "Hello Neeraj Kohirkar";
+  $scope.transactions = [];
 
 
   Socket.emit('test', {test: test});
@@ -27,6 +28,15 @@ angular.module('app.index', [])
       $scope.userOne = result[0].name;
       $scope.userTwo = result[1].name; 
     });
+  }
+
+  $scope.getAllTransactions = function() {
+    TransactionHist.getAllTransactions()
+    .then(function(results) {
+      console.log("I successfully got all transactions", results);
+      $scope.transactions = results.reverse();
+      console.log("what are my transacitons", $scope.transactions);
+    })
   }
 
   $scope.logout = function () {
@@ -64,6 +74,15 @@ angular.module('app.index', [])
       Socket.on('test', function(data) {
         console.log("here are my results", data);
       })
+
+      Socket.on('transaction', function(data) {
+        console.log('here is my data', data);
+        console.log("here it is", data.transaction.transaction);
+        $scope.transactions.unshift(data.transaction.transaction);
+        console.log("These are my transactions after socket event", $scope.transactions);
+      })
+
+      $scope.getAllTransactions();
     }
   })
 

@@ -245,6 +245,17 @@ var targetTransactionHist = function(targetId, callback) {
 	})
 }
 
+var getAllTransactions = function(callback) {
+	connection.query('SELECT * FROM transactionHist', function(err, rows) {
+		if (err) {
+			console.log('Error finding all transactionHist', err);
+			callback(err, null);
+		} else {
+			callback(null, rows);
+		}
+	})
+}
+
 //<h3>Score History functions</h3>
 //adds a score to the users history
 //do not pass a timestamp, mysql will do this for you
@@ -416,6 +427,7 @@ module.exports = {
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
 	targetTransactionHist: targetTransactionHist,
+	getAllTransactions: getAllTransactions,
 
 	//score History methods
 	addScore: addScore,

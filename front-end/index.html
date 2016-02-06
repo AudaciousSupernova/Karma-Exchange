@@ -31,6 +31,12 @@
       <span>{{userOne}}, </span>
       <span>{{userTwo}}</span>
     </div>
+    <br>
+    <div ng-repeat="transaction in transactions">
+      <span>{{transaction.type}} </span>
+      <span> {{transaction.numberShares}} </span>
+    </div>
+
     <!-- dependancies -->
     <script src="libs/angular-route/angular-route.min.js"> </script>
     <script src="libs/angular-ui-router/release/angular-ui-router.min.js"> </script>
@@ -41,6 +47,12 @@
     <script src="libs/Chart.js/Chart.min.js"></script>
     <script src="libs/angular-chart.js/dist/angular-chart.min.js"></script>
     <script src="libs/socket.io-client/socket.io.js"> </script>
+
+    <script>
+
+    window.socket = io.connect();
+
+    </script>
     <!-- our app js -->
     <script src="app/app.js"> </script>
     <script src="app/controllers/profile.js"> </script>
