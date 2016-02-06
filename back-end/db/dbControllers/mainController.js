@@ -246,7 +246,9 @@ var targetTransactionHist = function(targetId, callback) {
 }
 
 var getAllTransactions = function(callback) {
-	connection.query('SELECT * FROM transactionHist', function(err, rows) {
+	var oneWeekAgo = new Date();
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+	connection.query('SELECT * FROM transactionHist WHERE ts>? ORDER BY ts DESC',oneWeekAgo, function(err, rows) {
 		if (err) {
 			console.log('Error finding all transactionHist', err);
 			callback(err, null);

@@ -53,6 +53,7 @@ CREATE TABLE transactionHist (
   type varchar(4),
   numberShares int,
   karma int,
+  ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );
