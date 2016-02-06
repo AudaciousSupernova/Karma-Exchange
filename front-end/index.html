@@ -9,10 +9,10 @@
   </head>
 
   <body ng-controller="IndexController">
-    <div class = "navbar" ng-show = "currentUserInfo">
+    <div class = "navbar" ng-show = "loggedinUserInfo">
       <span class = "currentUserNavBar">
-        <span> Welcome {{currentUserInfo.name}}! </span>
-        <span> {{currentUserInfo.karma}} Karma</span>
+        <span> Welcome {{loggedinUserInfo.name}}! </span>
+        <span> {{loggedinUserInfo.karma}} Karma</span>
       </span>
       <span class="navBar" ng-click="viewHome()">Home</span>
       <span class="navBar" ng-click="viewProfile()">Profile</span>
@@ -27,7 +27,7 @@
     <div class = "spaceHolder">s</div>
     <script src="libs/angular/angular.min.js"> </script>
     <div class = "view" ui-view> </div>
-    <div class="leaders" ng-init='getLeaders()'>Top Leaders on Karma Exchange: 
+    <div class="leaders" ng-init='getLeaders()'>Top Leaders on Karma Exchange:
       <span>{{userOne}}, </span>
       <span>{{userTwo}}</span>
     </div>

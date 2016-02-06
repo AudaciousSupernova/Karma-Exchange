@@ -71,6 +71,12 @@ io.on('connection', function(socket) {
       transaction: transaction
     })
   })
+
+  socket.on('sell', function(transaction) {
+    io.sockets.emit('sell', {
+      transaction: transaction
+    })
+  })
 });
 
 app.use(passport.initialize());

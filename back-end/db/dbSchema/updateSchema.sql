@@ -29,11 +29,13 @@ USE main;
 
 -- ALTER TABLE users ADD access_token varchar(255);
 
-ALTER TABLE users ADD social_subScores varchar(200) DEFAULT "{friendScore:5,photoScore:5,feedScore:5}";
-ALTER TABLE users ADD social_investment_subScores varchar(200) DEFAULT "{numShareHolder:0,sharesOnMarket:0,numTransactions:0}";
-ALTER TABLE users ADD last_week_expected_social_change varchar(200) DEFAULT "0%";
-ALTER TABLE users ADD last_week_actual_social_change varchar(200) DEFAULT "0%";
-ALTER TABLE users ADD next_week_expected_social_change varchar(200) DEFAULT "0%";
+-- ALTER TABLE users ADD social_subScores varchar(200) DEFAULT "{friendScore:5,photoScore:5,feedScore:5}";
+-- ALTER TABLE users ADD social_investment_subScores varchar(200) DEFAULT "{numShareHolder:0,sharesOnMarket:0,numTransactions:0}";
+-- ALTER TABLE users ADD last_week_expected_social_change varchar(200) DEFAULT "0%";
+-- ALTER TABLE users ADD last_week_actual_social_change varchar(200) DEFAULT "0%";
+-- ALTER TABLE users ADD next_week_expected_social_change varchar(200) DEFAULT "0%";
+
+ALTER TABLE transactionHist ADD ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 -- ALTER TABLE transactionHist MODIFY type varchar(4);
 

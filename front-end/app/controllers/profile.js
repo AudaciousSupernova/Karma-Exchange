@@ -2,7 +2,7 @@ angular.module('app.profile', [])
 
 	//<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB) {
+.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB, $rootScope) {
 
   $scope.isUser = true;
   $scope.user;
@@ -43,29 +43,32 @@ angular.module('app.profile', [])
       })
   }
 
-  $scope.getUserById = function(id) {
+  $scope.getUserById = function(id, type) {
 
     User.getUser(id)
     .then(function(data) {
-      $scope.user = data[0];
-      if ($scope.user.profile_photo === null) {
-        $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
-      }
-      if ($scope.user.email === null) {
-        $scope.user.email = "No Email Provided"
-      }
-      // console.log("What does my user look like?", $scope.user);
-      // console.log("Well here we are", $scope.user);
-      // $scope.getScores();
-      //if id matches logged-in id
-        //then call getLeaders
-      //else
-        //display buy shares button
-      var date = new Date();
-      if (date.getDay() === 2) {
-        $scope.wednesday = true;
-      } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
-        $scope.wednesday = true;
+      if (type === 'loggedinUser') {
+        $scope.loggedinUserInfo = data[0];
+        var currentPath = $location.path();
+        currentPath = currentPath.split("");
+        $scope.profileId = currentPath.splice(9).join("");
+        console.log("what is my profile id", $scope.profileId);
+        $scope.getUserById($scope.profileId, 'profile');
+      } else {
+        $scope.user = data[0];
+        if ($scope.user.profile_photo === null) {
+          $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
+        }
+        if ($scope.user.email === null) {
+          $scope.user.email = "No Email Provided"
+        }
+        var date = new Date();
+        if (date.getDay() === 2) {
+          $scope.wednesday = true;
+        } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
+          $scope.wednesday = true;
+        }
+        $scope.getScores();
       }
     })
   }
@@ -79,11 +82,12 @@ angular.module('app.profile', [])
         $scope.scores[0].push(scoreObj.social);
         $scope.scores[1].push(scoreObj.currentScore);
       }
-      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length 
+      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length
       for(var i = 0; i < daysBeforeUserJoined; i++){
         $scope.scores[0].unshift(0)
         $scope.scores[1].unshift(0)
       }
+      console.table($scope.scores)
     })
   }
   $scope.addLabels = function(daysInPast){
@@ -153,8 +157,7 @@ angular.module('app.profile', [])
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: 
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+        numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
       }
 
       var investment = {
@@ -172,12 +175,13 @@ angular.module('app.profile', [])
           $scope.revealOptions = true;
 
         } else {
-
+          transaction.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+
           TransactionHist.makeTransaction(transaction)
             .then(function() {
               $mdDialog.hide();
-            })         
+            })
         }
       }
     }
@@ -188,42 +192,42 @@ angular.module('app.profile', [])
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: 
+        numberShares:
         $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       TransactionHist.makeTransaction(transaction).then(function()  {
-        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
+        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
-      })      
+      })
       $mdDialog.hide();
     }
 
-    $scope.buyDirect = function() { 
+    $scope.buyDirect = function() {
       var transaction = {
         user_id: $scope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: 
-        $scope.availableShares
+        numberShares: $scope.availableShares
       }
-      var newScore = Math.round($scope.profile.currentScore * 1.1); 
+      var newScore = Math.round($scope.profile.currentScore * 1.1);
 
       if ($scope.availableShares) {
         TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToBuy - transaction.numberShares; 
-          TransactionHist.closeTransactionRequest(transaction, newScore); 
+          transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
         })
 
       } else {
-        transaction.numberShares = $scope.sharesToBuy; 
+        transaction.numberShares = $scope.sharesToBuy;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
+      transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
       $scope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
       Socket.emit('transaction', {
         transaction: transaction
       })
-      $mdDialog.hide(); 
+      $mdDialog.hide();
     }
 
     $scope.checkSharesAvail = function() {
@@ -238,7 +242,7 @@ angular.module('app.profile', [])
   }
 
   //<h3> ReportModalController Function </h3>
-  //This will include the logic to display all profile report details. These include: 
+  //This will include the logic to display all profile report details. These include:
     //Current Score
     //Social Score
     //Expected Social Score Trend
@@ -262,14 +266,9 @@ angular.module('app.profile', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      $scope.loggedinUserInfo = Root.currentUserInfo.data;
-
-      var currentPath = $location.path();
-      currentPath = currentPath.split("");
-      $scope.profileId = currentPath.splice(9).join("");
-      $scope.getUserById($scope.profileId);
+      console.log("what is the rootscope id", $rootScope.user.data.id);
+      $scope.getUserById($rootScope.user.data.id, 'loggedinUser');
       $scope.addLabels(30);
-      $scope.getScores();
     }
   })
 });

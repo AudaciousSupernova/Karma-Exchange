@@ -19,7 +19,7 @@ CREATE TABLE users (
   social_investment int DEFAULT 5,
   currentScore int DEFAULT 10,
   id int NOT NULL AUTO_INCREMENT,
-  accessToken varchar(255) NOT NULL,
+  access_token varchar(255) NOT NULL,
   PRIMARY KEY (ID)
 );
 
@@ -53,6 +53,7 @@ CREATE TABLE transactionHist (
   type varchar(4),
   numberShares int,
   karma int,
+  ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (ID)
 );

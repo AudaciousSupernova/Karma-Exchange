@@ -17,7 +17,7 @@ connection.connect(function(err){
 
 //<h3> User database functions </h3>
 //takes a userObj with name, email, karma, facebookKey, id, password
-var addUser = function(userObj, callback){
+var addUser = function (userObj, callback) {
 	connection.query('INSERT INTO users SET ?', userObj, function(err, res){
 		if(err){
 			console.log("error inserting into users", err)
@@ -53,7 +53,7 @@ var findUsersByPartial = function(string, callback){
 		} else{
 			callback(null, rows);
 		}
-	})	
+	})
 }
 
 //finds the user by id, useful for buy/sell events
@@ -112,14 +112,14 @@ var getAllUsers = function(callback){
 
 }
 
-// returns array of top n users, ranked by current score 
+// returns array of top n users, ranked by current score
 var getTopUsers = function(limit, callback) {
 	connection.query('SELECT * FROM users ORDER BY currentScore DESC LIMIT ?',limit, function(err, res) {
 		if (err) {
-			console.log('Error finding all users sorted by current score');	
+			console.log('Error finding all users sorted by current score');
 			callback(err, null);
 		} else {
-			callback(null, res); 
+			callback(null, res);
 		}
 	})
 }
@@ -246,7 +246,9 @@ var targetTransactionHist = function(targetId, callback) {
 }
 
 var getAllTransactions = function(callback) {
-	connection.query('SELECT * FROM transactionHist', function(err, rows) {
+	var oneWeekAgo = new Date();
+	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+	connection.query('SELECT * FROM transactionHist WHERE ts>? ORDER BY ts DESC',oneWeekAgo, function(err, rows) {
 		if (err) {
 			console.log('Error finding all transactionHist', err);
 			callback(err, null);
@@ -257,11 +259,14 @@ var getAllTransactions = function(callback) {
 }
 
 //<h3>Score History functions</h3>
-//adds a score to the users history
+//adds a score to the users history, which will also update the user's scores(social, social_investment, currentScore) property
+//in the user table
 //do not pass a timestamp, mysql will do this for you
 //type can be social or social-investment
 //other types will be available in the future
 //scoreObj example
+
+
 // var sampleScoreObj = {
 // 	user_id: 243,
 // 	type: "social-investment",
@@ -274,12 +279,34 @@ var addScore = function(scoreObj, callback){
 		if(err){
 			console.log("error inserting into scoresHist", err)
 			callback(err, null)
-		} else{
+		} else {
 			console.log("last inserted Id: ", res.insertId);
+			scoreObj.id = scoreObj.user_id;
+			delete scoreObj.user_id;
+			updateUser(scoreObj,function(err, id) {
+				console.log(id);
+			})
 			callback(null, res.insertId)
 		}
 	})
 }
+
+// var scoreObj = {
+//                 user_id: userId,
+//                 social_investment: 5,
+//                 social: 5,
+//                 currentScore: 10
+//               };
+
+// var testObj = {
+// 	user_id: 4,
+// 	social_investment:7,
+// 	social:9,
+// 	currentScore:15
+// }
+// addScore(testObj, function (whatever) {
+// 	console.log(whatever);
+// })
 
 //grabs all scores for a target user
 var getScores = function(userId, callback){
@@ -297,11 +324,22 @@ var getScores = function(userId, callback){
 
 //grabs all scores for a target user in the last week
 var getRecentScores = function(userId, callback) {
-	console.log("I am in the get recent scores function");
 	var oneWeekAgo = new Date();
 	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-	console.log("one week ago looks like", oneWeekAgo);
 	connection.query('SELECT * FROM scoresHist where user_id=? AND ts>? ORDER BY ts', [userId, oneWeekAgo], function(err, rows) {
+		if (err) {
+			console.log("Error getting recent scores of user_id: ", userId, err);
+			callback(err, null);
+		} else {
+			callback(null, rows);
+		}
+	})
+}
+
+var getScoresLastThreeMonths = function(userId, callback) {
+	var threeMonthsAgo = new Date();
+	threeMonthsAgo.setDate(threeMonthsAgo.getDate() - 90);
+	connection.query('SELECT * FROM scoresHist where user_id=? AND ts>? ORDER BY ts', [userId, threeMonthsAgo], function(err, rows) {
 		if (err) {
 			console.log("Error getting recent scores of user_id: ", userId, err);
 			callback(err, null);
@@ -318,7 +356,7 @@ var getTopScores = function(limit, callback) {
 			console.log('Error finding all users sorted by current score');
 			callback(err, null);
 		} else {
-			callback(null, res); 
+			callback(null, res);
 		}
 	})
 }
@@ -433,6 +471,7 @@ module.exports = {
 	addScore: addScore,
 	getScores: getScores,
 	getRecentScores: getRecentScores,
+	getScoresLastThreeMonths, getScoresLastThreeMonths,
 	getTopScores: getTopScores,
 
 	//Current Stock methods

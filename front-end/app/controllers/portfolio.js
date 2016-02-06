@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, Scores, TransactionHist, User) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, $rootScope, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.loggedinUserInfo;
@@ -19,18 +19,24 @@ angular.module('app.portfolio', ["chart.js"])
     if (boolean === false) {
       $location.path('/')
     } else {
-      $scope.loggedinUserInfo = Root.currentUserInfo.data;
-      // console.log("Is the id correct", $scope.loggedinUserInfo);
-      $scope.getTransactionHist(function(){
-        $scope.getInvestments($scope.loggedinUserInfo.id);
-      });
+      $scope.getUserById($rootScope.user.data.id);
+
       $scope.addLabels(30)
     }
   })
 
+  $scope.getUserById = function(id) {
+    User.getUser(id)
+      .then(function(user) {
+        $scope.loggedinUserInfo = user[0];
+        console.log("This is the user");
+        $scope.getTransactionHist();
+      })
+  }
+
 
 //gets all current investments for the user
-//properties on an investment object
+//properties on an investment object4
 // currentScore: 45
 // data: Array[1]
 // id: 3220
@@ -56,7 +62,7 @@ angular.module('app.portfolio', ["chart.js"])
       for(var i = 0; i < scoresHist.length; i++){
         obj.data[0].push(scoresHist[i].currentScore)
       }
-      var daysBeforeUserJoined = $scope.labels.length - obj.data[0].length 
+      var daysBeforeUserJoined = $scope.labels.length - obj.data[0].length
       for(var i = 0; i < daysBeforeUserJoined; i++){
         obj.data[0].unshift(0)
       }
@@ -74,11 +80,12 @@ angular.module('app.portfolio', ["chart.js"])
 // target_name: "Rosie Bergnaum"
 // type: "sell"
 // user_id: 1
-  $scope.getTransactionHist = function(callback) {
+  $scope.getTransactionHist = function() {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {
       $scope.transactions = results.reverse();
-      callback()
+      $scope.getInvestments($scope.loggedinUserInfo.id);
+
     })
   }
 //gets all open user transactions for the logged in user.
@@ -109,7 +116,7 @@ angular.module('app.portfolio', ["chart.js"])
       }
       $scope.openTransactions = openTransactions;
     })
-  } 
+  }
 
 //generates lables for the graph. Initially to 30 days in the past however that can be modified in the future
   $scope.addLabels = function(daysInPast){
@@ -166,7 +173,7 @@ angular.module('app.portfolio', ["chart.js"])
         if(shares - transaction.numberShares > 0){
           profit += (transaction.numberShares * investment.currentScore - transaction.karma)
           shares -= transaction.numberShares
-          // <= 0 
+          // <= 0
         } else {
           var transactionScore = Math.abs(Math.round(transaction.karma / transaction.numberShares))
           profit += (shares * investment.currentScore - shares * transactionScore)
@@ -199,7 +206,7 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.toggleViews('openTransactions')
   }
 
-  function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Scores, User) {
+  function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Socket, Scores, User) {
 
 
     $scope.investment = investment;
@@ -210,27 +217,27 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.targetCurrentScore;
     $scope.revealOptions=false;
 
-  $scope.getUserById = function () {
-    User.getUser($scope.investment.target_id)
-      .then(function (results) {
+  // $scope.getUserById = function () {
+  //   User.getUser($scope.investment.target_id)
+  //     .then(function (results) {
 
-        var transaction = {
-          user_id: $scope.investment.user_id,
-          target_id: $scope.investment.target_id,
-          type: "sell",
-          numberShares: $scope.sharesToSell,
-          karma: $scope.sharesToSell * results[0].currentScore//reference logged in user's karma
-        }
+  //       var transaction = {
+  //         user_id: $scope.investment.user_id,
+  //         target_id: $scope.investment.target_id,
+  //         type: "sell",
+  //         numberShares: $scope.sharesToSell,
+  //         karma: $scope.sharesToSell * results[0].currentScore//reference logged in user's karma
+  //       }
 
-        $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + $scope.sharesToSell * results[0].currentScore;
-        TransactionHist.addTransaction(transaction)
-          .then(function(results) {
-            investment.numberShares = investment.numberShares - $scope.sharesToSell;
-            $mdDialog.hide();
+  //       $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + $scope.sharesToSell * results[0].currentScore;
+  //       TransactionHist.addTransaction(transaction)
+  //         .then(function(results) {
+  //           investment.numberShares = investment.numberShares - $scope.sharesToSell;
+  //           $mdDialog.hide();
 
-          })
-      })
-  }
+  //         })
+  //     })
+  // }
 
     $scope.confirm = function() {
 
@@ -253,9 +260,8 @@ angular.module('app.portfolio', ["chart.js"])
           console.log("THERE ARE NOT ENOUGH SHARES REQUESTED ON THE MARKET")
 
         } else {
-
           $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
-          console.log("what is shares to sell", $scope.sharesToSell);
+          Root.addUserInfo({data:$scope.loggedinUserInfo});
           $scope.investment.numberShares -= $scope.sharesToSell;
           TransactionHist.makeTransaction(transaction)
             .then(function () {
@@ -297,22 +303,25 @@ angular.module('app.portfolio', ["chart.js"])
         numberShares: $scope.requestedShares,
         karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
       }
-      console.log($scope.investment.currentScore);
       var newScore = Math.round($scope.investment.currentScore * 0.9);
 
       if ($scope.requestedShares) {
         TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares; 
+          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
           TransactionHist.closeTransactionRequest(transaction, newScore);
         })
 
       } else {
         transaction.numberShares = $scope.sharesToSell;
-        TransactionHist.closeTransactionRequest(transaction, newScore); 
+        TransactionHist.closeTransactionRequest(transaction, newScore);
       }
-      $scope.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+      transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+      Socket.emit('sell', {
+        transaction: transaction
+      })
+      $scope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
 
-      $mdDialog.hide(); 
+      $mdDialog.hide();
     }
 
 
