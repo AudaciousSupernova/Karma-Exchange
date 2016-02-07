@@ -5,7 +5,6 @@ var transactionUtil = require('./utils/transactionUtil')
 var transactionQueue = require('./db/dbControllers/transactionQueue');
 var fbRequests = require('./db/dbControllers/fbRequests.js');
 
-
 // fbRequests.getFacebookData();
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
@@ -19,7 +18,10 @@ module.exports = function (app, express) {
   app.get('/api/loggedin',
     function (req, res) {
       if (req.isAuthenticated()) {
-        res.send(req.user);
+        mainController.findUserById(req.user.id, function(err, user) {
+          console.log("here is my user now", user);
+          res.send(user);
+        })
       } else {
         res.redirect('/');
       }

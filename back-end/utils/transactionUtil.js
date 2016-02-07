@@ -51,7 +51,6 @@ var makeTransaction = function(transactionObj){
 						//update the queue and update a partial transaction
 					  updateOpenTransactionAndStocks(openTransactions[i], desiredShares, shareValue)
 						desiredShares = 0
-
 					//in the 0 case close the transaction and exit the loop
 					}
 					i++;

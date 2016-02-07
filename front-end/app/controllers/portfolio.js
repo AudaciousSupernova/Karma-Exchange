@@ -4,7 +4,6 @@ angular.module('app.portfolio', ["chart.js"])
 .controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, $rootScope, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
-  $scope.loggedinUserInfo;
   //Save the user id, included in the location path
   $scope.currentUserInfo = "invalid";
   //call getInvestments, pass the userId on the function call
@@ -19,8 +18,7 @@ angular.module('app.portfolio', ["chart.js"])
     if (boolean === false) {
       $location.path('/')
     } else {
-      $scope.getUserById($rootScope.user.data.id);
-
+      $scope.getTransactionHist();
       $scope.addLabels(30)
     }
   })
@@ -30,7 +28,6 @@ angular.module('app.portfolio', ["chart.js"])
       .then(function(user) {
         $scope.loggedinUserInfo = user[0];
         console.log("This is the user");
-        $scope.getTransactionHist();
       })
   }
 
@@ -81,17 +78,17 @@ angular.module('app.portfolio', ["chart.js"])
 // type: "sell"
 // user_id: 1
   $scope.getTransactionHist = function() {
-    TransactionHist.getTransactions($scope.loggedinUserInfo.id)
+    TransactionHist.getTransactions($rootScope.loggedinUserInfo.id)
     .then(function(results) {
       $scope.transactions = results.reverse();
-      $scope.getInvestments($scope.loggedinUserInfo.id);
+      $scope.getInvestments($rootScope.loggedinUserInfo.id);
 
     })
   }
 //gets all open user transactions for the logged in user.
 //sample properties on an open transaction
   $scope.getOpenUserTransactions = function(){
-    var user_id = $scope.loggedinUserInfo.id
+    var user_id = $rootScope.loggedinUserInfo.id
     //using a hash table to keep track of the openTransaction index of the user in question because of the asynch call below
     var hashedTransactions = {};
     TransactionHist.getOpenUserTransactions(user_id)
@@ -135,8 +132,7 @@ angular.module('app.portfolio', ["chart.js"])
     $mdDialog.show({
       templateUrl: '../app/views/sell.html',
       locals: {
-        investment: investment,
-        loggedinUserInfo: $scope.loggedinUserInfo
+        investment: investment
       },
       controller: SellModalController
     })
@@ -206,12 +202,11 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.toggleViews('openTransactions')
   }
 
-  function SellModalController($scope, $mdDialog, investment, loggedinUserInfo, TransactionHist, Socket, Scores, User) {
+  function SellModalController($scope, $mdDialog, investment, TransactionHist, Socket, Scores, User, $rootScope) {
 
 
     $scope.investment = investment;
     $scope.requestedShares;
-    $scope.loggedinUserInfo = loggedinUserInfo
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
@@ -260,8 +255,7 @@ angular.module('app.portfolio', ["chart.js"])
           console.log("THERE ARE NOT ENOUGH SHARES REQUESTED ON THE MARKET")
 
         } else {
-          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
-          Root.addUserInfo({data:$scope.loggedinUserInfo});
+          $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
           $scope.investment.numberShares -= $scope.sharesToSell;
           TransactionHist.makeTransaction(transaction)
             .then(function () {
@@ -316,10 +310,7 @@ angular.module('app.portfolio', ["chart.js"])
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
       transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
-      Socket.emit('sell', {
-        transaction: transaction
-      })
-      $scope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+      $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
 
       $mdDialog.hide();
     }
