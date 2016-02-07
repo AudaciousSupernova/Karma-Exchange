@@ -2,8 +2,6 @@ angular.module('app.index', [])
 
 
 .controller('IndexController', function($scope, Socket, $rootScope, $location, $http, Newsfeed, Root, Auth, User, TransactionHist) {
-
-  $scope.loggedinUserInfo = false;
   $scope.searchResults;
   $scope.searchQuery = "";
   var test = "Hello Neeraj Kohirkar";
@@ -27,11 +25,12 @@ angular.module('app.index', [])
     $location.path('/newsfeed');
   }
   $scope.viewProfile = function () {
-    $location.path('/profile/' + $scope.loggedinUserInfo.id);
+    console.log("what is the rootScope", $rootScope)
+    $location.path('/profile/' + $rootScope.loggedinUserInfo.id);
   }
 
   $scope.viewPortfolio = function () {
-    $location.path('/portfolio/' + $scope.loggedinUserInfo.id);
+    $location.path('/portfolio/' + $rootScope.loggedinUserInfo.id);
   }
 
   $scope.getLeaders = function () {
@@ -45,7 +44,7 @@ angular.module('app.index', [])
     TransactionHist.getAllTransactions()
     .then(function(results) {
       console.log("I successfully got all transactions", results);
-      $scope.transactions = results.reverse();
+      $scope.transactions = results;
       console.log("what are my transactions", $scope.transactions);
     })
   }
@@ -55,7 +54,7 @@ angular.module('app.index', [])
       method: 'GET',
       url: '/api/logout'
     }).then(function successCallback(response) {
-      $scope.loggedinUserInfo = false;
+      $rootScope.loggedinUserInfo = false;
       console.log('loggedOut')
       $location.path('/');
       }, function errorCallback(response) {
@@ -83,32 +82,41 @@ angular.module('app.index', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      console.log("this is the id", $rootScope.user.data.id);
-      $scope.getUserById($rootScope.user.data.id)
+      
+      // $scope.getUserById($rootScope.user.data.id)
 
-      Socket.on('test', function(data) {
-        console.log("here are my results", data);
-      })
+      // Socket.on('test', function(data) {
+      //   console.log("here are my results", data);
+      // })
 
-      Socket.on('transaction', function(data) {
-        console.log('here is my data', data);
-        console.log("here it is", data.transaction.transaction);
-        $scope.transactions.unshift(data.transaction.transaction);
-        if (data.transaction.transaction.user_id === $scope.loggedinUserInfo.id) {
-          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - data.transaction.transaction.karma;
-          console.log("These are my transactions after socket event", $scope.transactions);
-        }
-      })
+      // Socket.on('transaction', function(data) {
+      //   console.log('here is my data', data);
+      //   console.log("here it is", data.transaction.transaction);
+      //   $scope.transactions.unshift(data.transaction.transaction);
+      //   if (data.transaction.transaction.user_id === $scope.loggedinUserInfo.id) {
+      //     $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - data.transaction.transaction.karma;
+      //     console.log("These are my transactions after socket event", $scope.transactions);
+      //   }
+      // })
 
-      Socket.on('sell', function(data) {
-        console.log("on the sell click here is the transaction", data.transaction.transaction);
-        $scope.transactions.unshift(data.transaction.transaction);
-        if (data.transaction.transaction.user_id === $scope.loggedinUserInfo.id) {
-          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + data.transaction.transaction.karma;
-        }
-      })
+      // Socket.on('sell', function(data) {
+      //   console.log("on the sell click here is the transaction", data.transaction.transaction);
+      //   $scope.transactions.unshift(data.transaction.transaction);
+      //   if (data.transaction.transaction.user_id === $scope.loggedinUserInfo.id) {
+      //     $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + data.transaction.transaction.karma;
+      //   }
+      // })
+
+      // Socket.on('transactionQueue', function(data) {
+      //   console.log("here is the transaction queue activity", data);
+      // })
 
       $scope.getAllTransactions();
+
+      Socket.on('transaction', function(transaction) {
+        console.log("AM I IN HERE", transaction.transaction);
+        $scope.transactions.unshift(transaction.transaction.transaction);
+      })
     }
   })
 

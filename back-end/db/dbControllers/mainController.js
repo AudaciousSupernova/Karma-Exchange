@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-var _ = require('underscore')
+var _ = require('underscore');
 
 var connection = mysql.createConnection({
   user: "root",
@@ -471,7 +471,7 @@ module.exports = {
 	addScore: addScore,
 	getScores: getScores,
 	getRecentScores: getRecentScores,
-	getScoresLastThreeMonths:getScoresLastThreeMonths,
+	getScoresLastThreeMonths: getScoresLastThreeMonths,
 	getTopScores: getTopScores,
 
 	//Current Stock methods

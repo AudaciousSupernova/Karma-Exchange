@@ -85,8 +85,11 @@ angular.module('app.services', [])
         url: '/api/loggedin'
       })
       .then(function (user) {
-        if (user.data.id) {
-          $rootScope.user = user;
+        // console.log("what is user", user);
+        console.log("what is the user", user);
+        if (user.data[0].id) {
+          $rootScope.loggedinUserInfo = user.data[0];
+          console.log("what is my new $rootScope", $rootScope.loggedinUserInfo)
           return true;
         } else {
           console.log("error authenticating user");

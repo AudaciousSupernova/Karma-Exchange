@@ -7,9 +7,7 @@ angular.module('app.profile', [])
   $scope.isUser = true;
   $scope.user;
   $scope.leaders;
-  $scope.loggedinUserInfo = "invalid";
   $scope.profileId;
-  $scope.loggedinUserInfo.currentScore = "No score currently";
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
@@ -43,18 +41,10 @@ angular.module('app.profile', [])
       })
   }
 
-  $scope.getUserById = function(id, type) {
+  $scope.getUserById = function(id) {
 
     User.getUser(id)
     .then(function(data) {
-      if (type === 'loggedinUser') {
-        $scope.loggedinUserInfo = data[0];
-        var currentPath = $location.path();
-        currentPath = currentPath.split("");
-        $scope.profileId = currentPath.splice(9).join("");
-        console.log("what is my profile id", $scope.profileId);
-        $scope.getUserById($scope.profileId, 'profile');
-      } else {
         $scope.user = data[0];
         if ($scope.user.profile_photo === null) {
           $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
@@ -65,11 +55,10 @@ angular.module('app.profile', [])
         var date = new Date();
         if (date.getDay() === 2) {
           $scope.wednesday = true;
-        } else if ($scope.user.id === $scope.loggedinUserInfo.id) {
+        } else if ($scope.user.id === $rootScope.loggedinUserInfo.id) {
           $scope.wednesday = true;
         }
         $scope.getScores();
-      }
     })
   }
 
@@ -111,8 +100,7 @@ angular.module('app.profile', [])
     $mdDialog.show({
       templateUrl: '../app/views/buy.html',
       locals: {
-        profile: $scope.user,
-        loggedinUserInfo: $scope.loggedinUserInfo
+        profile: $scope.user
       },
       controller: BuyModalController
     })
@@ -140,13 +128,11 @@ angular.module('app.profile', [])
       })
   }
 
-  function BuyModalController($scope, $mdDialog, profile, loggedinUserInfo, TransactionHist, Portfolio, Socket) {
+  function BuyModalController($location, $scope, $mdDialog, profile, TransactionHist, Portfolio, Socket) {
 
     $scope.profile = profile;
-    $scope.score = loggedinUserInfo.currentScore;
+    $scope.score = $rootScope.loggedinUserInfo.currentScore;
     console.log("$scope.score", $scope.score);
-    $scope.loggedinUserInfo = loggedinUserInfo;
-    console.log("logged in user karma", $scope.loggedinUserInfo.karma);
     $scope.sharesToBuy;
     $scope.availableShares;
     $scope.revealOptions = false;
@@ -154,34 +140,45 @@ angular.module('app.profile', [])
     $scope.confirm = function() {
 
       var transaction = {
-        user_id: $scope.loggedinUserInfo.id,
+        user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares,
+        numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       var investment = {
-        user_id: $scope.loggedinUserInfo.id,
+        user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         numberShares: $scope.sharesToBuy
       }
 
-      if ($scope.loggedinUserInfo.karma < $scope.score* $scope.sharesToBuy) {
+      if ($rootScope.loggedinUserInfo.karma < $scope.score* $scope.sharesToBuy) {
         console.log("NOT ENOUGH MONEY")
+        // $location.path('/profile/' + $scope.loggedinUserInfo.id);
         $mdDialog.hide();
+
       } else {
 
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
 
         } else {
-          transaction.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
-          $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+          transaction.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+          $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
 
           TransactionHist.makeTransaction(transaction)
             .then(function() {
+              Socket.emit('transaction', {
+                transaction: transaction
+              });
               $mdDialog.hide();
             })
+
+            //other option: 
+            //on make transaction, return the transaction and all matching open transactions that were just closed
+            //then i can do the socket emit on the frontend on all of these
+
+
         }
       }
     }
@@ -189,14 +186,14 @@ angular.module('app.profile', [])
     $scope.wait = function() {
 
       var transaction = {
-        user_id: $scope.loggedinUserInfo.id,
+        user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares:
-        $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+        numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
       TransactionHist.makeTransaction(transaction).then(function()  {
+        Socket.emit()
         transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
       })
@@ -205,7 +202,7 @@ angular.module('app.profile', [])
 
     $scope.buyDirect = function() {
       var transaction = {
-        user_id: $scope.loggedinUserInfo.id,
+        user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: $scope.availableShares
@@ -223,10 +220,10 @@ angular.module('app.profile', [])
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
       transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
-      $scope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
+      $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
       Socket.emit('transaction', {
         transaction: transaction
-      })
+      });
       $mdDialog.hide();
     }
 
@@ -266,8 +263,14 @@ angular.module('app.profile', [])
     if (boolean === false) {
       $location.path('/')
     } else {
-      console.log("what is the rootscope id", $rootScope.user.data.id);
-      $scope.getUserById($rootScope.user.data.id, 'loggedinUser');
+      console.log("Auth works on the profile page");
+      var currentPath = $location.path();
+      currentPath = currentPath.split("");
+      $scope.profileId = currentPath.splice(9).join("");
+      $scope.getUserById($scope.profileId);
+      // console.log("what is the rootscope user", $rootScope.user);
+      // console.log("what is the rootscope id", $rootScope.user.data.id);
+      // $scope.getUserById($rootScope.user.data.id, 'loggedinUser');
       $scope.addLabels(30);
     }
   })
