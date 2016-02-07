@@ -1,45 +1,18 @@
 <div ng-module="app.profile">
   <section ng-model="user">
-
     <div class = "user info">
       <img src="{{user.profile_photo}}">
       <span>
-        <md-content>
-          <md-button ng-click="clickBuy()" class="md-raised">
-            Buy Shares
-          </md-button>
-        </md-content>
-        <md-content>
-          <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised">
-            View Report
-          </md-button>
-        </md-content>
+        <md-content> <md-button ng-click="clickBuy()" class="md-raised"> Buy Shares </md-button> </md-content>
+        <md-content> <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button></md-content>
       </span>
-      <h4> Name: {{user.name}} </h4>
-      <h4> Email: {{user.email}} </h4>
-       <div class='fb-test' ng-click="getFacebookData()"> Get Latest User Score </div>
-
+      <h4> {{user.name}} </h4>
+      <h4> {{user.email}} </h4>
+      <div class='fb-test' ng-click="getFacebookData()"> Get Latest User Score </div>
       <h4> Current Score: {{user.currentScore}} </h4>
-
     </div>
-
   </section>
   <section>
-    <p> <i>This is where the user graph will go. The scores associated with this user are: </i>
-      <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" ></canvas> 
-    </p>
+    <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" ></canvas> 
   </section>
-
-  <section>
-    <h4> Network Leaders </h4>
-    <ul ng-repeat="leader in leaders">
-      <li> {{leader.name}}</li>
-      <li> {{leader.score}} </li>
-    </ul>
-  </section>
-
-  <section>
-    <h4>Recommendations<h4>
-  </section>
-
 </div>

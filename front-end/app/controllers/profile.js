@@ -1,6 +1,6 @@
 angular.module('app.profile', [])
 
-	//<h3>Profile Controller</h3>
+//<h3>Profile Controller</h3>
 
 .controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB, $rootScope) {
 
@@ -11,46 +11,25 @@ angular.module('app.profile', [])
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
-  //Save the user id, included in the location path
 
-  //Pass this userId to $scope.getUserData in order to get all data associated with user
-
-  //if the userId matches the logged in user, then also call getLeaders
-  //if not, then display only the profile's general information
-
-  /*
-    When a user clicks on "Profile", pass the logged-in user's id to the new route: /profile/:id
-    in this controller file, save the id as user id
-    get UserData by passing the id
-
-    If a user types in a name in the search bar, then before routing to /profile/:id, first get the id associated with the selected name.
-
-    This function will be called on the main controller to grab user information by name.
-    The response will include the user id.
-
-    Now route to /profile/:id, save the id as user id, and get UserData
-
-    only call getLeaders if user id matches logged-in user's id
-
-*/
-
- $scope.getFacebookData = function() {
+  //Button press calls this function that retrieves the profile user's latest Facebook score.
+  $scope.getFacebookData = function() {
     FB.test($scope.user.id)
       .then(function(results) {
-        console.log('results', results);
+        console.log(results);
       })
   }
 
+  //This function grabs user information of the current profile id
   $scope.getUserById = function(id) {
-
     User.getUser(id)
-    .then(function(data) {
-        $scope.user = data[0];
+    .then(function(user) {
+        $scope.user = user[0];
         if ($scope.user.profile_photo === null) {
           $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
         }
         if ($scope.user.email === null) {
-          $scope.user.email = "No Email Provided"
+          $scope.user.email = "No Email Provided";
         }
         var date = new Date();
         if (date.getDay() === 2) {
@@ -62,6 +41,7 @@ angular.module('app.profile', [])
     })
   }
 
+  //getScores grabs all scores associated with the profile id
   $scope.getScores = function () {
     $scope.series = ["Social Score", "Total Score"]
     Scores.getScores($scope.profileId)
@@ -76,9 +56,10 @@ angular.module('app.profile', [])
         $scope.scores[0].unshift(0)
         $scope.scores[1].unshift(0)
       }
-      console.table($scope.scores)
     })
   }
+
+  //addLabels adds labels for the angular chart associated with profile id
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
       if(daysInPast % 5 === 0){
@@ -89,13 +70,7 @@ angular.module('app.profile', [])
     }
   }
 
-  $scope.getLeaders = function() {
-    User.getLeaderData()
-    .then(function(data) {
-      $scope.leaders = data;
-    })
-  }
-
+  //clickBuy opens up the Buy Modal
   $scope.clickBuy = function() {
     $mdDialog.show({
       templateUrl: '../app/views/buy.html',
@@ -108,14 +83,7 @@ angular.module('app.profile', [])
       })
   }
 
-  //Click on report function that takes user to the report modal
-  //Add in ng-show logic for the report button on the profile view
-    //if your on someone elses profile and one week has not gone by
-      //hide button
-    //otherwise if your on your profile
-      //show button
-    //otherwise if one week has gone by
-      //show button
+  //clickReport opens up the Report Modal
   $scope.clickReport = function() {
     $mdDialog.show({
       templateUrl: '../app/views/report.html',
@@ -128,17 +96,18 @@ angular.module('app.profile', [])
       })
   }
 
+  //Controller for the Buy Modal
   function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket) {
 
     $scope.profile = profile;
     $scope.score = $rootScope.loggedinUserInfo.currentScore;
-    console.log("$scope.score", $scope.score);
     $scope.sharesToBuy;
     $scope.availableShares;
     $scope.revealOptions = false;
 
+    //On confirm click, this function evaluates the transaction validity
+    //If the transaction is invalid, user will be notified
     $scope.confirm = function() {
-
       var transaction = {
         user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
@@ -152,46 +121,35 @@ angular.module('app.profile', [])
         numberShares: $scope.sharesToBuy
       }
 
-      if ($rootScope.loggedinUserInfo.karma < $scope.score* $scope.sharesToBuy) {
-        console.log("NOT ENOUGH MONEY")
-        // $location.path('/profile/' + $scope.loggedinUserInfo.id);
+      if ($rootScope.loggedinUserInfo.karma < $scope.score * $scope.sharesToBuy) {
+        console.log("This is an invalid transaction because loggedinUser does not have enough karma.");
         $mdDialog.hide();
-
       } else {
-
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
-
         } else {
           transaction.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
           $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
-
           TransactionHist.makeTransaction(transaction)
             .then(function() {
+              //On a successfull transaction, socket emit event to send recent transactions
               Socket.emit('transaction', {
                 transaction: transaction
               });
               $mdDialog.hide();
             })
-
-            //other option: 
-            //on make transaction, return the transaction and all matching open transactions that were just closed
-            //then i can do the socket emit on the frontend on all of these
-
-
         }
       }
     }
 
+    //This function adds a transaction to the transaction queue
     $scope.wait = function() {
-
       var transaction = {
         user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
         numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
-
       TransactionHist.makeTransaction(transaction).then(function()  {
         transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
@@ -199,6 +157,7 @@ angular.module('app.profile', [])
       $mdDialog.hide();
     }
 
+    //This function directly makes a transaction with increased cost
     $scope.buyDirect = function() {
       var transaction = {
         user_id: $rootScope.loggedinUserInfo.id,
@@ -207,19 +166,19 @@ angular.module('app.profile', [])
         numberShares: $scope.availableShares
       }
       var newScore = Math.round($scope.profile.currentScore * 1.1);
-
       if ($scope.availableShares) {
         TransactionHist.makeTransaction(transaction).then(function() {
           transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
           TransactionHist.closeTransactionRequest(transaction, newScore);
         })
-
       } else {
         transaction.numberShares = $scope.sharesToBuy;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
       transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
       $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
+
+      //Socket emit event to update recent transactions
       Socket.emit('transaction', {
         transaction: transaction
       });
@@ -232,44 +191,30 @@ angular.module('app.profile', [])
       });
     }
 
+    //Exit closes the Buy modal
     $scope.exit = function() {
       $mdDialog.hide();
     }
   }
 
   //<h3> ReportModalController Function </h3>
-  //This will include the logic to display all profile report details. These include:
-    //Current Score
-    //Social Score
-    //Expected Social Score Trend
-    //Current Social Score Trend
-    //Future Expected Social Score Trend
-    //# of Shareholders
-    //# of shares on market
-    //Supply and demand ratio
-    //Close button, on click should exit
-
   function ReportModalController($scope, $mdDialog, user) {
     $scope.user = user;
-    console.log($scope.user);
+    //Exit closes the Report modal
     $scope.exit = function() {
       $mdDialog.hide();
     }
   }
 
-
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
       $location.path('/')
     } else {
-      console.log("Auth works on the profile page");
+      //Grabs the profile id from the path and grabs the corresponding profile information
       var currentPath = $location.path();
       currentPath = currentPath.split("");
       $scope.profileId = currentPath.splice(9).join("");
       $scope.getUserById($scope.profileId);
-      // console.log("what is the rootscope user", $rootScope.user);
-      // console.log("what is the rootscope id", $rootScope.user.data.id);
-      // $scope.getUserById($rootScope.user.data.id, 'loggedinUser');
       $scope.addLabels(30);
     }
   })

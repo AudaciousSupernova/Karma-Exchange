@@ -1,9 +1,9 @@
 <div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
 
- <h2 ng-show = "currentInvestmentsView"> Your Current Investments </h2>
- <h2 ng-show = "transactionHistoryView"> Your Transaction History </h2>
- <h2 ng-show = "openTransactionsView"> Your Open Transactions </h2>
+  <h2 ng-show = "currentInvestmentsView"> Current Investments </h2>
+  <h2 ng-show = "transactionHistoryView"> Transaction History </h2>
+  <h2 ng-show = "openTransactionsView"> Open Transactions </h2>
     <md-button class="md-raised" ng-click = "toggleViews('currentInvestments')">Show Current Investments</md-button> 
     <md-button class="md-raised" ng-click = "toggleViews('transactionHistory')">Show Transaction History</md-button>
     <md-button class="md-raised" ng-click = "toggleOpenTransactions()">Show Open Transactions</md-button>
@@ -14,11 +14,11 @@
     <table ng-show  = "currentInvestmentsView">
       <tr>
         <th> Name </th>
-        <th> Current Market Value
+        <th> Current Value
         </th>
-        <th> Trend </th>
-        <th> Shares Owned </th>
-        <th> Profit if you sell </th>
+        <th> Recent Trend </th>
+        <th> Shares </th>
+        <th> Expected Profit </th>
       </tr>
       <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id, investment)'>
         <td> {{investment.name}} </td>
@@ -29,13 +29,11 @@
         <td>
           <div layout="column" ng-cloak>
             <md-content>
-              <md-button ng-click="clickSell(investment)" class="md-raised">Sell Shares
-              </md-button>
+              <md-button ng-click="clickSell(investment)" class="md-raised"> Sell Shares </md-button>
             </md-content>
           </div>
         </td>
       </tr>
-
     </table>
   <div ng-show = "transactionHistoryView"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
   </div>
@@ -49,8 +47,8 @@
     <table ng-show = 'transactionHistoryView &&tableVersion'>
       <tr>
         <th> Name </th>
-        <th> Type of Transaction </th>
-        <th> Number of Shares </th>
+        <th> Transaction Type </th>
+        <th> Shares </th>
         <th> Karma </th>
       </tr>
       <tr ng-repeat="transaction in transactions">
@@ -59,10 +57,9 @@
         <td> {{transaction.numberShares}}</td>
         <td> {{transaction.karma}} </td>
       </tr>
-
     </table>
 
-    <!-- Open Transactions View -->
+<!-- Open Transactions View -->
 <!--   <div ng-repeat="openTransaction in openTransactions" ng-init = "" ng-show = "openTransactionsView && !tableVersion">
       <p>{{openTransaction.string}</p>
       <p>openTransaction</p>
@@ -71,16 +68,17 @@
     <table ng-show = 'openTransactionsView'>
       <tr>
         <th> Name </th>
-        <th> Current Market Value </th>
-        <th> Type of Transaction </th>
-        <th> Number of Shares </th>
+        <th> Current Value </th>
+        <th> Transaction Type </th>
+        <th> Shares </th>
       </tr>
       <tr ng-repeat="openTransaction in openTransactions track by $index">
         <td> {{openTransaction.target_name}} </td>
         <td> {{openTransaction.currentScore}} </td>
         <td> {{openTransaction.type}} </td>
         <td> {{openTransaction.numberShares}}</td>
-        <td>  <div layout="column" ng-cloak>
+        <td>  
+          <div layout="column" ng-cloak>
             <md-content>
               <md-button ng-click="clickCancel(openTransaction.id, $index)" class="md-raised">Cancel Transaction
               </md-button>
@@ -88,9 +86,7 @@
           </div>
         </td>
       </tr>
-
     </table>
-
   <br/>
   <br/>
   <br/>
@@ -101,7 +97,4 @@
   <br/>
   <br/>
   <br/>
-
-   
-
 </div>

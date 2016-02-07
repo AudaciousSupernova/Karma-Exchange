@@ -11,11 +11,6 @@ angular.module('app.newsfeed', [])
   //trending data will be the same data for every user
   //call the function and store results in $scope.trending
 
-  //get number of users
-  //get number of transactions
-  //get total karma
-  //get richest users
-  //get highest scores
   $scope.getTrending = function() {
     Newsfeed.getTrending()
       .then(function(results) {

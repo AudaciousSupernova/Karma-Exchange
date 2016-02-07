@@ -4,9 +4,7 @@ angular.module('app.portfolio', ["chart.js"])
 .controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, $rootScope, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
-  //Save the user id, included in the location path
   $scope.currentUserInfo = "invalid";
-  //call getInvestments, pass the userId on the function call
   $scope.labels = [];
   $scope.transactions = []
   $scope.openTransactions = [];
@@ -14,6 +12,7 @@ angular.module('app.portfolio', ["chart.js"])
   $scope.openTransactionsView = false;
   $scope.transactionHistoryView = false;
 
+  //Auth check on portfolio view
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
       $location.path('/')
@@ -23,29 +22,19 @@ angular.module('app.portfolio', ["chart.js"])
     }
   })
 
+  //getUserById grabs the logged in user's portfolio information
   $scope.getUserById = function(id) {
     User.getUser(id)
       .then(function(user) {
         $scope.loggedinUserInfo = user[0];
-        console.log("This is the user");
       })
   }
 
-
-//gets all current investments for the user
-//properties on an investment object4
-// currentScore: 45
-// data: Array[1]
-// id: 3220
-// name: "Clemens Rohan"
-// numberShares: 64
-// series: "Clemens Rohan"
-// target_id: 85
-// user_id: 1
+  //getInvestment grabs all the current investment of the logged in user
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
-    .then(function(results) {
-      $scope.investments = results;
+    .then(function(investments) {
+      $scope.investments = investment;
     })
   }
 
@@ -68,25 +57,15 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
-//gets the transaction history for the current user
-//sample properties on a transaction object
-// id: 1729
-// karma: 4576
-// numberShares: 44
-// target_id: 64
-// target_name: "Rosie Bergnaum"
-// type: "sell"
-// user_id: 1
+//getTransactionHist gets all transactions for the logged in user
   $scope.getTransactionHist = function() {
     TransactionHist.getTransactions($rootScope.loggedinUserInfo.id)
     .then(function(results) {
       $scope.transactions = results.reverse();
       $scope.getInvestments($rootScope.loggedinUserInfo.id);
-
     })
   }
-//gets all open user transactions for the logged in user.
-//sample properties on an open transaction
+//getOpenUserTransactions gets all pending transactions for the logged in user
   $scope.getOpenUserTransactions = function(){
     var user_id = $rootScope.loggedinUserInfo.id
     //using a hash table to keep track of the openTransaction index of the user in question because of the asynch call below
@@ -115,7 +94,7 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
-//generates lables for the graph. Initially to 30 days in the past however that can be modified in the future
+//generates labels for the graph. Initially to 30 days in the past however that can be modified in the future
   $scope.addLabels = function(daysInPast){
     for(; daysInPast >= 0; daysInPast--){
       if(daysInPast % 5 === 0){
@@ -126,7 +105,7 @@ angular.module('app.portfolio', ["chart.js"])
     }
   }
 
-//controls opening the sell menue to sell current stocks
+//clickSell opens the Sell Modal
   $scope.clickSell = function(investment) {
     $scope.clickedInvestment = investment.id;
     $mdDialog.show({
@@ -137,10 +116,9 @@ angular.module('app.portfolio', ["chart.js"])
       controller: SellModalController
     })
       .then(function(clickedItem) {
-        // console.log(clickedItem, "this was clicked");
       })
   }
-//Cancels an open transaction, removing it from the queue
+//clickCancel cancels an open transaction, removing it from the queue
   $scope.clickCancel = function(transactionId, index){
     TransactionHist.deleteOpenTransaction(transactionId).then(function(response){
       if(response.status === 204){
@@ -149,14 +127,21 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
-//turns a transaction into a human friendly string
+//buildHistString turns a transaction into a human friendly string
   $scope.buildHistString = function(transaction){
     var type = transaction.type === "buy"? ' bought ' : ' sold ';
     var deltaKarma = transaction.type === "buy"? ' sharing ' : ' earning ';
     transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
   }
-//searches through the investment history to get the profit for each set of shares this should probably eventually be moved to the back end unless we always want to grab the entire transaction history for a user. It could be added by making a controller that searched through transaction hist by user_id and target_id to help refine the search then using that to add a profit to the object whenever a user makes a get request for their current stocks.
 
+//searches through the investment history to get the profit for each set of shares 
+//Could eventually be on the backend
+/*
+unless we always want to grab the entire transaction history for a user. 
+It could be added by making a controller that searched through transaction hist by user_id and target_id to 
+help refine the search then using that to add a profit to the object whenever a user makes a get request for 
+their current stocks.
+*/
   $scope.addProfit = function(investment){
     var shares = investment.numberShares
     var profit = 0;
@@ -180,7 +165,7 @@ angular.module('app.portfolio', ["chart.js"])
       }
     }
   }
-
+  //toggleViews switches to different views within the portfolio view
   $scope.toggleViews = function(viewToShow){
     if(viewToShow === "transactionHistory"){
       $scope.transactionHistoryView = true;
@@ -202,38 +187,16 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.toggleViews('openTransactions')
   }
 
+  //The Sell Modal Controller, which handles all possible sell actions
   function SellModalController($scope, $mdDialog, investment, TransactionHist, Socket, Scores, User, $rootScope) {
-
-
     $scope.investment = investment;
     $scope.requestedShares;
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
-    $scope.revealOptions=false;
+    $scope.revealOptions = false;
 
-  // $scope.getUserById = function () {
-  //   User.getUser($scope.investment.target_id)
-  //     .then(function (results) {
-
-  //       var transaction = {
-  //         user_id: $scope.investment.user_id,
-  //         target_id: $scope.investment.target_id,
-  //         type: "sell",
-  //         numberShares: $scope.sharesToSell,
-  //         karma: $scope.sharesToSell * results[0].currentScore//reference logged in user's karma
-  //       }
-
-  //       $scope.loggedinUserInfo.karma = $scope.loggedinUserInfo.karma + $scope.sharesToSell * results[0].currentScore;
-  //       TransactionHist.addTransaction(transaction)
-  //         .then(function(results) {
-  //           investment.numberShares = investment.numberShares - $scope.sharesToSell;
-  //           $mdDialog.hide();
-
-  //         })
-  //     })
-  // }
-
+    //Confirm checks to see if logged in user can sell x number of shares
     $scope.confirm = function() {
 
       var transaction = {
@@ -241,19 +204,17 @@ angular.module('app.portfolio', ["chart.js"])
         target_id: $scope.investment.target_id,
         type: "sell",
         numberShares: $scope.sharesToSell,
-        karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
+        karma: $scope.sharesToSell * $scope.investment.currentScore
       }
 
       if ($scope.sharesToSell > $scope.investment.numberShares) {
-        console.log("You are trying to sell more than you have!");
+        console.log("Sorry, you do not have that many shares to sell.");
         $mdDialog.hide();
 
       } else {
-
         if ($scope.sharesToSell > $scope.requestedShares) {
           $scope.revealOptions = true;
-          console.log("THERE ARE NOT ENOUGH SHARES REQUESTED ON THE MARKET")
-
+          console.log("There are not enough matching buy requests to match your request to sell.")
         } else {
           $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
           $scope.investment.numberShares -= $scope.sharesToSell;
@@ -261,15 +222,17 @@ angular.module('app.portfolio', ["chart.js"])
             .then(function () {
               $mdDialog.hide();
             })
-          console.log("YOU SOLD SHARES")
+          console.log("You successfully sold shares.");
         }
       }
     }
 
+    //Exit exits out of the Sell modal
     $scope.exit = function () {
       $mdDialog.hide();
     }
 
+    //Wait will add the sell transaction to the transaction queue
     $scope.wait = function () {
 
       var transaction = {
@@ -289,6 +252,7 @@ angular.module('app.portfolio', ["chart.js"])
       $mdDialog.hide();
     }
 
+    //sellDirect will sell shares directly to the Karma Exchange. 
     $scope.sellDirect = function () {
       var transaction = {
         user_id: $scope.investment.user_id,
@@ -298,23 +262,19 @@ angular.module('app.portfolio', ["chart.js"])
         karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
       }
       var newScore = Math.round($scope.investment.currentScore * 0.9);
-
       if ($scope.requestedShares) {
         TransactionHist.makeTransaction(transaction).then(function() {
           transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
           TransactionHist.closeTransactionRequest(transaction, newScore);
         })
-
       } else {
         transaction.numberShares = $scope.sharesToSell;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
       transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
       $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
-
       $mdDialog.hide();
     }
-
 
     $scope.checkSharesReq = function() {
       TransactionHist.checkSharesAvail($scope.investment.target_id, 'buy').then(function(response){
@@ -323,5 +283,4 @@ angular.module('app.portfolio', ["chart.js"])
       });
     }
   }
-
 })
