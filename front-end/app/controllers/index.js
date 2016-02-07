@@ -74,6 +74,11 @@ angular.module('app.index', [])
     }
   }
 
+  $scope.resetSearch = function(){
+    $scope.searchQuery = ""
+    $scope.searchResults = [];
+  }
+
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
       $location.path('/')
