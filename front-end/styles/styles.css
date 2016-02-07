@@ -114,12 +114,12 @@ tr, td, th{
 }
 
 /* Enables Top Leaders (ranked by current score) to scroll across each pg */
-.leaders {
+.ticker {
  height: 50px;	
  overflow: hidden;
  position: relative;
 }
-.leaders {
+.ticker {
  position: absolute;
  width: 100%;
  height: 100%;
