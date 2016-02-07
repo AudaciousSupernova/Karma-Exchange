@@ -128,7 +128,7 @@ angular.module('app.profile', [])
       })
   }
 
-  function BuyModalController($location, $scope, $mdDialog, profile, TransactionHist, Portfolio, Socket) {
+  function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket) {
 
     $scope.profile = profile;
     $scope.score = $rootScope.loggedinUserInfo.currentScore;
@@ -193,7 +193,6 @@ angular.module('app.profile', [])
       }
 
       TransactionHist.makeTransaction(transaction).then(function()  {
-        Socket.emit()
         transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
       })
