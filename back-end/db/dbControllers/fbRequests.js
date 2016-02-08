@@ -65,7 +65,7 @@ var getFacebookData = function() {
                 photoScore: photoScore,
                 feedScore: feedScore
               }
-              socialSubScores = JSON.stringify(socialSubScores);
+              social_subScores = JSON.stringify(social_subScores);
               updateScores(newSocialScore, social_subScores, user);
             })
           })
@@ -74,6 +74,8 @@ var getFacebookData = function() {
     }
   })
 }
+
+getFacebookData();
 
 //Essentially a replica of the above function definition, but only grabs user data for one user by user_id
 var getFacebookUserData = function(id) {
@@ -150,7 +152,7 @@ var updateScores = function(newScore, social_subScores, user) {
   // console.log(user.name + "'s social_investment score is: ", user.social_investment);
   // console.log(user.name + "'s total current score is: ", user.currentScore)
   var date = new Date();
-  if (date.getDate() === 2) {
+  if (date.getDay() === 3) {
     console.log("Today is Wednesday.");
     var scoreObj = {
       user_id: user.id,
