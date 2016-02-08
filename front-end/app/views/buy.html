@@ -15,6 +15,8 @@
 
     <p ng-show="revealOptions">Or you may cancel your request</p>
 
+    <p class="errorMessage" ng-show="errorMessage"> Sorry, you do not have enough karma. Please change the amount of shares you'd like to buy. </p>
+
     <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show="revealOptions"> Wait For Availability</md-button>
 
     <md-button class="md-primary" ng-click="buyDirect()" aria-label="Complete" ng-show="revealOptions"> Buy From Karma Exchange</md-button>

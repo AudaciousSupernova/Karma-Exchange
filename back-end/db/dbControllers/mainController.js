@@ -33,7 +33,6 @@ var addUser = function (userObj, callback) {
 //returns an array of obj's (should only be one) usefull for login
 var findUser = function(name, password, callback){
 	connection.query('SELECT * FROM users where name=? and password=?', [name, password], function(err, rows){
-		// just do callback(err, user)
 		if(err){
 			console.log("Error finding user by name :", err)
 			callback(err, null);
@@ -245,6 +244,7 @@ var targetTransactionHist = function(targetId, callback) {
 	})
 }
 
+//retrieves transactions from the last week involving any users
 var getAllTransactions = function(callback) {
 	var oneWeekAgo = new Date();
 	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -264,9 +264,6 @@ var getAllTransactions = function(callback) {
 //do not pass a timestamp, mysql will do this for you
 //type can be social or social-investment
 //other types will be available in the future
-//scoreObj example
-
-
 // var sampleScoreObj = {
 // 	user_id: 243,
 // 	type: "social-investment",
@@ -321,7 +318,6 @@ var getScores = function(userId, callback){
 	})
 }
 
-
 //grabs all scores for a target user in the last week
 var getRecentScores = function(userId, callback) {
 	var oneWeekAgo = new Date();
@@ -349,7 +345,7 @@ var getScoresLastThreeMonths = function(userId, callback) {
 	})
 }
 
-// grabs all users, sorted by current score
+// grabs x users, sorted by current score
 var getTopScores = function(limit, callback) {
 	connection.query('SELECT * FROM users ORDER BY currentScore LIMIT=?',limit, function(err, res) {
 		if (err) {
@@ -360,9 +356,6 @@ var getTopScores = function(limit, callback) {
 		}
 	})
 }
-
-
-
 
 //<h3>Current Stocks</h3>
 
@@ -449,6 +442,7 @@ var deleteStock = function(userId, targetId, callback) {
 
 module.exports = {
 	connection: connection,
+	//user methods
 	addUser: addUser,
 	findUser: findUser,
 	findUserById: findUserById,
@@ -460,7 +454,7 @@ module.exports = {
 	getTopUsers: getTopUsers,
 	findUserByFbKey: findUserByFbKey,
 	updatePhoto:updatePhoto,
-
+	findUsersByPartial: findUsersByPartial,
 	//transaction methods
 	addTransaction:addTransaction,
 	getTransactionHist:getTransactionHist,
@@ -481,6 +475,5 @@ module.exports = {
 	getStocks: getStocks,
 	getStockRow: getStockRow,
 	updateStock: updateStock,
-	deleteStock: deleteStock,
-	findUsersByPartial: findUsersByPartial
+	deleteStock: deleteStock
 };

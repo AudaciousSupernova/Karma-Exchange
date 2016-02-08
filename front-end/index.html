@@ -2,7 +2,8 @@
 
 <html ng-app="app">
   <head>
-    <title> </title>
+    <title> Karma Exchange </title>
+    <!-- styles -->
     <link rel="stylesheet" href="libs/angular-material/angular-material.css">
     <link rel="stylesheet" href="libs/angular-chart.js/dist/angular-chart.css">
     <link rel="stylesheet" href="styles/styles.css">
@@ -11,24 +12,27 @@
   <body ng-controller="IndexController">
     <div class = "navbar" ng-show = "loggedinUserInfo">
       <span class = "currentUserNavBar">
-        <span> Welcome {{loggedinUserInfo.name}}! </span>
+        <span> Hi {{loggedinUserInfo.name}}! </span>
         <span> {{loggedinUserInfo.karma}} Karma</span>
       </span>
       <span class="navBar" ng-click="viewHome()">Home</span>
       <span class="navBar" ng-click="viewProfile()">Profile</span>
-      <span class="navBar" ng-click="viewPortfolio()">Your Fortune</span>
-      <span class="right"><input type = "text" ng-model = "searchQuery" ng-change = "findUsersByPartial()"/><span class = "dropdown">
-        <div ng-repeat = "user in searchResults" ng-click = "resetSearch()"><a href="/#/profile/{{user.id}}">{{user.name}}</a></div></span>
-      <span class="navBar logout" ng-click="logout()">Logout</span>
+      <span class="navBar" ng-click="viewPortfolio()">Fortune</span>
+      <span class="right">
+        <input type = "text" ng-model = "searchQuery" ng-change = "findUsersByPartial()"/>
+        <span class = "dropdown">
+          <div ng-repeat = "user in searchResults" ng-click = "resetSearch()">
+            <a href="/#/profile/{{user.id}}">{{user.name}}</a>
+          </div>
+        </span>
+        <span class="navBar logout" ng-click="logout()">Logout</span>
       </span>
       <span></span>
       <span></span>
     </div>
     <div class = "spaceHolder">s</div>
-    <script src="libs/angular/angular.min.js"> </script>
-    
+    <script src="libs/angular/angular.min.js"> </script> 
     <div class = "view" ui-view> </div>
-
     <div class="leaders" ng-init='getLeaders()'>
       <span>{{userOne}}, </span>
       <span>{{userTwo}}</span>
@@ -51,9 +55,7 @@
     <script src="libs/socket.io-client/socket.io.js"> </script>
 
     <script>
-
-    window.socket = io.connect();
-
+      window.socket = io.connect();
     </script>
     <!-- our app js -->
     <script src="app/app.js"> </script>
@@ -66,7 +68,6 @@
     <script src="app/controllers/auth.js"> </script>
     <script src="app/services/services.js"> </script>
     <script src="app/controllers/index.js"> </script>
-    <!-- styles -->
   </body>
 
 </html>
