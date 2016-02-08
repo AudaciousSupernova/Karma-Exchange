@@ -1,6 +1,6 @@
-<md-dialog ng-init="checkSharesReq()">
+<md-dialog ng-init="checkSharesReq(); getUsersOpenSellTransactionsForTarget()">
   <md-dialog-content>
-    <div> 
+    <div>
    		<p>Are you sure you want to sell</p> <input ng-model="	sharesToSell" placeholder="{{investment.numberShares}}"/> shares of {{investment.name}}?
    </div>
 
@@ -23,7 +23,7 @@
     <md-button class="md-primary" ng-click="sellDirect()" aria-label="Complete" ng-show='revealOptions'> Sell to Karma Exchange</md-button>
 
     <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show='revealOptions'> Cancel Your Sale</md-button>
-    
+
   </md-dialog-content>
 
 </md-dialog>

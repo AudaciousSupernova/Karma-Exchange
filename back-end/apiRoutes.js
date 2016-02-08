@@ -20,7 +20,6 @@ module.exports = function (app, express) {
     function (req, res) {
       if (req.isAuthenticated()) {
         mainController.findUserById(req.user.id, function(err, user) {
-          console.log("here is my user now", user);
           res.send(user);
         })
       } else {
@@ -163,6 +162,18 @@ module.exports = function (app, express) {
     })
   })
 
+  app.get('/transaction/queueSells', function (req, res) {
+    var target_id = req.param('target_id');
+    var user_id = req.param('user_id');
+    transactionQueue.findOpenUserTransactionForTarget(user_id, target_id, 'sell', function (err, results) {
+      if(err){
+        console.log("Error in API Routes looking for a sell transaction for a specific user and target", err);
+      } else {
+        res.send(results);
+      }
+    });
+  })
+
   //Adds transaction to transaction queue
   app.post('/transaction/queue', function (req, res) {
     var transactionObj = req.body.transactionObj;
@@ -180,6 +191,7 @@ module.exports = function (app, express) {
     var transactionObj = req.body.transactionObj;
     var shareValue = req.body.shareValue
     transactionUtil.closeTransactionRequest(transactionObj, shareValue);
+    res.status(201)
   })
 
   //Removes a transaction fron the transaction queue
@@ -281,9 +293,11 @@ module.exports = function (app, express) {
     res.send(test);
   })
 
-  app.get('api/updateInvestmentScore/:id', function (req, res) {
+  app.get('/api/updateInvestmentScore/:id', function (req, res) {
     var id = req.params.id;
+    console.log(id)
     scoresUtil.newSocialInvestmentScore(id);
+    res.status(200);
   })
 };
 

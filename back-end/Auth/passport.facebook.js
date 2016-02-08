@@ -32,7 +32,6 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log("What is the access token?", accessToken);
     process.nextTick(function () {
       // console.log('Facebook Profile',profile);
       // console.log('Access Token', accessToken);
@@ -81,17 +80,13 @@ passport.use(new FacebookStrategy({
         } else {
           //If the user is found, run a check to see if the users photo has been changed
           //since the last login.
-          console.log(profile[0].access_token,'\n',accessToken);
-          console.log(profile[0].profile_photo===photo, 'checking photo equality')
           //profile[0] is what is returned from the database when a user is found
           if (profile[0].profile_photo !== photo || profile[0].access_token !== accessToken) {
             profile[0].access_token = accessToken;
             profile[0].profile_photo = photo;
-            mainController.updateUser(profile[0], function(err, userId) {
+            mainController.updateUser(profile[0], function(err, user) {
               if (err) {
                 console.log('Error');
-              } else {
-                console.log('Updated user ' + userId);
               }
             });
           }

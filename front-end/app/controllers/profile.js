@@ -97,7 +97,7 @@ angular.module('app.profile', [])
   }
 
   //Controller for the Buy Modal
-  function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket) {
+  function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket, Scores) {
 
     $scope.profile = profile;
     $scope.score = $rootScope.loggedinUserInfo.currentScore;
@@ -116,13 +116,13 @@ angular.module('app.profile', [])
         numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
-      var investment = {
-        user_id: $rootScope.loggedinUserInfo.id,
-        target_id: $scope.profile.id,
-        numberShares: $scope.sharesToBuy
-      }
+      // var investment = {
+      //   user_id: $rootScope.loggedinUserInfo.id,
+      //   target_id: $scope.profile.id,
+      //   numberShares: $scope.sharesToBuy
+      // }
 
-      if ($rootScope.loggedinUserInfo.karma < $scope.score * $scope.sharesToBuy) {
+      if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.sharesToBuy) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
@@ -151,13 +151,18 @@ angular.module('app.profile', [])
         type: "buy",
         numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
-      TransactionHist.makeTransaction(transaction).then(function()  {
-        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
-        TransactionHist.addTransactionToQueue(transaction);
-      })
-      Scores.updateSocialInvestment($scope.investment.id);
+      if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * ($scope.sharesToBuy - transaction.numberShares)) {
+        $scope.errorMessage = true;
+      } else {
+        $scope.errorMessage = false;
+        TransactionHist.makeTransaction(transaction).then(function()  {
+          transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
+          TransactionHist.addTransactionToQueue(transaction);
+        })
+        Scores.updateSocialInvestment($scope.profile.id);
 
-      $mdDialog.hide();
+        $mdDialog.hide();
+      }
     }
 
     //This function directly makes a transaction with increased cost
@@ -169,24 +174,28 @@ angular.module('app.profile', [])
         numberShares: $scope.availableShares
       }
       var newScore = Math.round($scope.profile.currentScore * 1.1);
-      if ($scope.availableShares) {
-        TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
-          TransactionHist.closeTransactionRequest(transaction, newScore);
-        })
+      if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.availableShares + newScore*($scope.sharesToBuy - $scope.availableShares)) {
+        $scope.errorMessage = true;
       } else {
-        transaction.numberShares = $scope.sharesToBuy;
-        TransactionHist.closeTransactionRequest(transaction, newScore);
-      }
-      Scores.updateSocialInvestment($scope.investment.id);
-      transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
-      $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
+        $scope.errorMessage = false;
+        if ($scope.availableShares) {
+          TransactionHist.makeTransaction(transaction).then(function() {
+            transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+            TransactionHist.closeTransactionRequest(transaction, newScore);
+          })
+        } else {
+          transaction.numberShares = $scope.sharesToBuy;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
+        }
+        Scores.updateSocialInvestment($scope.profile.id);
+        $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
 
-      //Socket emit event to update recent transactions
-      Socket.emit('transaction', {
-        transaction: transaction
-      });
-      $mdDialog.hide();
+        //Socket emit event to update recent transactions
+        Socket.emit('transaction', {
+          transaction: transaction
+        });
+        $mdDialog.hide();
+      }
     }
 
     $scope.checkSharesAvail = function() {

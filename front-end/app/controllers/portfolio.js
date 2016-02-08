@@ -194,21 +194,32 @@ their current stocks.
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
+    $scope.numSharesInTransactionQueueByUser;
     $scope.revealOptions = false;
     $scope.errorMessage = false;
 
+    $scope.getUsersOpenSellTransactionsForTarget = function () {
+      $scope.numSharesInTransactionQueueByUser = 0;
+      TransactionHist.getOpenUserSellTransactionsForTarget($scope.investment.user_id, $scope.investment.target_id)
+        .then(function (response) {
+          for (var i = 0; i < response.length; i++) {
+            $scope.numSharesInTransactionQueueByUser += response[i].numberShares;
+          }
+        })
+    }
+
     //Confirm checks to see if logged in user can sell x number of shares
     $scope.confirm = function() {
-
       var transaction = {
         user_id: $scope.investment.user_id,
         target_id: $scope.investment.target_id,
         type: "sell",
         numberShares: $scope.sharesToSell,
+        // what even is this karma?
         karma: $scope.sharesToSell * $scope.investment.currentScore
       }
 
-      if ($scope.sharesToSell > $scope.investment.numberShares) {
+      if ($scope.sharesToSell > $scope.investment.numberShares - $scope.numSharesInTransactionQueueByUser) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
@@ -242,11 +253,15 @@ their current stocks.
         numberShares: $scope.requestedShares,
         //reference logged in user's karma
       };
-
-      TransactionHist.makeTransaction(transaction).then(function() {
-        transaction.numberShares = $scope.sharesToSell - transaction.numberShares;
-        TransactionHist.addTransactionToQueue(transaction);
-      });
+      if ($scope.sharesToSell > $scope.investment.numberShares - $scope.numSharesInTransactionQueueByUser) {
+        $scope.errorMessage = true;
+      } else {
+        $scope.errorMessage = false;
+        TransactionHist.makeTransaction(transaction).then(function() {
+          transaction.numberShares = $scope.sharesToSell - transaction.numberShares;
+          TransactionHist.addTransactionToQueue(transaction);
+        });
+      }
       $mdDialog.hide();
     }
 
@@ -259,20 +274,25 @@ their current stocks.
         numberShares: $scope.requestedShares,
       }
       var newScore = Math.round($scope.investment.currentScore * 0.9);
-      if ($scope.requestedShares) {
-        TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
-          TransactionHist.closeTransactionRequest(transaction, newScore);
-        })
-        Scores.updateSocialInvestment($scope.investment.id);
+      if ($scope.sharesToSell > $scope.investment.numberShares - numSharesInTransactionQueueByUser) {
+        $scope.errorMessage = true;
       } else {
-        transaction.numberShares = $scope.sharesToSell;
-        TransactionHist.closeTransactionRequest(transaction, newScore);
+        $scope.errorMessage = false;
+        if ($scope.requestedShares) {
+          TransactionHist.makeTransaction(transaction).then(function() {
+            transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
+            TransactionHist.closeTransactionRequest(transaction, newScore);
+          })
+          Scores.updateSocialInvestment($scope.investment.id);
+        } else {
+          transaction.numberShares = $scope.sharesToSell;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
+        }
+        Scores.updateSocialInvestment($scope.investment.id);
+        transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+        $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+        $mdDialog.hide();
       }
-      Scores.updateSocialInvestment($scope.investment.id);
-      transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
-      $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
-      $mdDialog.hide();
     }
 
     $scope.checkSharesReq = function() {
