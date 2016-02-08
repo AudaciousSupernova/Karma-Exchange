@@ -4,14 +4,18 @@ var mainController = require("./mainController.js");
 
 //<h3> Get Facebook Data </h3>
 
-//In this section, getFacebookData should be called every day on all users
-//The following are the steps required to achieve this
-//make a function call to get all users
-  //loop through every user and get facebook data using every user's access key
-    //after getting all facebook Data
-      //perform function to calculate new base score
-      //update current score, and update current user
-      //add new score to scores history
+//This function loops through all users once a day and updates the following sub scores: 
+  //Friend Score: calculated based on number of friends user has on Facebook
+  //Photo Score: calculated based on number of recent photos and engagement (likes and comments) on each
+  //Feed Score: calculated based on number of recent feed posts and engagement (likes and comments) on each
+//The sub scores are all taken into account to generate a new social score.
+//This new score is provided in an update to the user in the database. 
+//In addition, once a week, the following additional updates are made to the user in the database:
+  //Using linear regression, the updateScores function will:
+    //1. Update last_week_expected_social_change
+    //2. Update last_week_actual_social_change
+    //3. Update next_week_expected_social_change
+  //In the future, we may want to keep track of these trend changes. 
 
 var getFacebookData = function() {
   var users;
@@ -20,11 +24,13 @@ var getFacebookData = function() {
       console.log("Not able to retrieve all users", err);
     } else {
       users = results;
+      //Loop through all users
       users.forEach(function(user) {
         var friends;
         var friendScore = 0;
         var photoScore = 0;
         var feedScore = 0;
+        var social_subScores;
         var newSocialScore;
         request('https://graph.facebook.com/v2.2/me/friends/?access_token=' + user.access_token, function (error, response, body) {
           friends = JSON.parse(body).summary.total_count;
@@ -32,9 +38,8 @@ var getFacebookData = function() {
           console.log("This is " + user.name + "'s friendScore: " , friendScore);
           request('https://graph.facebook.com/v2.2/me/photos/?fields=from,likes.summary(true),comments.summary(true),created_time&limit=25&access_token=' + user.access_token, function (error, response, body) {
             JSON.parse(body).data.forEach(function(photo) {
-              // photo.created_time provides the date the photo was posted
-              photoScore += photo.comments.summary.total_count/(Math.sqrt(friends) + 1) * 4;
-              photoScore += photo.likes.summary.total_count/(Math.sqrt(friends));
+              photoScore += photo.comments.summary.total_count/(Math.sqrt(friends + 1) * 4;
+              photoScore += photo.likes.summary.total_count/(Math.sqrt(friends + 1);
            })
             console.log("This is " + user.name + "'s photoScore: ", photoScore);
             request('https://graph.facebook.com/v2.2/me/feed/?fields=from,type,likes.summary(true),comments.summary(true),created_time&limit=25&access_token=' + user.access_token, function (error, response, body) {
@@ -55,7 +60,13 @@ var getFacebookData = function() {
               console.log("This is " + user.name + "'s feedScore: ", feedScore)
               newSocialScore = Math.round(0.1 * friendScore + 0.6 * photoScore + 0.3 * feedScore);
               console.log("This is " + user.name + "'s newSocialScore: ", newSocialScore);
-              updateScores(newSocialScore, user);
+              social_subScores = {
+                friendScore: friendScore, 
+                photoScore: photoScore, 
+                feedScore: feedScore
+              }
+              socialSubScores = JSON.stringify(socialSubScores);
+              updateScores(newSocialScore, social_subScores, user);
             })
           })
         })   
@@ -64,6 +75,7 @@ var getFacebookData = function() {
   })
 }
 
+//Essentially a replica of the above function definition, but only grabs user data for one user by user_id
 var getFacebookUserData = function(id) {
   var users;
   mainController.findUserById(id, function(err, user) {
@@ -90,7 +102,6 @@ var getFacebookUserData = function(id) {
           console.log("This is " + user.name + "'s photoScore: " , photoScore);
           request('https://graph.facebook.com/v2.2/me/feed/?fields=from,type,likes.summary(true),comments.summary(true),created_time&limit=25&access_token=' + user.access_token, function (error, response, body) {
             JSON.parse(body).data.forEach(function(post) {
-              // post.created_time provides the date the photo was posted
               var date = new Date();
               var daysAgo = Math.ceil(((date - Date.parse(post.created_time))/(3600 * 1000 * 24)))
 
@@ -116,18 +127,19 @@ var getFacebookUserData = function(id) {
   })
 }
 
-var updateScores = function(newScore, type, user) {
-  user[type] = newScore;
+var updateScores = function(newScore, social_subScores, user) {
+  user.social = newScore;
   var soc_weight = (user.social/(user.social + user.social_investment));
   var social_investment_weight = (1 - soc_weight);
   user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
+  user.social_subScores = social_subScores;
   //change the social_subScores
   // console.log(user.name + "'s social score is: ", user.social);
   // console.log(user.name + "'s social_investment score is: ", user.social_investment);
   // console.log(user.name + "'s total current score is: ", user.currentScore)
   var date = new Date();
-  if (date.getDate() === 4) {
-    console.log("I am in the update scores function on the thursday logic!")
+  if (date.getDate() === 3) {
+    console.log("Today is Wednesday.");
     var scoreObj = {
       user_id: user.id, 
       social: user.social, 
@@ -147,9 +159,9 @@ var updateScores = function(newScore, type, user) {
         var velocity;
         mainController.getRecentScores(user.id, function(err, recentScores) {
           if (err) {
-            console.log("There was an error retrieving the recent scores");
+            console.log("There was an error retrieving the recent scores", err);
           } else {
-            console.log("These are my recent scores", recentScores);
+            console.log("Successfully retrieved recent scores of user");
             for (var i = 0; i<recentScores.length; i++) {
               recentYVals.push(recentScores[i].social);
               recentXVals.push(i);
@@ -158,7 +170,7 @@ var updateScores = function(newScore, type, user) {
               if (err) {
                 console.log("Unable to retrieve all scores for user", err);
               } else {
-                console.log("here are ALL the scores", scores);
+                console.log("Successfully retrieved all scores for user");
                 for (var i = 0; i<scores.length; i++) {
                     generalYVals.push(scores[i].social);
                     generalXVals.push(i); 
@@ -171,15 +183,15 @@ var updateScores = function(newScore, type, user) {
                 }
                 recentVelocity = linearRegression(recentYVals, recentXVals).slope;
                 generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-                console.log("what is the recent velocity", recentVelocity);
-                console.log("what is the general velocity", generalVelocity);
-                user.last_week_actual_social_change = recentVelocity.toString();
-                user.next_week_expected_social_change = (0.6*recentVelocity + 0.4*generalVelocity).toString();
+                console.log("The recent velocity of " + user.name + " is: ", recentVelocity);
+                console.log("The general velocity of " + user.name + " is: ", generalVelocity);
+                user.last_week_actual_social_change = JSON.stringify(recentVelocity);
+                user.next_week_expected_social_change = JSON.stringify((0.6*recentVelocity + 0.4*generalVelocity));
                 mainController.updateUser(user, function(err, results) {
                   if (err) {
                     console.log("Unable to update user", err);
                   } else {
-                    console.log("Successfully updated user", results);
+                    console.log("Successfully updated user");
                   }
                 })
               }
@@ -196,7 +208,7 @@ var updateScores = function(newScore, type, user) {
       if (err) {
         console.log("Unable to update user", err);
       } else {
-        console.log("Successfully updated user", results);
+        console.log("Successfully updated user");
         var scoreObj = {
           user_id: user.id, 
           social: user.social, 
@@ -215,30 +227,7 @@ var updateScores = function(newScore, type, user) {
   }
 }
 
-// getFacebookUserData(179);
-//The getFacebookData function should be called using a set interval every day at 3 AM
-//Sample setInterval implementation: setInterval(getFacebookData, 3.6e+6);
-//Note: getFacebookData function should also include a setTimeout at the end of each user's update score
-
-//Add logic to the updateScores function
-//Upon successfully adding the score to the scores' history table
-//if the day is Tuesday
-  //Reference the social_subScores
-  //Reference the social_investment_subScores
-  //Reference the last_week_expected_social_trend
-  //Reference the last_week_actual_social_trend
-  //Reference the next_week_expected_social_trend
-  //change the social_subScores
-  //change the last_week_expected_social_trend to what next_week's value was
-
-  //get all social scores for users
-    //look at actual trend for last week (including latest social score)
-    //set that to actual last_week_actual_social_trend
-    //compare to linear regression of all social scores for users
-    //create a next_week_expected_social_trend value
-    //update user
-      //addScore
-
+//Linear regression function used to grab slope of scores, recent and general. 
 function linearRegression(y,x){
   var lr = {};
   var n = y.length;

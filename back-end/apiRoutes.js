@@ -1,3 +1,5 @@
+//Required backend dependencies
+
 var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
 var scoresUtil = require('./utils/scoresUtil')
@@ -5,7 +7,6 @@ var transactionUtil = require('./utils/transactionUtil')
 var transactionQueue = require('./db/dbControllers/transactionQueue');
 var fbRequests = require('./db/dbControllers/fbRequests.js');
 
-// fbRequests.getFacebookData();
 module.exports = function (app, express) {
 	app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns.
@@ -58,7 +59,6 @@ module.exports = function (app, express) {
     })
   });
 
-
   //Post request to complete buy transaction from certain user's profile
   app.post('/profile/buy', function(req, res) {
     var investment = req.body.investment;
@@ -71,6 +71,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Get scores data from days away for a certain user
   app.get('/profile/score/month/:id', function (req, res) {
     var id = req.params.id;
     scoresUtil.getScoresFromDaysAway(id, 30, function (err, results) {
@@ -82,6 +83,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Get top users from the user database based on current score
   app.get('/leaders', function(req, res) {
     mainController.getTopUsers(2, function(err, results) {
       if (err) {
@@ -117,6 +119,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Check transaction
   app.get('/transaction/check', function(req, res) {
     var target_id = req.param('target_id');
     var type = req.param('type');
@@ -137,6 +140,7 @@ module.exports = function (app, express) {
     res.send(201);
   })
 
+  //Get all recent transactions
   app.get('/transaction/all/', function(req, res) {
     mainController.getAllTransactions(function(err, transactions) {
       if (err) {
@@ -159,6 +163,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Adds transaction to transaction queue
   app.post('/transaction/queue', function(req, res) {
     var transactionObj = req.body.transactionObj;
     transactionQueue.addTransactionToQueue(transactionObj, function(err, results) {
@@ -170,12 +175,14 @@ module.exports = function (app, express) {
     })
   })
 
+  //Closes a transaction
   app.post('/transaction/close', function(req, res) {
     var transactionObj = req.body.transactionObj;
     var shareValue = req.body.shareValue
     transactionUtil.closeTransactionRequest(transactionObj, shareValue);
   })
 
+  //Removes a transaction fron the transaction queue
   app.delete('/transaction/queue/delete/:transactionId', function(req,res){
     var transactionId = req.params.transactionId;
     transactionQueue.deleteOpenTransaction(transactionId, function(err, response){
@@ -223,7 +230,7 @@ module.exports = function (app, express) {
   })
 
 
-
+  //This is a test route
   app.get('/trending', function(req, res) {
     var test = {
       data: [
