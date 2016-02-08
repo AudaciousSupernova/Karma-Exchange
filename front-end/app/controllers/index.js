@@ -6,6 +6,7 @@ angular.module('app.index', [])
   $scope.searchResults;
   $scope.searchQuery = "";
   $scope.transactions = [];
+  $scope.recentTransactions; 
 
 
   //getUserById finds a user in the database by passing a sql id
@@ -44,9 +45,8 @@ angular.module('app.index', [])
   //getAllTransactions grabs all of last week's transactions. 
   $scope.getAllTransactions = function() {
     TransactionHist.getAllTransactions()
-    .then(function(recentTransactions) {
-      console.log("Successfully received all recent transactions");
-      $scope.transactions = recentTransactions;
+    .then(function(results) {
+      $scope.recentTransactions = results.slice(0, 9); 
     })
   }
 

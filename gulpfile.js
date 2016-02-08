@@ -9,4 +9,3 @@ gulp.task('karma', function (done) {
     configFile: __dirname + '/karma.conf.js'
   }, done).start();
 });
-

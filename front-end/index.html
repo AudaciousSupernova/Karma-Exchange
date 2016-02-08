@@ -33,16 +33,19 @@
     <div class = "spaceHolder">s</div>
     <script src="libs/angular/angular.min.js"> </script> 
     <div class = "view" ui-view> </div>
-    <div class="leaders" ng-init='getLeaders()'>
-      <span>{{userOne}}, </span>
-      <span>{{userTwo}}</span>
+    <div class="ticker">
+      <div ng-init='getLeaders()'>Top Leaders on Karma Exchange:
+        <span>{{userOne}}, </span>
+        <span>{{userTwo}}</span>
+      </div>
+      <div class="recentTransactions">
+        <span>Most Recent Transactions on Karma Exchange:</span>
+        <span ng-repeat="transaction in recentTransactions">
+          <span>{{transaction.type}}</span>
+          <span>{{transaction.numberShares}}...</span>
+        </span>
+      </div>
     </div>
-    <br>
-    <div ng-repeat="transaction in transactions">
-      <span>{{transaction.type}} </span>
-      <span> {{transaction.numberShares}} </span>
-    </div>
-
     <!-- dependancies -->
     <script src="libs/angular-route/angular-route.min.js"> </script>
     <script src="libs/angular-ui-router/release/angular-ui-router.min.js"> </script>
