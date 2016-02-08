@@ -155,6 +155,8 @@ angular.module('app.profile', [])
         transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
         TransactionHist.addTransactionToQueue(transaction);
       })
+      Scores.updateSocialInvestment($scope.investment.id);
+
       $mdDialog.hide();
     }
 
@@ -176,6 +178,7 @@ angular.module('app.profile', [])
         transaction.numberShares = $scope.sharesToBuy;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
+      Scores.updateSocialInvestment($scope.investment.id);
       transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
       $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
 

@@ -132,7 +132,7 @@ angular.module('app.services', [])
 
     getAllTransactions: function() {
       return $http({
-        method: 'GET', 
+        method: 'GET',
         url: '/transaction/all/'
       })
       .then(function(res) {
@@ -211,6 +211,13 @@ angular.module('app.services', [])
       .then(function(res) {
         return res.data;
       })
+    },
+
+    updateSocialInvestment: function (id) {
+      return $http({
+        method: 'GET',
+        url: 'api/updateInvestmentScore/' + id
+      })
     }
   }
 })
@@ -238,7 +245,7 @@ angular.module('app.services', [])
 
     on: function(eventName, callback) {
       window.socket.on(eventName, function() {
-        
+
         var args = arguments;
         $rootScope.$apply(function() {
           callback.apply(window.socket, args);
@@ -246,7 +253,7 @@ angular.module('app.services', [])
         // var args = arguments;
         // callback(socket, args);
       });
-    }, 
+    },
 
     emit: function(eventName, data, callback) {
       window.socket.emit(eventName, data, function() {
@@ -258,7 +265,7 @@ angular.module('app.services', [])
         })
       });
     }
-    
+
   }
 
 });

@@ -134,12 +134,12 @@ angular.module('app.portfolio', ["chart.js"])
     transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
   }
 
-//searches through the investment history to get the profit for each set of shares 
+//searches through the investment history to get the profit for each set of shares
 //Could eventually be on the backend
 /*
-unless we always want to grab the entire transaction history for a user. 
-It could be added by making a controller that searched through transaction hist by user_id and target_id to 
-help refine the search then using that to add a profit to the object whenever a user makes a get request for 
+unless we always want to grab the entire transaction history for a user.
+It could be added by making a controller that searched through transaction hist by user_id and target_id to
+help refine the search then using that to add a profit to the object whenever a user makes a get request for
 their current stocks.
 */
   $scope.addProfit = function(investment){
@@ -241,25 +241,22 @@ their current stocks.
         type: "sell",
         numberShares: $scope.requestedShares,
         //reference logged in user's karma
-        karma: $scope.sharesToSell * $scope.investment.currentScore
       };
 
       TransactionHist.makeTransaction(transaction).then(function() {
         transaction.numberShares = $scope.sharesToSell - transaction.numberShares;
-        delete transaction.karma;
         TransactionHist.addTransactionToQueue(transaction);
       });
       $mdDialog.hide();
     }
 
-    //sellDirect will sell shares directly to the Karma Exchange. 
+    //sellDirect will sell shares directly to the Karma Exchange.
     $scope.sellDirect = function () {
       var transaction = {
         user_id: $scope.investment.user_id,
         target_id: $scope.investment.target_id,
         type: "sell",
         numberShares: $scope.requestedShares,
-        karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
       }
       var newScore = Math.round($scope.investment.currentScore * 0.9);
       if ($scope.requestedShares) {
@@ -267,10 +264,12 @@ their current stocks.
           transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
           TransactionHist.closeTransactionRequest(transaction, newScore);
         })
+        Scores.updateSocialInvestment($scope.investment.id);
       } else {
         transaction.numberShares = $scope.sharesToSell;
         TransactionHist.closeTransactionRequest(transaction, newScore);
       }
+      Scores.updateSocialInvestment($scope.investment.id);
       transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
       $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
       $mdDialog.hide();

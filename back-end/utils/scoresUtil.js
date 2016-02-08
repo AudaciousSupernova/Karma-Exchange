@@ -193,9 +193,15 @@ var newSocialInvestmentScore = function(target_id) {
                           _.each(sellRequests, function (sellRequest) {
                             supply += sellRequest.numberShares;
                           })
-                          newSocialInvestmentScore = Math.sqrt(sharesOnMarket+demand-supply) * ((Math.atan(velocity) + Math.PI/2)*1.1);
-                          console.log(newSocialInvestmentScore, "this is the newSocialInvestmentScore")
-                          updateScores(newSocialInvestmentScore, user)
+                          social_investment_scores_object = {};
+                          social_investment_scores_object.subscores = {
+                            numShareHolder: numInvestors,
+                            sharesOnMarket: sharesOnMarket,
+                            numTransactions: numTransactionsMade
+                          }
+                          social_investment_scores_object.newSocialInvestmentScore = Math.sqrt(sharesOnMarket+demand-supply) * ((Math.atan(velocity) + Math.PI/2)*1.1);
+                          console.log(social_investment_scores_object.newSocialInvestmentScore, "this is the newSocialInvestmentScore")
+                          updateScores(social_investment_scores_object, user)
                         })
                       }
                     })
@@ -215,8 +221,9 @@ var newSocialInvestmentScore = function(target_id) {
 // newSocialInvestmentScore(4)
 
 
-var updateScores = function(newSocialInvestmentScore, user) {
-	user.social_investment = newSocialInvestmentScore;
+var updateScores = function(socialInvestmentScoresObj, user) {
+  user.social_investment_subscores = JSON.stringify(socialInvestmentScoresObj.subscores);
+	user.social_investment = socialInvestmentScoresObj.newSocialInvestmentScore;
 
 	var gap = user.social - user.social_investment;
 	var soc_weight = (user.social/(user.social + user.social_investment));
@@ -229,7 +236,7 @@ var updateScores = function(newSocialInvestmentScore, user) {
 		social_investment: user.social_investment,
 		currentScore: user.currentScore
 	}
-	mainController.addScore(scoreObj, function(err, results) {
+	mainController.addScore(scoreObj, user.social_investment_subscores, function(err, results) {
 		if (err) {
 			console.log("There was an error adding the score to scores' history", err);
 		} else {
