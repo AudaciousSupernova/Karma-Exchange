@@ -13,6 +13,8 @@ angular.module('app', [
   'ngMaterial',
   'chart.js'
   ])
+
+//<h3> app.js file that lists all the dependencies for this app along with all the states with corresponding views/controllers </h3>
   .config(['ChartJsProvider', function (ChartJsProvider) {
     // Configure all charts
     ChartJsProvider.setOptions({
