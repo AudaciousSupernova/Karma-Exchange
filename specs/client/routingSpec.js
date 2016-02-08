@@ -72,7 +72,6 @@ describe('Routing', function() {
 
   beforeEach(inject(function ($state) {
     transactionHistState = $state.get('portfolio');
-    console.log('transactionHistState', transactionHistState); 
   }));
 
   it('Should have transaction history route, template, and controller', function () {
