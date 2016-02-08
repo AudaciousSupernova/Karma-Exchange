@@ -8,7 +8,7 @@ var transactionQueue = require('./db/dbControllers/transactionQueue');
 var fbRequests = require('./db/dbControllers/fbRequests.js');
 
 module.exports = function (app, express) {
-	app.get('/auth/facebook',
+  app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns.
 	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
 
