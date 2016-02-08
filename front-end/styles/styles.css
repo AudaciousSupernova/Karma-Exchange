@@ -156,3 +156,7 @@ tr, td, th{
  transform: translateX(100%); 
  }
 }
+
+.errorMessage {
+  color: red;
+}

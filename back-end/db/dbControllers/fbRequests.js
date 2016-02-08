@@ -38,8 +38,8 @@ var getFacebookData = function() {
           console.log("This is " + user.name + "'s friendScore: " , friendScore);
           request('https://graph.facebook.com/v2.2/me/photos/?fields=from,likes.summary(true),comments.summary(true),created_time&limit=25&access_token=' + user.access_token, function (error, response, body) {
             JSON.parse(body).data.forEach(function(photo) {
-              photoScore += photo.comments.summary.total_count/(Math.sqrt(friends + 1) * 4;
-              photoScore += photo.likes.summary.total_count/(Math.sqrt(friends + 1);
+              photoScore += photo.comments.summary.total_count/(Math.sqrt(friends + 1)) * 4;
+              photoScore += photo.likes.summary.total_count/(Math.sqrt(friends + 1));
            })
             console.log("This is " + user.name + "'s photoScore: ", photoScore);
             request('https://graph.facebook.com/v2.2/me/feed/?fields=from,type,likes.summary(true),comments.summary(true),created_time&limit=25&access_token=' + user.access_token, function (error, response, body) {
@@ -96,7 +96,7 @@ var getFacebookUserData = function(id) {
         request('https://graph.facebook.com/v2.2/me/photos/?fields=from,likes.summary(true),comments.summary(true),created_time&limit=25&access_token=' + user.access_token, function (error, response, body) {
           JSON.parse(body).data.forEach(function(photo) {
             // photo.created_time provides the date the photo was posted
-            photoScore += photo.comments.summary.total_count/(Math.sqrt(friends) + 1) * 4;
+            photoScore += photo.comments.summary.total_count/(Math.sqrt(friends + 1)) * 4;
             photoScore += photo.likes.summary.total_count/(Math.sqrt(friends));
           })
           console.log("This is " + user.name + "'s photoScore: " , photoScore);

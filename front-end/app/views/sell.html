@@ -8,6 +8,8 @@
 
     <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-hide='revealOptions'> Cancel </md-button>
 
+    <p class="errorMessage" ng-show="errorMessage"> You do not own that many shares. Please change the amount of shares you'd like to sell. </p>
+
     <p ng-show='revealOptions'>There are not enough buy requests to sell all of your shares. You have the following options.:</p>
 
     <p ng-show='revealOptions'>You may choose to make a partial sale of your shares and allow the rest of your transaction to be completed upon market demand.</p>

@@ -34,7 +34,7 @@ angular.module('app.portfolio', ["chart.js"])
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
     .then(function(investments) {
-      $scope.investments = investment;
+      $scope.investments = investments;
     })
   }
 
@@ -195,6 +195,7 @@ their current stocks.
     $scope.scores;
     $scope.targetCurrentScore;
     $scope.revealOptions = false;
+    $scope.errorMessage = false;
 
     //Confirm checks to see if logged in user can sell x number of shares
     $scope.confirm = function() {
@@ -208,10 +209,9 @@ their current stocks.
       }
 
       if ($scope.sharesToSell > $scope.investment.numberShares) {
-        console.log("Sorry, you do not have that many shares to sell.");
-        $mdDialog.hide();
-
+        $scope.errorMessage = true;
       } else {
+        $scope.errorMessage = false;
         if ($scope.sharesToSell > $scope.requestedShares) {
           $scope.revealOptions = true;
           console.log("There are not enough matching buy requests to match your request to sell.")

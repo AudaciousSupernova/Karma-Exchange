@@ -104,6 +104,7 @@ angular.module('app.profile', [])
     $scope.sharesToBuy;
     $scope.availableShares;
     $scope.revealOptions = false;
+    $scope.errorMessage = false;
 
     //On confirm click, this function evaluates the transaction validity
     //If the transaction is invalid, user will be notified
@@ -122,9 +123,9 @@ angular.module('app.profile', [])
       }
 
       if ($rootScope.loggedinUserInfo.karma < $scope.score * $scope.sharesToBuy) {
-        console.log("This is an invalid transaction because loggedinUser does not have enough karma.");
-        $mdDialog.hide();
+        $scope.errorMessage = true;
       } else {
+        $scope.errorMessage = false;
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
         } else {
