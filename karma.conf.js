@@ -40,7 +40,8 @@ module.exports = function(config) {
       'front-end/app/**/*.js',
 
       // our spec files
-      'specs/client/routingSpec.js'
+      'specs/client/routingSpec.js',
+      'specs/client/servicesSpec.js'
     ],
 
     // list of files to exclude
