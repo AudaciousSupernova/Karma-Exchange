@@ -127,6 +127,21 @@ var getFacebookUserData = function(id) {
   })
 }
 
+var getFacebookProfileFromAccessToken = function(access_token, callback){
+  request('https://graph.facebook.com/v2.2/me?fields=id,name,picture&access_token=' + access_token, function(err, response, body){
+    if(err){
+      console.log("Error getting facebook info from access token", err)
+      callback(err, null)
+    } else {
+      callback(null, JSON.parse(body))
+    }
+  })
+}
+
+var token = "CAAK6H5Q1fAgBABM3dDCpFyOWKo4b0GQZAgNd1ZCackBzwbVyevaZACnkSPauWD5g3SWDmbnmx4FXFReXz44qRvXTzSUrKNROhxVGkEceNw97RZAZCAVB2DryserDFrjPZCrZCn25ZA1hvklQqxTAdrEZAWyDclV1SteDHdnDwiZCRZCZAM48oOZBWOgYrJem7UxaGRExfZB2HbEltYbgZDZD"
+
+getFacebookProfileFromAccessToken(token, console.log)
+
 var updateScores = function(newScore, social_subScores, user) {
   user.social = newScore;
   var soc_weight = (user.social/(user.social + user.social_investment));
@@ -255,6 +270,7 @@ function linearRegression(y,x){
 
 module.exports = {
   getFacebookData: getFacebookData, 
-  getFacebookUserData: getFacebookUserData
+  getFacebookUserData: getFacebookUserData,
+  getFacebookProfileFromAccessToken: getFacebookProfileFromAccessToken
 }
 

@@ -15,6 +15,19 @@ module.exports = function (app, express) {
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
 
+  app.get('/mobile/login/:token', function(req,res){
+    var access_token = req.params.token
+    fbRequests.getFacebookProfileFromAccessToken(access_token, function(err, fbUserObject){
+      if(err){
+        console.log("Error in API routes with mobile login", err)
+      } else {
+        passport.verifyOrAddMobileUser(fbUserObject, access_token, function(err, response){
+
+        })
+      }
+    })
+  })
+
   //Get request on login attempt
   app.get('/api/loggedin',
     function (req, res) {
