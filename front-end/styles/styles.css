@@ -164,3 +164,9 @@ tr, td, th{
 .center{
   text-align: center;
 }
+
+.img-circle {
+  border-radius: 50%; 
+  width: 100%;
+  height: 100%;
+}

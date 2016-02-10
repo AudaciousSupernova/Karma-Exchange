@@ -50,8 +50,8 @@ angular.module('app.profile', [])
     .then(function (results) {
       for(var i = 0; i < results.length; i++){
         var scoreObj = results[i];
-        // if the actual user, show both total/current score AND social score
-        if ($scope.isUser === true) {
+        // if the actual user OR if it's wednesday (day to reveal social scores), show both total/current score AND social score
+        if ($scope.isUser === true || $scope.wednesday) {
           $scope.scores[0].push(scoreObj.currentScore);
           $scope.scores[1].push(scoreObj.social);
           // else just show total/current score
