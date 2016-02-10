@@ -52,8 +52,12 @@ angular.module('app.portfolio', ["chart.js"])
       for(var i = 0; i < daysBeforeUserJoined; i++){
         obj.data[0].unshift(0)
       }
-      obj.currentScore = obj.data[0][obj.data[0].length - 1]
-      $scope.addProfit(obj)
+      // obj.currentScore = obj.data[0][obj.data[0].length - 1]
+      User.getUser(target_id)
+        .then(function(user) {
+          obj.currentScore = user[0].currentScore;
+          $scope.addProfit(obj)
+        })
     })
   }
 
@@ -134,12 +138,12 @@ angular.module('app.portfolio', ["chart.js"])
     transaction.string = "You" + type + transaction.numberShares + " shares of " + transaction.target_name + deltaKarma + Math.abs(transaction.karma) + " karma."
   }
 
-//searches through the investment history to get the profit for each set of shares 
+//searches through the investment history to get the profit for each set of shares
 //Could eventually be on the backend
 /*
-unless we always want to grab the entire transaction history for a user. 
-It could be added by making a controller that searched through transaction hist by user_id and target_id to 
-help refine the search then using that to add a profit to the object whenever a user makes a get request for 
+unless we always want to grab the entire transaction history for a user.
+It could be added by making a controller that searched through transaction hist by user_id and target_id to
+help refine the search then using that to add a profit to the object whenever a user makes a get request for
 their current stocks.
 */
   $scope.addProfit = function(investment){
@@ -154,12 +158,14 @@ their current stocks.
         if(shares - transaction.numberShares > 0){
           profit += (transaction.numberShares * investment.currentScore - transaction.karma)
           shares -= transaction.numberShares
+          investment.profit = profit;
           // <= 0
         } else {
           var transactionScore = Math.abs(Math.round(transaction.karma / transaction.numberShares))
           profit += (shares * investment.currentScore - shares * transactionScore)
           shares = 0
           investment.profit = profit;
+          console.log("here is the investment profit", investment.profit)
           break;
         }
       }
@@ -188,40 +194,56 @@ their current stocks.
   }
 
   //The Sell Modal Controller, which handles all possible sell actions
-  function SellModalController($scope, $mdDialog, investment, TransactionHist, Socket, Scores, User, $rootScope) {
+  function SellModalController($scope, $mdDialog, $location, investment, TransactionHist, Socket, Scores, User, $rootScope) {
     $scope.investment = investment;
     $scope.requestedShares;
+    $scope.requestedSharesInfo;
     $scope.sharesToSell;
     $scope.scores;
     $scope.targetCurrentScore;
+    $scope.numSharesInTransactionQueueByUser;
     $scope.revealOptions = false;
     $scope.errorMessage = false;
 
+    $scope.getUsersOpenSellTransactionsForTarget = function () {
+      $scope.numSharesInTransactionQueueByUser = 0;
+      TransactionHist.getOpenUserSellTransactionsForTarget($scope.investment.user_id, $scope.investment.target_id)
+        .then(function (response) {
+          for (var i = 0; i < response.length; i++) {
+            $scope.numSharesInTransactionQueueByUser += response[i].numberShares;
+          }
+        })
+    }
+
     //Confirm checks to see if logged in user can sell x number of shares
     $scope.confirm = function() {
-
       var transaction = {
         user_id: $scope.investment.user_id,
         target_id: $scope.investment.target_id,
         type: "sell",
         numberShares: $scope.sharesToSell,
-        karma: $scope.sharesToSell * $scope.investment.currentScore
+        // // what even is this karma?
+        // karma: $scope.sharesToSell * $scope.investment.currentScore
       }
 
-      if ($scope.sharesToSell > $scope.investment.numberShares) {
+      if ($scope.sharesToSell > $scope.investment.numberShares - $scope.numSharesInTransactionQueueByUser) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
+        console.log($scope.requestedShares);
         if ($scope.sharesToSell > $scope.requestedShares) {
           $scope.revealOptions = true;
           console.log("There are not enough matching buy requests to match your request to sell.")
         } else {
-          $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
-          $scope.investment.numberShares -= $scope.sharesToSell;
           TransactionHist.makeTransaction(transaction)
             .then(function () {
               $mdDialog.hide();
+              $location.path('/portfolio/'+$rootScope.loggedinUserInfo.id);
             })
+          if ($scope.requestedSharesInfo && $scope.requestedSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()){
+            $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma + ($scope.investment.currentScore * $scope.sharesToSell);
+            $scope.investment.numberShares -= $scope.sharesToSell;
+          }
           console.log("You successfully sold shares.");
         }
       }
@@ -234,52 +256,74 @@ their current stocks.
 
     //Wait will add the sell transaction to the transaction queue
     $scope.wait = function () {
-
       var transaction = {
         user_id: $scope.investment.user_id,
         target_id: $scope.investment.target_id,
         type: "sell",
         numberShares: $scope.requestedShares,
         //reference logged in user's karma
-        karma: $scope.sharesToSell * $scope.investment.currentScore
       };
-
-      TransactionHist.makeTransaction(transaction).then(function() {
-        transaction.numberShares = $scope.sharesToSell - transaction.numberShares;
-        delete transaction.karma;
-        TransactionHist.addTransactionToQueue(transaction);
-      });
+      if ($scope.sharesToSell > $scope.investment.numberShares - $scope.numSharesInTransactionQueueByUser) {
+        $scope.errorMessage = true;
+      } else {
+        $scope.errorMessage = false;
+        TransactionHist.makeTransaction(transaction).then(function() {
+          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
+          TransactionHist.addTransactionToQueue(transaction);
+        });
+        Scores.updateSocialInvestment($scope.investment.target_id);
+        if ($scope.requestedSharesInfo && $scope.requestedSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()) {
+          $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * ($scope.requestedShares)
+          $scope.investment.numberShares -= $scope.requestedShares;
+        }
+      }
       $mdDialog.hide();
+      $location.path('/portfolio/' + $rootScope.loggedinUserInfo.id)
     }
 
-    //sellDirect will sell shares directly to the Karma Exchange. 
+    //sellDirect will sell shares directly to the Karma Exchange.
     $scope.sellDirect = function () {
       var transaction = {
         user_id: $scope.investment.user_id,
         target_id: $scope.investment.target_id,
         type: "sell",
         numberShares: $scope.requestedShares,
-        karma: $scope.sharesToSell * $scope.investment.currentScore//reference logged in user's karma
       }
-      var newScore = Math.round($scope.investment.currentScore * 0.9);
-      if ($scope.requestedShares) {
-        TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
-          TransactionHist.closeTransactionRequest(transaction, newScore);
-        })
+      var newScore = $scope.investment.currentScore * 0.9;
+      if ($scope.sharesToSell > $scope.investment.numberShares - $scope.numSharesInTransactionQueueByUser) {
+        $scope.errorMessage = true;
       } else {
-        transaction.numberShares = $scope.sharesToSell;
-        TransactionHist.closeTransactionRequest(transaction, newScore);
+        $scope.errorMessage = false;
+        if ($scope.requestedShares) {
+          TransactionHist.makeTransaction(transaction).then(function() {
+            transaction.numberShares = $scope.sharesToSell - $scope.requestedShares;
+            TransactionHist.closeTransactionRequest(transaction, newScore);
+          })
+          // Scores.updateSocialInvestment($scope.investment.id);
+        } else {
+          transaction.numberShares = $scope.sharesToSell;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
+        }
+        // transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
+        Scores.updateSocialInvestment($scope.investment.target_id);
+        if ($scope.requestedSharesInfo && $scope.requestedSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()) {
+          $scope.investment.numberShares -=$scope.sharesToSell;
+          $rootScope.loggedinUserInfo.karma += Math.round($scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares));
+        } else {
+          $scope.investment.numberShares -= $scope.sharesToSell - $scope.requestedShares;
+          $rootScope.loggedinUserInfo.karma += Math.round(newScore * ($scope.sharesToSell - $scope.requestedShares))
+        }
+
+        $mdDialog.hide();
+        $location.path('/portfolio/' + $rootScope.loggedinUserInfo.id);
       }
-      transaction.karma = $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
-      $rootScope.loggedinUserInfo.karma += $scope.investment.currentScore * $scope.requestedShares + newScore * ($scope.sharesToSell - $scope.requestedShares);
-      $mdDialog.hide();
     }
 
     $scope.checkSharesReq = function() {
       TransactionHist.checkSharesAvail($scope.investment.target_id, 'buy').then(function(response){
-        console.log(response);
-        $scope.requestedShares = response;
+        $scope.requestedShares = response[0];
+        $scope.requestedSharesInfo = response[1][0];
+        console.log($scope.requestedSharesInfo, 'requestedSharesInfo')
       });
     }
   }

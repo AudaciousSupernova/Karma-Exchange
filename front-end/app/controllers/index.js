@@ -25,7 +25,6 @@ angular.module('app.index', [])
 
   //viewProfile redirects the user to his/her profile
   $scope.viewProfile = function () {
-    console.log("what is the rootScope", $rootScope)
     $location.path('/profile/' + $rootScope.loggedinUserInfo.id);
   }
 
@@ -42,7 +41,7 @@ angular.module('app.index', [])
     });
   }
 
-  //getAllTransactions grabs all of last week's transactions. 
+  //getAllTransactions grabs all of last week's transactions.
   $scope.getAllTransactions = function() {
     TransactionHist.getAllTransactions()
     .then(function(results) {

@@ -271,7 +271,8 @@ var getAllTransactions = function(callback) {
 // }
 
 //takes a score object and adds it to the scores' history table
-var addScore = function(scoreObj, callback){
+var addScore = function(scoreObj, subscoresObj,callback) {
+	callback = arguments[arguments.length-1];
 	connection.query('INSERT INTO scoresHist SET ?', scoreObj, function(err, res){
 		if(err){
 			console.log("error inserting into scoresHist", err)
@@ -280,6 +281,7 @@ var addScore = function(scoreObj, callback){
 			console.log("last inserted Id: ", res.insertId);
 			scoreObj.id = scoreObj.user_id;
 			delete scoreObj.user_id;
+			scoreObj.social_investment_subscores = subscoresObj;
 			updateUser(scoreObj,function(err, id) {
 				console.log(id);
 			})

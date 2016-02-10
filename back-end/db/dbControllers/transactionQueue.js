@@ -48,7 +48,7 @@ var addTransactionToQueue = function(transactionObj, callback){
 //not likely to have both buy and sell
 var findOpenTransaction = function(target_id, type, callback){
 	callback = arguments[arguments.length - 1]
-	connection.query('SELECT * FROM openTransactions where target_id=? and type=?', [target_id,type], function(err, rows){
+	connection.query('SELECT * FROM openTransactions WHERE target_id=? AND type=?', [target_id, type], function(err, rows){
 		if(err){
 			console.log("Error finding transactions for target " + target_id, err)
 			callback(err, null);
@@ -58,8 +58,20 @@ var findOpenTransaction = function(target_id, type, callback){
 	})
 }
 
+var findOpenUserTransactionForTarget = function(user_id, target_id, type, callback){
+  callback = arguments[arguments.length - 1]
+  connection.query('SELECT * FROM openTransactions Where user_id=? AND target_id=? AND type=?', [user_id, target_id, type], function(err, rows){
+    if(err){
+      console.log("Error finding sell transactions for user" + user_id + " and target " + target_id, err)
+      callback(err, null);
+    } else{
+      callback(null, rows);
+    }
+  })
+}
+
 var findOpenUserTransactions = function(user_id, callback){
-	connection.query('SELECT * FROM openTransactions where user_id=?', user_id, function(err, rows){
+	connection.query('SELECT * FROM openTransactions WHERE user_id=?', user_id, function(err, rows){
 		if(err){
 			console.log("Error finding transactions for user " + user_id, err)
 			callback(err, null);
@@ -104,4 +116,5 @@ module.exports = {
 	deleteOpenTransaction: deleteOpenTransaction,
 	updateOpenTransaction: updateOpenTransaction,
 	findOpenUserTransactions: findOpenUserTransactions,
+  findOpenUserTransactionForTarget: findOpenUserTransactionForTarget,
 }

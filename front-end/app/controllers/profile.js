@@ -97,12 +97,13 @@ angular.module('app.profile', [])
   }
 
   //Controller for the Buy Modal
-  function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket) {
+  function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket, Scores) {
 
     $scope.profile = profile;
     $scope.score = $rootScope.loggedinUserInfo.currentScore;
     $scope.sharesToBuy;
     $scope.availableShares;
+    $scope.availableSharesInfo;
     $scope.revealOptions = false;
     $scope.errorMessage = false;
 
@@ -116,27 +117,27 @@ angular.module('app.profile', [])
         numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
 
-      var investment = {
-        user_id: $rootScope.loggedinUserInfo.id,
-        target_id: $scope.profile.id,
-        numberShares: $scope.sharesToBuy
-      }
-
-      if ($rootScope.loggedinUserInfo.karma < $scope.score * $scope.sharesToBuy) {
+      // var investment = {
+      //   user_id: $rootScope.loggedinUserInfo.id,
+      //   target_id: $scope.profile.id,
+      //   numberShares: $scope.sharesToBuy
+      // }
+      if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.sharesToBuy) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
         } else {
-          transaction.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
-          $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
           TransactionHist.makeTransaction(transaction)
             .then(function() {
               //On a successfull transaction, socket emit event to send recent transactions
               Socket.emit('transaction', {
                 transaction: transaction
               });
+              if ($scope.availableSharesInfo && $scope.availableSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()) {
+                $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+              }
               $mdDialog.hide();
             })
         }
@@ -149,13 +150,22 @@ angular.module('app.profile', [])
         user_id: $rootScope.loggedinUserInfo.id,
         target_id: $scope.profile.id,
         type: "buy",
-        numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+        numberShares: $scope.availableShares
       }
-      TransactionHist.makeTransaction(transaction).then(function()  {
-        transaction.numberShares = $scope.sharesToBuy - transaction.numberShares;
-        TransactionHist.addTransactionToQueue(transaction);
-      })
-      $mdDialog.hide();
+      if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * ($scope.sharesToBuy - transaction.numberShares)) {
+        $scope.errorMessage = true;
+      } else {
+        $scope.errorMessage = false;
+        TransactionHist.makeTransaction(transaction).then(function()  {
+          transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+          TransactionHist.addTransactionToQueue(transaction);
+        })
+        Scores.updateSocialInvestment($scope.profile.id);
+        if ($scope.availableSharesInfo && $scope.availableSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()) {
+          $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore*($scope.availableShares);
+        }
+        $mdDialog.hide();
+      }
     }
 
     //This function directly makes a transaction with increased cost
@@ -166,33 +176,50 @@ angular.module('app.profile', [])
         type: "buy",
         numberShares: $scope.availableShares
       }
-      var newScore = Math.round($scope.profile.currentScore * 1.1);
-      if ($scope.availableShares) {
-        TransactionHist.makeTransaction(transaction).then(function() {
-          transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
-          TransactionHist.closeTransactionRequest(transaction, newScore);
-        })
-      } else {
-        transaction.numberShares = $scope.sharesToBuy;
-        TransactionHist.closeTransactionRequest(transaction, newScore);
-      }
-      transaction.karma = $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares)
-      $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares);
 
-      //Socket emit event to update recent transactions
-      Socket.emit('transaction', {
-        transaction: transaction
-      });
-      $mdDialog.hide();
+      var newScore = $scope.profile.currentScore * 1.1;
+      if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.availableShares + newScore*($scope.sharesToBuy - $scope.availableShares)) {
+        $scope.errorMessage = true;
+      } else {
+        $scope.errorMessage = false;
+        if ($scope.availableShares) {
+          TransactionHist.makeTransaction(transaction).then(function() {
+            setTimeout(function() {
+              transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+              TransactionHist.closeTransactionRequest(transaction, newScore);
+            }, 100)
+          })
+        } else {
+          transaction.numberShares = $scope.sharesToBuy;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
+        }
+        //If the user you are buying from is you, you only lose the money that will go to the server.
+        if ($scope.availableSharesInfo && $scope.availableSharesInfo.user_id === $rootScope.loggedinUserInfo.id.toString()) {
+          $rootScope.loggedinUserInfo.karma -= Math.round(newScore * ($scope.sharesToBuy - $scope.availableShares));
+        } else {
+          $rootScope.loggedinUserInfo.karma -= Math.round($scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares));
+        }
+
+        Scores.updateSocialInvestment($scope.profile.id);
+        //Socket emit event to update recent transactions
+
+        Socket.emit('transaction', {
+          transaction: transaction
+        });
+        $mdDialog.hide();
+      }
     }
 
     $scope.checkSharesAvail = function() {
       TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
-        $scope.availableShares = response;
+        $scope.availableShares = response[0];
+        $scope.availableSharesInfo = response[1][0];
+        console.log($scope.availableSharesInfo, 'availableSharesInfo')
       });
     }
 
     //Exit closes the Buy modal
+    //is this really necessary?
     $scope.exit = function() {
       $mdDialog.hide();
     }

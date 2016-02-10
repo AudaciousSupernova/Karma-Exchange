@@ -85,11 +85,8 @@ angular.module('app.services', [])
         url: '/api/loggedin'
       })
       .then(function (user) {
-        // console.log("what is user", user);
-        console.log("what is the user", user);
         if (user.data[0].id) {
           $rootScope.loggedinUserInfo = user.data[0];
-          console.log("what is my new $rootScope", $rootScope.loggedinUserInfo)
           return true;
         } else {
           console.log("error authenticating user");
@@ -132,7 +129,7 @@ angular.module('app.services', [])
 
     getAllTransactions: function() {
       return $http({
-        method: 'GET', 
+        method: 'GET',
         url: '/transaction/all/'
       })
       .then(function(res) {
@@ -144,6 +141,17 @@ angular.module('app.services', [])
       return $http({
         method: 'GET',
         url: '/transaction/queue/' + user_id
+      })
+      .then(function(res) {
+        return res.data;
+      })
+    },
+    //gets all of the open transactions for a specific user and a specific target, used in the sell controller to determine how many shares a user can actually sell
+    getOpenUserSellTransactionsForTarget: function(user_id, target_id){
+      return $http({
+        method: 'GET',
+        url: '/transaction/queueSells',
+        params: {user_id: user_id, target_id: target_id}
       })
       .then(function(res) {
         return res.data;
@@ -211,6 +219,13 @@ angular.module('app.services', [])
       .then(function(res) {
         return res.data;
       })
+    },
+
+    updateSocialInvestment: function (id) {
+      return $http({
+        method: 'GET',
+        url: '/api/updateInvestmentScore/' + id
+      })
     }
   }
 })
@@ -238,7 +253,7 @@ angular.module('app.services', [])
 
     on: function(eventName, callback) {
       window.socket.on(eventName, function() {
-        
+
         var args = arguments;
         $rootScope.$apply(function() {
           callback.apply(window.socket, args);
@@ -246,7 +261,7 @@ angular.module('app.services', [])
         // var args = arguments;
         // callback(socket, args);
       });
-    }, 
+    },
 
     emit: function(eventName, data, callback) {
       window.socket.emit(eventName, data, function() {
@@ -258,7 +273,7 @@ angular.module('app.services', [])
         })
       });
     }
-    
+
   }
 
 });
