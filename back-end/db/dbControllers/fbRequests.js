@@ -75,7 +75,7 @@ var getFacebookData = function() {
   })
 }
 
-getFacebookData();
+// getFacebookData();
 
 //Essentially a replica of the above function definition, but only grabs user data for one user by user_id
 var getFacebookUserData = function(id) {

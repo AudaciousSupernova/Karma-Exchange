@@ -8,6 +8,7 @@
     "angular-material": "~1.0.3",
     "angular-mocks": "~1.4.9",
     "angular-chart.js": "~0.8.8",
-    "socket.io-client": "~1.4.5"
+    "socket.io-client": "~1.4.5",
+    "angular-material-data-table": "~0.9.11"
   }
 }
