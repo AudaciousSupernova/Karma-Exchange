@@ -33,7 +33,7 @@ angular.module('app.profile', [])
         }
         var date = new Date();
         console.log("ID's",$scope.user.id,$rootScope.loggedinUserInfo.id)
-        if (date.getDay() === 2) {
+        if (date.getDay() === 3) {
           $scope.wednesday = true;
         } else if ($scope.user.id === $rootScope.loggedinUserInfo.id) {
           $scope.isUser = true;
@@ -44,16 +44,17 @@ angular.module('app.profile', [])
 
   // getScores grabs all scores associated with the profile id
   $scope.getScores = function () {
-    // if not the actual user, show only total/current score, NOT social score
     $scope.series = ["Total Score", "Social Score"];
     
     Scores.getScores($scope.profileId)
     .then(function (results) {
       for(var i = 0; i < results.length; i++){
         var scoreObj = results[i];
+        // if the actual user, show both total/current score AND social score
         if ($scope.isUser === true) {
-          $scope.scores[1].push(scoreObj.social);
           $scope.scores[0].push(scoreObj.currentScore);
+          $scope.scores[1].push(scoreObj.social);
+          // else just show total/current score
         } else {
           $scope.scores[0].push(scoreObj.currentScore);
         }

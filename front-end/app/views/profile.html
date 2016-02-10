@@ -21,7 +21,7 @@
   <md-tabs md-dynamic-height md-border-bottom>
     <md-tab label="Profile">
       <!-- 1st ROW -->
-      <md-content class="md-padding" layout="row" flex>
+      <md-content layout="row" flex>
         <!-- 1st CARD -->
         <md-card flex="50" style="height: 300px;">
           <md-card-title style="margin-bottom: 20px;">
@@ -45,23 +45,14 @@
           <md-card-title style="margin-bottom: 20px;">
             <md-card-title-text>
               <span class="md-headline">{{ user.name }}</span>
-              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button> </span>
-              <span>
-                 <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button>
-              </span>
-        
+              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button></span>
+              <span class="md-subhead"> <md-button ng-show="wednesday || isUser" ng-click="clickReport()" class="md-raised"> View Report </md-button> </span>
             </md-card-title-text>
-            <md-card-title-media>
-              <img class="md-user-avatar" ng-src="{{ user.profile.picture }}"/>
-            </md-card-title-media>
           </md-card-title>
-          <md-card-actions layout="row" layout-align="end center" style="margin-top: 10px;">
-            <md-button class="md-raised md-primary" ng-click="becomeTeacherRequest(user.profile.id)" ng-show="showBecomeTeacherButtom()" >Become a Teacher</md-button>
-          </md-card-actions>
         </md-card>
       </md-content>
       <!-- 2nd ROW -->
-      <md-content class="md-padding" layout="row" flex>
+      <md-content layout="row" flex>
         <!-- 3rd CARD -->
         <md-card flex="100">
           <md-card-title-text>
