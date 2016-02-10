@@ -127,7 +127,7 @@ module.exports = function (app, express) {
         console.log(err, null);
       } else {
         console.log('response', response);
-        res.json(response[0]);
+        res.json(response);
       }
     })
   })

@@ -13,11 +13,11 @@ var sampleTransaction = {
 	user_id: 5,
 	target_id: 4,
 	type: "buy",
-	numberShares: 12 
+	numberShares: 12
 }
 
 
-//callback can be added in the future	
+//callback can be added in the future
 var makeTransaction = function(transactionObj){
 	var desiredShares = transactionObj.numberShares
 	var savedDesiredShares = desiredShares
@@ -54,11 +54,11 @@ var makeTransaction = function(transactionObj){
 					//in the 0 case close the transaction and exit the loop
 					}
 					i++;
-				}				
+				}
 				//needs to close the overarcing transaction and update karma
 				closeTransactionRequest(transactionObj, shareValue)
 			}
-		})	
+		})
 	})
 }
 
@@ -68,7 +68,7 @@ var makeTransaction = function(transactionObj){
 // 	user_id: 3,
 // 	target_id: 2,
 // 	type: "sell",
-// 	numberShares: 15, 
+// 	numberShares: 15,
 // }
 //closes a transaction request that either goes through make transaction
 //or one that goes directly through the server
@@ -92,12 +92,12 @@ var closeTransactionRequest = function(transactionObj, shareValue){
 	stocksUtil.updateOrAddStocks(transactionObj, function(err, response){
 		if(err){
 			console.log(err)
-		} 
+		}
 			scoresUtil.newSocialInvestmentScore(transactionObj.target_id);
 			//call updateInvestmentScore function from scoresUtil
 			//pass the transactionObj.target_id
-		
-	})	
+
+	})
 }
 
 // closeTransactionRequest(sampleTransaction1, 25)
@@ -128,7 +128,7 @@ var closeOpenTransaction = function(transactionQueueObj, shareValue){
 		if(err){
 			console.log(err)
 		}
-	})	
+	})
 }
 
 // var sampleQueueObj = {
@@ -149,13 +149,13 @@ var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange,
 		}
 	})
 	delete transactionQueueObj['id']
-	transactionQueueObj.karma = karmaChange
-	transactionQueueObj.numberShares = sharesChange
+	transactionQueueObj.karma = karmaChange;
+	transactionQueueObj.numberShares = sharesChange;
 	mainController.addTransaction(transactionQueueObj, function(err, response){
 		if(err){
 			console.log(err)
 		}
-	})	
+	})
 	mainController.updateKarma(transactionQueueObj.user_id, karmaChange, function(err, response){
 		if(err){
 			console.log(err)
@@ -165,7 +165,7 @@ var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange,
 		if(err){
 			console.log(err)
 		}
-	})		
+	})
 }
 
 // updateOpenTransactionAndStocks(sampleQueueObj, 3, 50)
@@ -173,7 +173,7 @@ var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange,
 //<h3>Transaction Queue Checkers</h3>
 //checks for transactions of a type from a specific target
 //uses a callback on a tuple with the first value as the number
-//of total shares available to buy/sell then an array of 
+//of total shares available to buy/sell then an array of
 //the transactionQueue objects
 var checkTransaction = function(target_id, type, callback){
 	transactionQueueController.findOpenTransaction(target_id,type, function(err, rows){
@@ -184,7 +184,7 @@ var checkTransaction = function(target_id, type, callback){
 			for(var i = 0; i < rows.length; i++){
 				numberOfShares += rows[i].numberShares;
 			}
-			callback(null, [numberOfShares, rows])			
+			callback(null, [numberOfShares, rows])
 		}
 	})
 }

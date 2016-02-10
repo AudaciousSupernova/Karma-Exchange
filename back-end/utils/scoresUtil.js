@@ -129,6 +129,7 @@ var newSocialInvestmentScore = function(target_id) {
 			console.log('This is an error', err);
 		} else {
       user = user[0];
+      console.log(user,'user returned in newSocialInvestmentScore');
 			mainController.targetTransactionHist(target_id, function(err, rows) {
 				if (err) {
 					console.log("There was an error", err);
