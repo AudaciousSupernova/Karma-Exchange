@@ -138,8 +138,6 @@ var getFacebookProfileFromAccessToken = function(access_token, callback){
   })
 }
 
-var token = "CAAK6H5Q1fAgBABM3dDCpFyOWKo4b0GQZAgNd1ZCackBzwbVyevaZACnkSPauWD5g3SWDmbnmx4FXFReXz44qRvXTzSUrKNROhxVGkEceNw97RZAZCAVB2DryserDFrjPZCrZCn25ZA1hvklQqxTAdrEZAWyDclV1SteDHdnDwiZCRZCZAM48oOZBWOgYrJem7UxaGRExfZB2HbEltYbgZDZD"
-
 
 var updateScores = function(newScore, social_subScores, user) {
   user.social = newScore;
