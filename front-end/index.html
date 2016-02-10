@@ -24,10 +24,14 @@
             <label>Search Name</label>
             <input ng-model = "searchQuery" ng-change = "findUsersByPartial()" type="text"/>
             <div ng-repeat = "user in searchResults" ng-click = "resetSearch()">
-              <md-card>
-                <md-card-content>
-                  <a href="/#/profile/{{user.id}}">{{user.name}} </a>
+              <md-card flex style="min-width:200px">
+                <a href="/#/profile/{{user.id}}">
+                  <md-card-content>
+                <span> <img class="searchimage" src="{{user.profile_photo}}"> </span>
+                <span> {{user.name}}: </span>
+                <span> {{user.currentScore}} </span>
                 </md-card-content>
+                </a>
               </md-card>
               <md-card>
             </div>

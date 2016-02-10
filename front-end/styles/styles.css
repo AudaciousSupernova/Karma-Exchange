@@ -42,6 +42,10 @@ div.view{
   font-size: 18px;
 }
 
+.searchimage {
+  width: 50px;
+  height: 50px;
+}
 
 
 /*this is directly behind the nav bar to ensure that other
@@ -61,6 +65,11 @@ div.navbar > span {
 md-content{
   background-color: rgb(240, 240, 240); 
   overflow:hidden;
+}
+
+a {
+  text-decoration: none;
+  color: black;
 }
 
 .png-icon{
