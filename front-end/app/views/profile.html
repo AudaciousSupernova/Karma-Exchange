@@ -1,18 +1,96 @@
-<div ng-module="app.profile">
-  <section ng-model="user">
-    <div class = "user info">
-      <img src="{{user.profile_photo}}">
-      <span>
-        <md-content> <md-button ng-click="clickBuy()" class="md-raised"> Buy Shares </md-button> </md-content>
-        <md-content> <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button></md-content>
-      </span>
-      <h4> {{user.name}} </h4>
-      <h4> {{user.email}} </h4>
-      <div class='fb-test' ng-click="getFacebookData()"> Get Latest User Score </div>
-      <h4> Current Score: {{user.currentScore}} </h4>
-    </div>
-  </section>
-  <section>
-    <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" ></canvas> 
-  </section>
-</div>
+<!--   <div ng-module="app.profile">
+    <section ng-model="user">
+      <div class = "user info">
+        <img src="{{user.profile_photo}}">
+        <span>
+           <md-button ng-click="clickBuy()" class="md-raised"> Buy Shares </md-button> 
+           <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button>
+        </span>
+        <h4> {{user.name}} </h4>
+        <h4> {{user.email}} </h4>
+        <div class='fb-test' ng-click="getFacebookData()"> Get Latest User Score </div>
+        <h4> Current Score: {{user.currentScore}} </h4>
+      </div>
+    </section>
+    <section>
+      <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" ></canvas> 
+    </section>
+  </div> -->
+
+<md-content>
+  <md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Profile">
+      <!-- 1st ROW -->
+      <md-content class="md-padding" layout="row" flex>
+        <!-- 1st CARD -->
+        <md-card flex="50" style="height: 300px;">
+          <md-card-title style="margin-bottom: 20px;">
+            <md-card-title-text>
+              <span class="md-headline">{{ user.name }}</span>
+              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button> </span>
+              <span>
+                 <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button>
+              </span>
+            </md-card-title-text>
+            <md-card-title-media>
+              <img class="md-user-avatar" ng-src="{{ user.profile.picture }}"/>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-actions layout="row" layout-align="end center" style="margin-top: 10px;">
+            <md-button class="md-raised md-primary" ng-click="becomeTeacherRequest(user.profile.id)" ng-show="showBecomeTeacherButtom()" >Become a Teacher</md-button>
+          </md-card-actions>
+        </md-card>
+        <!-- 2nd CARD -->
+        <md-card flex="50" style="height: 300px;">
+          <md-card-title style="margin-bottom: 20px;">
+            <md-card-title-text>
+              <span class="md-headline">{{ user.name }}</span>
+              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button> </span>
+              <span>
+                 <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button>
+              </span>
+        
+            </md-card-title-text>
+            <md-card-title-media>
+              <img class="md-user-avatar" ng-src="{{ user.profile.picture }}"/>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-actions layout="row" layout-align="end center" style="margin-top: 10px;">
+            <md-button class="md-raised md-primary" ng-click="becomeTeacherRequest(user.profile.id)" ng-show="showBecomeTeacherButtom()" >Become a Teacher</md-button>
+          </md-card-actions>
+        </md-card>
+      </md-content>
+      <!-- 2nd ROW -->
+      <md-content class="md-padding" layout="row" flex>
+        <!-- 3rd CARD -->
+        <md-card flex="100">
+          <md-card-title-text>
+            <div class="md-headline center">Score History Over Past 30 Days</div>
+          </md-card-title-text>
+          <div>
+            <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" height="25" width="100%">
+            </canvas> 
+          </div>
+        </md-card>
+        <!-- 4th CARD -->
+        <!-- <md-card flex="50" style="height: 300px;">
+          <md-card-title style="margin-bottom: 20px;">
+            <md-card-title-text>
+              <span class="md-headline">{{ user.name }}</span>
+              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button> </span>
+              <span>
+                 <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button>
+              </span>
+            </md-card-title-text>
+            <md-card-title-media>
+              <img class="md-user-avatar" ng-src="{{ user.profile.picture }}"/>
+            </md-card-title-media>
+          </md-card-title>
+          <md-card-actions layout="row" layout-align="end center" style="margin-top: 10px;">
+            <md-button class="md-raised md-primary" ng-click="becomeTeacherRequest(user.profile.id)" ng-show="showBecomeTeacherButtom()" >Become a Teacher</md-button>
+          </md-card-actions>
+        </md-card> -->
+      </md-content>
+    </md-tab>
+  </md-tabs>
+</md-content>

@@ -4,13 +4,13 @@ angular.module('app.profile', [])
 
 .controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB, $rootScope) {
 
-  $scope.isUser = true;
   $scope.user;
   $scope.leaders;
   $scope.profileId;
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
+  $scope.isUser = false; 
 
   //Button press calls this function that retrieves the profile user's latest Facebook score.
   $scope.getFacebookData = function() {
@@ -23,7 +23,7 @@ angular.module('app.profile', [])
   //This function grabs user information of the current profile id
   $scope.getUserById = function(id) {
     User.getUser(id)
-    .then(function(user) {
+      .then(function(user) {
         $scope.user = user[0];
         if ($scope.user.profile_photo === null) {
           $scope.user.profile_photo = "http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg";
@@ -32,29 +32,36 @@ angular.module('app.profile', [])
           $scope.user.email = "No Email Provided";
         }
         var date = new Date();
+        console.log("ID's",$scope.user.id,$rootScope.loggedinUserInfo.id)
         if (date.getDay() === 2) {
           $scope.wednesday = true;
         } else if ($scope.user.id === $rootScope.loggedinUserInfo.id) {
-          $scope.wednesday = true;
+          $scope.isUser = true;
         }
         $scope.getScores();
-    })
+      })
   }
 
-  //getScores grabs all scores associated with the profile id
+  // getScores grabs all scores associated with the profile id
   $scope.getScores = function () {
-    $scope.series = ["Social Score", "Total Score"]
+    // if not the actual user, show only total/current score, NOT social score
+    $scope.series = ["Total Score", "Social Score"];
+    
     Scores.getScores($scope.profileId)
     .then(function (results) {
       for(var i = 0; i < results.length; i++){
         var scoreObj = results[i];
-        $scope.scores[0].push(scoreObj.social);
-        $scope.scores[1].push(scoreObj.currentScore);
+        if ($scope.isUser === true) {
+          $scope.scores[1].push(scoreObj.social);
+          $scope.scores[0].push(scoreObj.currentScore);
+        } else {
+          $scope.scores[0].push(scoreObj.currentScore);
+        }
       }
       var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length
       for(var i = 0; i < daysBeforeUserJoined; i++){
-        $scope.scores[0].unshift(0)
-        $scope.scores[1].unshift(0)
+        $scope.scores[0].unshift(0);
+        $scope.scores[1].unshift(0);
       }
     })
   }

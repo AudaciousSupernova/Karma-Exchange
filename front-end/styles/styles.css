@@ -160,3 +160,7 @@ tr, td, th{
 .errorMessage {
   color: red;
 }
+
+.center{
+  text-align: center;
+}
