@@ -18,7 +18,6 @@ module.exports = function (app, express) {
 	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
 
   app.get('/mobile/login/:token', function(req,res){
-    console.log("ping")
     var access_token = req.params.token
     fbRequests.getFacebookProfileFromAccessToken(access_token, function(err, fbUserObject){
       if(err){
@@ -28,8 +27,8 @@ module.exports = function (app, express) {
           if(err){
             console.log("Error in API routes confirming user with mobile login", err)
           } else {
-            var token = jwt.sign(userObj.id, 'supernova', {
-              expiresInMinutes: 1440 // expires in 24 hours
+            var token = jwt.sign(userObj, 'supernova', {
+              expiresIn: "1d"
             });
             res.send({token: token,
                       userObj: userObj})
@@ -44,13 +43,11 @@ module.exports = function (app, express) {
  
     jwt.verify(token, 'supernova' , function(err, decoded) {      
       if (err) {
-        console.log("Error in mobile loging, failed to authenticate token")
-        res.send({ success: false, message: 'Failed to authenticate token.' });    
+        console.log("Error in mobile login, failed to authenticate token")
+        res.send({ loggedin: false, message: 'Failed to authenticate token.' });    
       } else {
         // if everything is good, save to request for use in other routes
-        console.log(decoded)
-        req.decoded = decoded;
-        res.send({success:true})    
+        res.send({loggedin: true})    
       }
     });
   })
