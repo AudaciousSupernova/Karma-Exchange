@@ -1,19 +1,56 @@
 //Required backend dependencies
-
+var mobileLogin = require('./Auth/mobileLogin');
 var passport = require('./Auth/passport.facebook');
 var mainController = require('./db/dbControllers/mainController.js');
 var scoresUtil = require('./utils/scoresUtil')
 var transactionUtil = require('./utils/transactionUtil')
 var transactionQueue = require('./db/dbControllers/transactionQueue');
 var fbRequests = require('./db/dbControllers/fbRequests.js');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+
 
 module.exports = function (app, express) {
-	app.get('/auth/facebook',
+  app.get('/auth/facebook',
 		// inside the scope array, we can include additional permissionns.
 	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
 
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
+
+  app.get('/mobile/login/:token', function(req,res){
+    var access_token = req.params.token
+    fbRequests.getFacebookProfileFromAccessToken(access_token, function(err, fbUserObject){
+      if(err){
+        console.log("Error in API routes with mobile login", err)
+      } else {
+        mobileLogin.verifyOrAddMobileUser(fbUserObject, access_token, function(err, userObj){
+          if(err){
+            console.log("Error in API routes confirming user with mobile login", err)
+          } else {
+            var token = jwt.sign(userObj, 'supernova', {
+              expiresIn: "1d"
+            });
+            res.send({token: token,
+                      userObj: userObj})
+          }
+        })
+      }
+    })
+  })
+
+  app.get('/mobile/loggedin/:sessionToken', function (req, res){
+    var token = req.params.sessionToken
+ 
+    jwt.verify(token, 'supernova' , function(err, decoded) {      
+      if (err) {
+        console.log("Error in mobile login, failed to authenticate token")
+        res.send({ loggedin: false, message: 'Failed to authenticate token.' });    
+      } else {
+        // if everything is good, save to request for use in other routes
+        res.send({loggedin: true})    
+      }
+    });
+  })
 
   //Get request on login attempt
   app.get('/api/loggedin',
