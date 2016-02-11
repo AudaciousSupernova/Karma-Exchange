@@ -24,6 +24,7 @@ angular.module('app', [
       // datasetFill: false
     });
   }])
+  
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {
 
   $stateProvider

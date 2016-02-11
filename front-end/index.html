@@ -13,15 +13,17 @@
   <body ng-controller="IndexController">
 
     <md-toolbar class="fixed" layout="row" ng-show="loggedinUserInfo">
-      <span class="karma"> {{loggedinUserInfo.karma}} Karma </span>
+    <span class="logo"> <img src="./styles/assets/kx_grey.png"> </span>
+    <span class="karma"> {{loggedinUserInfo.karma}} </span>
       <div flex>
         <span flex></span>
-        <md-button class="profile" ng-click="viewProfile()" class="md-warn"> Profile
+        <md-button class="profile" ng-click="viewProfile()" class="md-warn">  Profile  
          </md-button>
-        <md-button class="fortune" ng-click="viewPortfolio()" class="md-accent"> Fortune </md-button>
+        <md-button class="fortune" ng-click="viewPortfolio()" class="md-accent">  Fortune  </md-button>
         <md-button class="navBar logout right" ng-click="logout()" > Logout </md-button>
-          <md-input-container class="right">
-            <label>Search Name</label>
+          <md-input-container class="right md-warn md-hue-1">
+            <label><img class="search-white" src="./styles/assets/search_white2.png"> </label>
+            <md-icon md-png-src="./styles/assets/search.png"></md-icon>
             <input ng-model = "searchQuery" ng-change = "findUsersByPartial()" type="text"/>
             <div ng-repeat = "user in searchResults" ng-click = "resetSearch()">
               <md-card flex style="min-width:200px">
@@ -59,6 +61,17 @@
     <div class = "spaceHolder">s</div>
     <script src="libs/angular/angular.min.js"> </script> 
     <div class = "view" ui-view> </div>
+
+    <md-toolbar layout="row" ng-show="loggedinUserInfo">
+    <span class="logo"> karma exchange. </span>
+      <div flex>
+        <span flex></span>
+        <md-button class="footer" ng-click="viewProfile()" class="md-warn">  About Us  
+         </md-button>
+        <md-button class="footer" ng-click="viewPortfolio()" class="md-accent">  Privacy  </md-button>
+        <md-button class="footer" ng-click="viewPortfolio()" class="md-accent">  Careers  </md-button>
+      </div>
+    </md-toolbar>
 
     <!-- dependancies -->
     <script src="libs/angular-route/angular-route.min.js"> </script>

@@ -2,16 +2,18 @@
   font-family: "sfText";
   src: url("./font.ttf") format("truetype");
 }*/
-
-html, body, .md-raised{
-	background-color: rgb(240, 240, 240);
   /*font-family: 'sfText';*/
-}
 
+
+html, body {
+  background-color: rgb(234, 234, 234);
+}
 div.view{
 	width: 80%;
 	margin: 0% 10% 0 10%;
+  background-color: rgb(234, 234, 234);
 }
+
 
 .right{
 	float:right;
@@ -19,27 +21,34 @@ div.view{
 }
 
 .profile {
-  background-color: rgb(0, 111, 166);
-  margin-left: 30%;
-  padding-top: 10px;
+  background-color: rgb(66, 66, 66);
+  color: white;
+  margin-left: 27%;
+  margin-top: 1.5%;
+  font-size: 15px;
+  border: 0.1px solid white;
 }
 
+
+
 .fortune {
-  background-color: rgb(0, 111, 166);
-  padding-top: 10px;
+  background-color: rgb(66, 66, 66);
+  margin-top: 1.5%;
+  color: white;
+  font-size: 15px;
+  border: 0.1px solid white;
 }
+
 
 .fixed {
   position:fixed;
   max-height:50px;
-  max-width: 85%;
-  margin-left: 7.5%;
-  margin-right: 7.5%;
 }
 
 .karma {
-  padding-top: 10px;
-  font-size: 18px;
+  margin-left: 0.5%;
+  margin-top: 2%;
+  font-size: 17px;
 }
 
 .searchimage {
@@ -59,7 +68,7 @@ div.spaceHolder{
 }
 
 div.navbar > span {
-  color: white;
+  color: rgb((92,91,91));
 }
 
 md-content{
@@ -88,7 +97,7 @@ a {
 }*/
 
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
-  background: rgb(135, 135, 135);
+  background:rgb(66, 66, 66)
 }
 
 
@@ -96,11 +105,26 @@ md-input-container {
   font-size: 14px;
   max-height: 20px;
   max-width: 150px;
-  margin-right: 20%;
+  margin-right: 27%;
+}
+md-input-container:not(.md-input-has-value) input:not(:focus), md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-ampm-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-day-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-hour-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-millisecond-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-minute-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-month-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-second-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-week-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-year-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-text {
+  border-color: white;
 }
 
-.md-input-focused {
-  color:red;
+md-input-container .md-input-focused {
+  border-color: red;
+}
+md-input-container label {
+  color: white;
+  font-size: 20px;
+}
+md-input-container label input {
+  font-size: 20px;
+}
+
+
+md-input-container:not(.md-input-invalid).md-input-cofused .md-input {
+  
 }
 span.dropdown{
   margin-left: -200px;
@@ -115,24 +139,8 @@ span.dropdown{
 	color:black;
 }
 
-span.logout{
-	border: 0px solid black;
-}
-
-span.logout:hover{
-	background-color: rgb(240, 240, 240);
-}
-
-span.currentUserNavBar{
-	opacity: .5;
-	padding:10px 0 10px 0;
-	background-color: black;
-	border-right: 2px solid gray;
-}
-
-.navBar:hover {
-  background-color: rgb(240, 240, 240);
-  color: black;
+.logout {
+  padding: 1%;
 }
 
 td{
@@ -150,15 +158,12 @@ td{
   color: white;
 }
 
-table{
-	border: 2px solid black;
-	box-shadow: 4px 4px;
-}
-tr, td, th{
+/*tr, td, th{
 	outline: thin solid;
-}
+}*/
 
 /* Enables Top Leaders (ranked by current score) to scroll across each pg */
+
 .ticker {
  height: 50px;	
  overflow: hidden;
@@ -243,4 +248,32 @@ img.center {
 .md-button.md-raised:not([disabled]):hover {
   background-color: rgb(275, 100, 100);
 }
+
+.table {
+  border: 1px solid gray;
+}
+
+table.table {
+  width:100%;
+}
+
+.md-table {
+  overflow:hidden;
+}
+
+.logo {
+  margin-top: 1%;
+  margin-left: 1%;
+}
+
+.footer {
+  margin-left: 1%;
+  margin-top: 1%;
+  border: 1px solid white;
+}
+
+.search-white {
+  margin-right:5px;
+}
+
 
