@@ -109,7 +109,7 @@ angular.module('app.profile', [])
 
     $scope.profile = profile;
     $scope.score = $rootScope.loggedinUserInfo.currentScore;
-    $scope.sharesToBuy;
+    $scope.sharesToBuy = 0;
     $scope.availableShares;
     $scope.availableSharesInfo;
     $scope.revealOptions = false;

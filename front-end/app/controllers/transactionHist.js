@@ -4,14 +4,14 @@ angular.module('app.transactionHist', [])
   $scope.test = "hello testing buy";
 
   $scope.transactions = []
-  
+
   $scope.getTransactions = function() {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {
       console.log(results);
       $scope.transactions = results;
     })
-  } 
+  }
 
   Auth.checkLoggedIn().then(function(boolean) {
     if (boolean === false) {
@@ -24,6 +24,6 @@ angular.module('app.transactionHist', [])
       $scope.getTransactions();
     }
   })
- 
+
 
 });
