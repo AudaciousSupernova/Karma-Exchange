@@ -7,7 +7,6 @@ angular.module('app.index', [])
   $scope.searchQuery = "";
   $scope.transactions = [];
   $scope.recentTransactions; 
-  $scope.showTicker = false;
 
 
   //getUserById finds a user in the database by passing a sql id
@@ -47,7 +46,6 @@ angular.module('app.index', [])
     TransactionHist.getAllTransactions()
     .then(function(results) {
       $scope.recentTransactions = results.slice(0, 9); 
-      console.log("here they are", $scope.recentTransactions);
     })
   }
 
