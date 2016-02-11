@@ -42,7 +42,7 @@
     </md-toolbar>
         
     
-    <div class="ticker">
+    <div ng-class="{ 'ticker': loggedinUserInfo}" ng-show="loggedinUserInfo">
       <div ng-init='getLeaders()'>Highest Scores:
         <span>{{userOne}}, </span>
         <span>{{userTwo}}</span>

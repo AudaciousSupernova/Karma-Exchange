@@ -7,6 +7,7 @@ angular.module('app.index', [])
   $scope.searchQuery = "";
   $scope.transactions = [];
   $scope.recentTransactions; 
+  $scope.showTicker = false;
 
 
   //getUserById finds a user in the database by passing a sql id
@@ -88,7 +89,7 @@ angular.module('app.index', [])
       $location.path('/')
     } else {
       $scope.getAllTransactions();
-
+      $scope.showTicker = true;
       //Socket listener for latest transactions
       Socket.on('transaction', function(transaction) {
         $scope.transactions.unshift(transaction.transaction.transaction);
