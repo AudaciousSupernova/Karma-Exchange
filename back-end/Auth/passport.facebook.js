@@ -1,5 +1,6 @@
 var passport = require('passport');
 var mainController = require('../db/dbControllers/mainController')
+var fbRequests = require('../db/dbControllers/fbRequests')
 var FacebookStrategy = require('passport-facebook').Strategy;
 var callbackURL;
 
@@ -49,11 +50,11 @@ passport.use(new FacebookStrategy({
           var addObj = {
             'facebookKey': id,
             'name': displayName,
-            'karma': 1000,
+            'karma': 5000,
             'profile_photo':photo,
             'email': email,
             'social': 5,
-            'social_investment':5,
+            'social_investment':1,
             'currentScore':10,
             'access_token': token
           };
@@ -63,7 +64,7 @@ passport.use(new FacebookStrategy({
             } else {
               var scoreObj = {
                 user_id: userId,
-                social_investment: 5,
+                social_investment: 1,
                 social: 5,
                 currentScore: 10
               };
@@ -72,6 +73,7 @@ passport.use(new FacebookStrategy({
                   console.log("scoreObj was not added", err);
                 } else {
                   addObj.id = userId;
+                  fbRequests.getFacebookUserData(addObj.id)
                   done(null, addObj);
                 }
               })

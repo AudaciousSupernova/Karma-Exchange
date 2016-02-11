@@ -4,18 +4,18 @@ var mainController = require("./mainController.js");
 
 //<h3> Get Facebook Data </h3>
 
-//This function loops through all users once a day and updates the following sub scores: 
+//This function loops through all users once a day and updates the following sub scores:
   //Friend Score: calculated based on number of friends user has on Facebook
   //Photo Score: calculated based on number of recent photos and engagement (likes and comments) on each
   //Feed Score: calculated based on number of recent feed posts and engagement (likes and comments) on each
 //The sub scores are all taken into account to generate a new social score.
-//This new score is provided in an update to the user in the database. 
+//This new score is provided in an update to the user in the database.
 //In addition, once a week, the following additional updates are made to the user in the database:
   //Using linear regression, the updateScores function will:
     //1. Update last_week_expected_social_change
     //2. Update last_week_actual_social_change
     //3. Update next_week_expected_social_change
-  //In the future, we may want to keep track of these trend changes. 
+  //In the future, we may want to keep track of these trend changes.
 
 var getFacebookData = function() {
   var users;
@@ -61,15 +61,15 @@ var getFacebookData = function() {
               newSocialScore = Math.round(0.1 * friendScore + 0.6 * photoScore + 0.3 * feedScore);
               console.log("This is " + user.name + "'s newSocialScore: ", newSocialScore);
               social_subScores = {
-                friendScore: friendScore, 
-                photoScore: photoScore, 
+                friendScore: friendScore,
+                photoScore: photoScore,
                 feedScore: feedScore
               }
               socialSubScores = JSON.stringify(socialSubScores);
               updateScores(newSocialScore, social_subScores, user);
             })
           })
-        })   
+        })
       })
     }
   })
@@ -125,7 +125,7 @@ var getFacebookUserData = function(id) {
       })
     }
   })
-} 
+}
 
 var getFacebookProfileFromAccessToken = function(access_token, callback){
   request('https://graph.facebook.com/v2.2/me?fields=id,name,picture&access_token=' + access_token, function(err, response, body){
@@ -137,8 +137,6 @@ var getFacebookProfileFromAccessToken = function(access_token, callback){
     }
   })
 }
-
-var token = "CAAK6H5Q1fAgBABM3dDCpFyOWKo4b0GQZAgNd1ZCackBzwbVyevaZACnkSPauWD5g3SWDmbnmx4FXFReXz44qRvXTzSUrKNROhxVGkEceNw97RZAZCAVB2DryserDFrjPZCrZCn25ZA1hvklQqxTAdrEZAWyDclV1SteDHdnDwiZCRZCZAM48oOZBWOgYrJem7UxaGRExfZB2HbEltYbgZDZD"
 
 
 var updateScores = function(newScore, social_subScores, user) {
@@ -152,12 +150,12 @@ var updateScores = function(newScore, social_subScores, user) {
   // console.log(user.name + "'s social_investment score is: ", user.social_investment);
   // console.log(user.name + "'s total current score is: ", user.currentScore)
   var date = new Date();
-  if (date.getDate() === 3) {
+  if (date.getDate() === 2) {
     console.log("Today is Wednesday.");
     var scoreObj = {
-      user_id: user.id, 
-      social: user.social, 
-      social_investment: user.social_investment, 
+      user_id: user.id,
+      social: user.social,
+      social_investment: user.social_investment,
       currentScore: user.currentScore
     }
     mainController.addScore(scoreObj, function(err, results) {
@@ -187,7 +185,7 @@ var updateScores = function(newScore, social_subScores, user) {
                 console.log("Successfully retrieved all scores for user");
                 for (var i = 0; i<scores.length; i++) {
                     generalYVals.push(scores[i].social);
-                    generalXVals.push(i); 
+                    generalXVals.push(i);
                 }
                 if (generalXVals.length < 2) {
                   generalXVals.push(generalXVals[0]);
@@ -210,11 +208,11 @@ var updateScores = function(newScore, social_subScores, user) {
                 })
               }
             })
-            
+
           }
         })
 
-        
+
       }
     })
   } else {
@@ -224,9 +222,9 @@ var updateScores = function(newScore, social_subScores, user) {
       } else {
         console.log("Successfully updated user");
         var scoreObj = {
-          user_id: user.id, 
-          social: user.social, 
-          social_investment: user.social_investment, 
+          user_id: user.id,
+          social: user.social,
+          social_investment: user.social_investment,
           currentScore: user.currentScore
         }
         mainController.addScore(scoreObj, function(err, results) {
@@ -241,7 +239,7 @@ var updateScores = function(newScore, social_subScores, user) {
   }
 }
 
-//Linear regression function used to grab slope of scores, recent and general. 
+//Linear regression function used to grab slope of scores, recent and general.
 function linearRegression(y,x){
   var lr = {};
   var n = y.length;
@@ -268,7 +266,7 @@ function linearRegression(y,x){
 }
 
 module.exports = {
-  getFacebookData: getFacebookData, 
+  getFacebookData: getFacebookData,
   getFacebookUserData: getFacebookUserData,
   getFacebookProfileFromAccessToken: getFacebookProfileFromAccessToken
 }
