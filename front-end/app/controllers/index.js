@@ -87,7 +87,6 @@ angular.module('app.index', [])
       $location.path('/')
     } else {
       $scope.getAllTransactions();
-
       //Socket listener for latest transactions
       Socket.on('transaction', function(transaction) {
         $scope.transactions.unshift(transaction.transaction.transaction);

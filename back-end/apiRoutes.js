@@ -189,7 +189,18 @@ module.exports = function (app, express) {
       if (err) {
         console.log("Was unable to get all transactions", err);
       } else {
-        res.send(transactions);
+        transactions.forEach(function(transaction, index) {
+          console.log("what is my index", index);
+          mainController.findUserById(transaction.user_id, function(err, user) {
+            transaction.user_name = user[0].name;
+            mainController.findUserById(transaction.target_id, function(err, target) {
+              transaction.target_name = target[0].name;
+              if (index === transactions.length - 1) {
+                res.send(transactions);
+              }
+            })
+          })
+        })
       }
     })
   })
