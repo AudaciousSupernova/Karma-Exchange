@@ -30,12 +30,21 @@ angular.module('app.portfolio', ["chart.js"])
   //getUserById grabs the logged in user's portfolio information
   $scope.getUserById = function(id) {
     User.getUser(id)
-      .then(function(user) {
-        $scope.loggedinUserInfo = user[0];
-      })
+    .then(function(user) {
+      $scope.loggedinUserInfo = user[0];
+    })
   }
 
   //getInvestment grabs all the current investment of the logged in user
+  //properties on an investment object
+  // currentScore: 45
+  // data: Array[1]
+  // id: 3220
+  // name: "Clemens Rohan"
+  // numberShares: 64
+  // series: "Clemens Rohan"
+  // target_id: 85
+  // user_id: 1
   $scope.getInvestments = function(id) {
     Portfolio.getInvestments(id)
     .then(function(investments) {
@@ -67,6 +76,14 @@ angular.module('app.portfolio', ["chart.js"])
   }
 
 //getTransactionHist gets all transactions for the logged in user
+//sample properties on a transaction object
+// id: 1729
+// karma: 4576
+// numberShares: 44
+// target_id: 64
+// target_name: "Rosie Bergnaum"
+// type: "sell"
+// user_id: 1
   $scope.getTransactionHist = function() {
     TransactionHist.getTransactions($rootScope.loggedinUserInfo.id)
     .then(function(results) {
@@ -170,7 +187,6 @@ their current stocks.
           profit += (shares * investment.currentScore - shares * transactionScore)
           shares = 0
           investment.profit = profit;
-          console.log("here is the investment profit", investment.profit)
           break;
         }
       }

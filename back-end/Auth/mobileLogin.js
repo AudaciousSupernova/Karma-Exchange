@@ -17,7 +17,7 @@ var verifyOrAddMobileUser = function(fbUserObj, access_token, callback){
       var addObj = {
         'facebookKey': userObj.id,
         'name': userObj.name,
-        'karma': 1000,
+        'karma': 5000,
         'profile_photo':userObj.photo,
         'email': null,
         'social': 1,

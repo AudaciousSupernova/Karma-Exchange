@@ -51,7 +51,7 @@ module.exports = function (app, express) {
     jwt.verify(token, 'supernova' , function(err, decoded) {      
       if (err) {
         console.log("Error in mobile login, failed to authenticate token")
-        res.send({ loggedin: false, message: 'Failed to authenticate token.' });    
+        res.send({loggedin: false, message: 'Failed to authenticate token.' });    
       } else {
         // if everything is good, save to request for use in other routes
         res.send({loggedin: true})    
