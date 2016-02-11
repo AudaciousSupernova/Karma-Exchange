@@ -46,6 +46,7 @@ angular.module('app.index', [])
     TransactionHist.getAllTransactions()
     .then(function(results) {
       $scope.recentTransactions = results.slice(0, 9); 
+      console.log("here they are", $scope.recentTransactions);
     })
   }
 

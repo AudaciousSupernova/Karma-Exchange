@@ -14,7 +14,9 @@
     <md-card-title style="margin-bottom: 20px;">
       <md-card-title-text>
         <span class="md-headline username">{{ user.name }}</span>
-        <span class="md-subhead currentScore">Current Score: {{ user.currentScore }}<md-button class="buyButton md-raised" ng-click="clickBuy()">Buy</md-button></span>
+        <span class="md-subhead currentScore">Current Score: {{ user.currentScore }}
+          <md-button class="buyButton md-raised" ng-show="!isUser" ng-click="clickBuy()">Buy</md-button>
+        </span>
         <span class="md-subhead viewReport"><md-button ng-show="wednesday || isUser" ng-click="clickReport()" class="buyButton md-raised"> View Report </md-button></span>
       </md-card-title-text>
     </md-card-title>

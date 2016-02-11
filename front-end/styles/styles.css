@@ -123,9 +123,14 @@ md-input-container label input {
 }
 
 
-md-input-container:not(.md-input-invalid).md-input-cofused .md-input {
 
+
+
+
+md-input-container.md-default-theme.md-hue-1:not(.md-input-invalid).md-input-focused.md-warn .md-input, md-input-container.md-hue-1:not(.md-input-invalid).md-input-focused.md-warn .md-input {
+  border-color: white;
 }
+
 span.dropdown{
   margin-left: -200px;
   margin-top: 25px;
