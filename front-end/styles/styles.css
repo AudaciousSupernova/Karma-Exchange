@@ -40,6 +40,7 @@ div.navbar > span {
 
 md-content{
 	overflow:hidden;
+  background-color: rgb(240, 240, 240); 
 }
 
 .png-icon{
@@ -160,3 +161,42 @@ tr, td, th{
 .errorMessage {
   color: red;
 }
+
+.center{
+  text-align: center;
+}
+
+img.center {
+  margin-left: 55%;
+}
+
+.img-circle {
+  border-radius: 50%; 
+  width: 100%;
+  height: 100%;
+}
+
+.username {
+  text-align: center; 
+}
+
+.currentScore {
+  text-align: center;
+}
+
+.viewReport {
+  text-align: center; 
+}
+
+.floatright {
+  float: right; 
+}
+
+.buyButton.md-raised {
+  background-color: rgb(225, 78, 78);
+  color: white;
+}
+.md-button.md-raised:not([disabled]):hover {
+  background-color: rgb(275, 100, 100);
+}
+
