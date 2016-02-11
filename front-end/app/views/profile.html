@@ -17,63 +17,40 @@
     </section>
   </div> -->
 
-<md-content>
   
-      <!-- 1st ROW -->
-      <md-content layout="row" flex>
-        <!-- 1st CARD -->
-        <md-card flex="50" style="height: 300px;" layout-align="center center">
-          <md-card-title style="margin-bottom: 20px;">
-            <md-card-title-media>
-              <img class="img-circle" ng-src="{{ user.profile_photo }}"/>
-            </md-card-title-media>
-          </md-card-title>
-          <md-card-actions layout="row" layout-align="end center" style="margin-top: 10px;">
-            <md-button class="md-raised md-primary" ng-click="becomeTeacherRequest(user.profile.id)" ng-show="showBecomeTeacherButtom()" >Become a Teacher</md-button>
-          </md-card-actions>
-        </md-card>
-        <!-- 2nd CARD -->
-        <md-card flex="50" style="height: 300px;">
-          <md-card-title style="margin-bottom: 20px;">
-            <md-card-title-text>
-              <span class="md-headline">{{ user.name }}</span>
-              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button></span>
-              <span class="md-subhead"> <md-button ng-show="wednesday || isUser" ng-click="clickReport()" class="md-raised"> View Report </md-button> </span>
-            </md-card-title-text>
-          </md-card-title>
-        </md-card>
-      </md-content>
-
-      <!-- 2nd ROW -->
-      <md-content layout="row" flex>
-        <!-- 3rd CARD -->
-        <md-card flex="100">
-          <md-card-title-text>
-            <div class="md-headline center">Score History Over Past 30 Days</div>
-          </md-card-title-text>
-          <div>
-            <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" height="25" width="100%">
-            </canvas> 
-          </div>
-        </md-card>
-        <!-- 4th CARD -->
-        <!-- <md-card flex="50" style="height: 300px;">
-          <md-card-title style="margin-bottom: 20px;">
-            <md-card-title-text>
-              <span class="md-headline">{{ user.name }}</span>
-              <span class="md-subhead">Current Score: {{ user.currentScore }} <md-button ng-click="clickBuy()" class="md-raised">Buy</md-button> </span>
-              <span>
-                 <md-button ng-show="wednesday"ng-click="clickReport()" class="md-raised"> View Report </md-button>
-              </span>
-            </md-card-title-text>
-            <md-card-title-media>
-              <img class="md-user-avatar" ng-src="{{ user.profile.picture }}"/>
-            </md-card-title-media>
-          </md-card-title>
-          <md-card-actions layout="row" layout-align="end center" style="margin-top: 10px;">
-            <md-button class="md-raised md-primary" ng-click="becomeTeacherRequest(user.profile.id)" ng-show="showBecomeTeacherButtom()" >Become a Teacher</md-button>
-          </md-card-actions>
-        </md-card> -->
-      </md-content>
-
+<!-- 1st ROW -->
+<md-content layout="row" flex>
+  <!-- 1st CARD -->
+  <md-card flex="40" style="height: 300px;">
+    <md-card-title style="margin-bottom: 20px;">
+      <md-card-title-media>
+        <img class="img-circle center" ng-src="{{ user.profile_photo }}"/>
+      </md-card-title-media>
+    </md-card-title>
+  </md-card>
+  <!-- 2nd CARD -->
+  <md-card flex="60" style="height: 300px;">
+    <md-card-title style="margin-bottom: 20px;">
+      <md-card-title-text>
+        <span class="md-headline username">{{ user.name }}</span>
+        <span class="md-subhead currentScore">Current Score: {{ user.currentScore }}<md-button class="buyButton md-raised" ng-click="clickBuy()">Buy</md-button></span>
+        <span class="md-subhead viewReport"><md-button ng-show="wednesday || isUser" ng-click="clickReport()" class="buyButton md-raised"> View Report </md-button></span>
+      </md-card-title-text>
+    </md-card-title>
+  </md-card>
 </md-content>
+
+<!-- 2nd ROW -->
+<md-content layout="row" flex>
+  <!-- 3rd CARD -->
+  <md-card flex="100">
+    <md-card-title-text>
+      <div class="md-headline center">Score History Over Past 30 Days</div>
+    </md-card-title-text>
+    <div>
+      <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" height="25" width="100%">
+      </canvas> 
+    </div>
+  </md-card>
+</md-content>
+
