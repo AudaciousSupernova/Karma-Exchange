@@ -71,11 +71,21 @@ var getFacebookData = function() {
           })
         })
       })
+      //All users have been updated here
+      //get new time
+      //now until next launch time should be the interval
+
     }
   })
 }
 
-// getFacebookData();
+//calling getFacebookData only in between the hours of 2AM and 4AM for all users.
+setInterval(function () {
+  var date = new Date();
+  if (date.getHours >=2 && date.getHours <=4) {
+    getFacebookData();
+  }
+}, 7100000)
 
 //Essentially a replica of the above function definition, but only grabs user data for one user by user_id
 var getFacebookUserData = function(id) {
