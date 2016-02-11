@@ -10,31 +10,41 @@
  <br/>
  <br/>
  <br/>
-     <!-- Current Investments View -->
-    <table ng-show  = "currentInvestmentsView">
-      <tr>
-        <th> Name </th>
-        <th> Current Value
-        </th>
-        <th> Recent Trend </th>
-        <th> Shares </th>
-        <th> Expected Profit </th>
-      </tr>
-      <tr ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id, investment)'>
-        <td> {{investment.name}} </td>
-        <td> {{investment.currentScore}}</td>
-        <td> <canvas id="line" class="chart chart-line" chart-data="investment.data" chart-labels="labels" chart-legend="false" chart-series="investment.series" chart-click="onClick" ></canvas> </td>
-        <td> {{investment.numberShares}}</td>
-        <td> {{investment.profit}} karma </td>
-        <td>
-          <div layout="column" ng-cloak>
-            <md-content>
-              <md-button ng-click="clickSell(investment)" class="md-raised"> Sell Shares </md-button>
-            </md-content>
-          </div>
-        </td>
-      </tr>
+ <md-card>
+  <md-table-container>
+    <table md-table ng-show="currentInvestmentsView" class="table md-table">
+      <thead md-head class="table">
+        <tr md-row class="table">
+          <th md-column colspan="10"> Name </th>
+          <th md-column colspan="10"> Current Value </th>
+          <th md-column> Recent Trend </th>
+          <th md-column> Shares </th>
+          <th md-column> Expected Profit </th>
+          <th md-column> Sell </th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row ng-repeat="investment in investments" ng-init = 'getScores(investment.target_id, investment)'>
+          <td md-cell colspan="10"> {{investment.name}} </td>
+          <td md-cell colspan="10"> {{investment.currentScore}} </td>
+          <td md-cell> <canvas id="line" class="chart chart-line" chart-data="investment.data" chart-labels="labels" chart-legend="false" chart-series="investment.series" chart-click="onClick" ></canvas></td>
+          <td md-cell> {{investment.numberShares}} </td>
+          <td md-cell> {{investment.profit}} </td>
+          <td md-cell>
+            <div layout="column" ng-cloak>
+              <md-button ng-click="clickSell(investment)" class="md-raised"> Sell </md-button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
+
+  </md-table-container>
+
+  <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{investments.length}}" md-on-paginate="onPaginate" md-page-select></md-table-pagination>
+
+</md-card>
+     <!-- Current Investments View -->
   <div ng-show = "transactionHistoryView"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
   </div>
 
@@ -65,36 +75,33 @@
       <p>openTransaction</p>
     </div>
  -->
-    <table ng-show = 'openTransactionsView'>
-      <tr>
-        <th> Name </th>
-        <th> Current Value </th>
-        <th> Transaction Type </th>
-        <th> Shares </th>
-      </tr>
-      <tr ng-repeat="openTransaction in openTransactions track by $index">
-        <td> {{openTransaction.target_name}} </td>
-        <td> {{openTransaction.currentScore}} </td>
-        <td> {{openTransaction.type}} </td>
-        <td> {{openTransaction.numberShares}}</td>
-        <td>
-          <div layout="column" ng-cloak>
-            <md-content>
-              <md-button ng-click="clickCancel(openTransaction.id, $index)" class="md-raised">Cancel Transaction
-              </md-button>
-            </md-content>
-          </div>
-        </td>
-      </tr>
+
+ <md-card>
+  <md-table-container>
+    <table md-table ng-show="openTransactionsView">
+      <thead md-head>
+        <tr class="table"md-row>
+          <th md-column colspan="10"> Name </th>
+          <th md-column colspan="10"> Current Value </th>
+          <th md-column> Transaction Type </th>
+          <th md-column> Shares </th>
+          <th md-column> Cancel </th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row ng-repeat="openTransaction in openTransactions track by $index">
+          <td md-cell colspan="10"> {{openTransaction.target_name}} </td>
+          <td md-cell colspan="10"> {{openTransaction.currentScore}} </td>
+          <td md-cell colspan="10"> {{openTransaction.type}} </td>
+          <td md-cell colspan="10"> {{openTransaction.numberShares}} </td>
+          <td md-cell>
+            <div layout="column" ng-cloak>
+              <md-button ng-click="clickCancel(openTransaction.id, $index)" class="md-raised"> Cancel Transaction </md-button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
+
+  </md-table-container>
 </div>

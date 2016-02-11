@@ -11,6 +11,11 @@ angular.module('app.portfolio', ["chart.js"])
   $scope.currentInvestmentsView = true;
   $scope.openTransactionsView = false;
   $scope.transactionHistoryView = false;
+  $scope.query = {
+    order: 'name',
+    limit: 1,
+    page: 1
+  };
 
   //Auth check on portfolio view
   Auth.checkLoggedIn().then(function(boolean) {

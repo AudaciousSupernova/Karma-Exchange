@@ -19,9 +19,9 @@ angular.module('app.index', [])
   }
 
   //viewHome redirects the user to the newsfeed
-  $scope.viewHome = function () {
-    $location.path('/newsfeed');
-  }
+  // $scope.viewHome = function () {
+  //   $location.path('/newsfeed');
+  // }
 
   //viewProfile redirects the user to his/her profile
   $scope.viewProfile = function () {

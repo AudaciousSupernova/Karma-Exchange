@@ -1,8 +1,5 @@
 angular.module('app', [
-  'app.profile',
-  'app.newsfeed', 
-  'app.buy', 
-  'app.sell', 
+  'app.profile', 
   'app.portfolio',
   'app.auth',
   'ngRoute', 
@@ -11,7 +8,8 @@ angular.module('app', [
   'app.index', 
   'app.transactionHist',
   'ngMaterial',
-  'chart.js'
+  'chart.js', 
+  'md.data.table'
   ])
 
 //<h3> app.js file that lists all the dependencies for this app along with all the states with corresponding views/controllers </h3>
@@ -26,6 +24,7 @@ angular.module('app', [
       // datasetFill: false
     });
   }])
+  
 .config(function ($routeProvider, $stateProvider, $sceProvider, $urlRouterProvider) {
 
   $stateProvider
@@ -33,12 +32,6 @@ angular.module('app', [
       url: '/', 
       templateUrl: 'app/views/auth.html', 
       controller: 'AuthController',
-      authenticate: true
-    })
-    .state('newsfeed', {
-      url: '/newsfeed', 
-      templateUrl: 'app/views/newsfeed.html', 
-      controller: 'NewsfeedController',
       authenticate: true
     })
     .state('profile', {

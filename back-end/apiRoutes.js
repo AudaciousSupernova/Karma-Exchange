@@ -15,7 +15,14 @@ module.exports = function (app, express) {
 	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
 
 	app.get('/auth/facebook/callback',
-	  passport.authenticate('facebook', { successRedirect: '/#/newsfeed'}));
+	  passport.authenticate('facebook', { successRedirect: '/api/profileOnLogin'})
+  )
+
+  app.get('/api/profileOnLogin', function (req, res) {
+    var id = req.user.id
+    res.redirect('/#/profile/' + id)
+  })
+
 
   app.get('/mobile/login/:token', function(req,res){
     var access_token = req.params.token
