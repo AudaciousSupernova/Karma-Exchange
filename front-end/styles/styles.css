@@ -72,7 +72,7 @@ div.navbar > span {
 }
 
 md-content{
-  background-color: rgb(240, 240, 240); 
+  background-color: rgb(240, 240, 240);
   overflow:hidden;
 }
 
@@ -124,7 +124,7 @@ md-input-container label input {
 
 
 md-input-container:not(.md-input-invalid).md-input-cofused .md-input {
-  
+
 }
 span.dropdown{
   margin-left: -200px;
@@ -135,7 +135,7 @@ span.dropdown{
 	background-color: white;
 	position: fixed;
 	border-radius: 5px;
-	z-index: 10;	
+	z-index: 10;
 	color:black;
 }
 
@@ -165,7 +165,7 @@ td{
 /* Enables Top Leaders (ranked by current score) to scroll across each pg */
 
 .ticker {
- height: 50px;	
+ height: 50px;
  overflow: hidden;
  position: relative;
 }
@@ -178,9 +178,9 @@ td{
  text-align: center;
  /* Starting position */
  -moz-transform:translateX(-100%);
- -webkit-transform:translateX(-100%);	
+ -webkit-transform:translateX(-100%);
  transform:translateX(-100%);
- /* Apply animation to this element */	
+ /* Apply animation to this element */
  -moz-animation: example2 12s linear infinite;
  -webkit-animation: example2 12s linear infinite;
  animation: example2 12s linear infinite;
@@ -195,15 +195,15 @@ td{
  100% { -webkit-transform: translateX(100%); }
 }
 @keyframes example2 {
- 0%   { 
+ 0%   {
  -moz-transform: translateX(-100%); /* Firefox bug fix */
  -webkit-transform: translateX(-100%); /* Firefox bug fix */
- transform: translateX(-100%); 		
+ transform: translateX(-100%);
  }
- 100% { 
+ 100% {
  -moz-transform: translateX(100%); /* Firefox bug fix */
  -webkit-transform: translateX(100%); /* Firefox bug fix */
- transform: translateX(100%); 
+ transform: translateX(100%);
  }
 }
 
@@ -220,13 +220,13 @@ img.center {
 }
 
 .img-circle {
-  border-radius: 50%; 
+  border-radius: 50%;
   width: 100%;
   height: 100%;
 }
 
 .username {
-  text-align: center; 
+  text-align: center;
 }
 
 .currentScore {
@@ -234,11 +234,11 @@ img.center {
 }
 
 .viewReport {
-  text-align: center; 
+  text-align: center;
 }
 
 .floatright {
-  float: right; 
+  float: right;
 }
 
 .buyButton.md-raised {
@@ -274,6 +274,10 @@ table.table {
 
 .search-white {
   margin-right:5px;
+
+md-input-container .md-errors-spacer {
+  min-height:0px;
+  min-width: 0px
 }
 
 

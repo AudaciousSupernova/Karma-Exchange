@@ -1,14 +1,37 @@
-<md-dialog ng-init="checkSharesAvail()">
-  <md-dialog-content>
-   <div> 
-   	<p>How many shares would you like to buy?</p> I would like to buy <input ng-model="sharesToBuy"/> shares of {{profile.name}}
-   	</div>
-
-    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete" ng-hide="revealOptions"> Confirm </md-button>
-
-    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-hide="revealOptions"> Cancel </md-button>
+<md-dialog ng-init="checkSharesAvail()" style="width:30%;">
+  <md-dialog-content layout-padding>
+    <md-content>
+      <div layout="row" layout-align="center center">
+<!--    	    <div layout="column" layout-align="center center">
+          <p>Buy {{profile.name}}?</p>
+        </div> -->
+        <div layout="row" layout-align="center center">
+          <div layout-align="center center">
+            <md-input-container>
+              <label>Amount</label>
+              <input ng-model="sharesToBuy" type="number" step="1" min='0'>
+            </md-input-container>
+          </div>
+          <div layout-align="center start">
+            <p>shares at {{profile.currentScore}} Karma/share</p>
+          </div>
+        </div>
+      </div>
+      <div layout="row" layout-align="center center">
+        <p>Total: {{profile.currentScore * sharesToBuy}}</p>
+      </div>
+    </md-content>
+    <div layout="row" layout-align="center center">
+      <md-button ng-click="confirm()" class="md-primary md-raised" aria-label="Complete" ng-hide="revealOptions" style="background-color:#29a329;">
+        <md-icon md-svg-src="../../styles/assets/ic_done_black_48px.svg"></md-icon>
+      </md-button>
+      <md-button  ng-click="exit()" class="md-primary md-raised" aria-label="Complete" ng-hide="revealOptions" style="background-color: #8c8c8c">
+      <!-- #a6a6a6 -->
+        <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
+      </md-button>
+    </div>
     <p ng-show = "revealOptions">You have selected more shares than are currently available. You have the following options:</p>
- 
+
     <p ng-show = "revealOptions"> You may choose to make a partial purchase of {{availableShares}} shares and allow the rest of your transaction to be completed upon market availability.</p>
 
     <p ng-show = "revealOptions">You may choose to make a partial purchase of {{availableShares}} shares and immediately buy the remaining shares in your order from Karma Exchange at 110% of current market value.</p>
@@ -23,9 +46,6 @@
 
     <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show="revealOptions"> Cancel Your Order</md-button>
 
-
-
-    
   </md-dialog-content>
 
 </md-dialog>
