@@ -1,13 +1,32 @@
 <md-dialog ng-init="checkSharesReq(); getUsersOpenSellTransactionsForTarget()">
-  <md-dialog-content>
-    <div>
-   		<p>Are you sure you want to sell</p> <input ng-model="	sharesToSell" placeholder="{{investment.numberShares}}"/> shares of {{investment.name}}?
-   </div>
+  <md-dialog-content layout-padding>
+  <md-content>
+    <div layout="row" layout-align="center center">
 
-    <md-button ng-click="confirm()" class="md-primary" aria-label="Complete" ng-hide='revealOptions'> Confirm </md-button>
-
-    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-hide='revealOptions'> Cancel </md-button>
-
+      <div layout="row" layout-align="center center">
+        <div layout-align="center center">
+          <md-input-container>
+            <label>Amount</label>
+            <input ng-model="	sharesToSell" type="number" step="1" min="0">
+          </md-input-container>
+        </div>
+        <div layout-align="center start">
+          <p> shares at {{investment.currentScore}} Karma/share?</p>
+        </div>
+      </div>
+    </div>
+    <div layout="row" layout-align="center center">
+      <p>Total: {{investment.currentScore * sharesToSell}}</p>
+    </div>
+    </md-content>
+    <div layout="row" layout-align="center center">
+      <md-button ng-click="confirm()" class="md-primary md-raised" aria-label="Complete" ng-hide='revealOptions' style="background-color:#29a329;">
+        <md-icon md-svg-src="../../styles/assets/ic_done_black_48px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-hide='revealOptions' style="background-color:#8c8c8c;">
+        <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
+      </md-button>
+    </div>
     <p class="errorMessage" ng-show="errorMessage"> You do not own that many shares. Make sure you are not selling shares that are in your pending transactions. Please change the amount of shares you'd like to sell. </p>
 
     <p ng-show='revealOptions'>There are not enough buy requests to sell all of your shares. You have the following options.:</p>

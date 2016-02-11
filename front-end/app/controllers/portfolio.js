@@ -203,7 +203,7 @@ their current stocks.
     $scope.investment = investment;
     $scope.requestedShares;
     $scope.requestedSharesInfo;
-    $scope.sharesToSell;
+    $scope.sharesToSell=0;
     $scope.scores;
     $scope.targetCurrentScore;
     $scope.numSharesInTransactionQueueByUser;
