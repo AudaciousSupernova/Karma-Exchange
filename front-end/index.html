@@ -41,24 +41,22 @@
           </md-input-container>
       </div>
     </md-toolbar>
-        
-    
+    <br><br><br><br>
+    <div class="tickerBorder">
     <div ng-class="{ 'ticker': loggedinUserInfo}" ng-show="loggedinUserInfo">
       <div ng-init='getLeaders()'>Highest Scores:
         <span>{{userOne}}, </span>
         <span>{{userTwo}}</span>
-      </div>
-      <div class="recentTransactions">
-        <span>Most Recent Transactions on Karma Exchange:</span>
+        Most Recent Transactions: 
         <span ng-repeat="transaction in recentTransactions">
-          <span> {{transaction.user_name}} {{transaction.type}}s {{transaction.numberShares}} shares of {{transaction.target_name}} </span>
+          <span> {{transaction.user_name}} {{transaction.type}}s {{transaction.numberShares}} shares of {{transaction.target_name}}, </span>
         </span>
       </div>
     </div>
+    </div>
       <span></span>
       <span></span>
     </div>
-    <div class = "spaceHolder">s</div>
     <script src="libs/angular/angular.min.js"> </script> 
     <div class = "view" ui-view> </div>
 

@@ -97,7 +97,8 @@ a {
 }*/
 
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
-  background:rgb(66, 66, 66)
+  background:rgb(66, 66, 66);
+  opacity: 0.8
 }
 
 
@@ -164,49 +165,35 @@ td{
 	outline: thin solid;
 }*/
 
-/* Enables Top Leaders (ranked by current score) to scroll across each pg */
+/* Enables Top Leaders (ranked by current score) and most Recent Transaction to scroll across each pg */
 
 .ticker {
- height: 50px;
- overflow: hidden;
- position: relative;
+  height: 20px;
+  margin-left: 1%;
+  margin-right: 1%;
+  position: relative;
+  overflow:hidden;
+  padding-top: 4px;
 }
-.ticker {
- position: absolute;
- width: 100%;
- height: 100%;
- margin: 0;
- line-height: 50px;
- text-align: center;
- /* Starting position */
- -moz-transform:translateX(-100%);
- -webkit-transform:translateX(-100%);
- transform:translateX(-100%);
- /* Apply animation to this element */
- -moz-animation: example2 12s linear infinite;
- -webkit-animation: example2 12s linear infinite;
- animation: example2 12s linear infinite;
+
+.ticker div {
+  width:200%;
+  height:30px;
+  position: absolute;
+  overflow:hidden;
+  animation: marquee 10s linear infinite;
 }
-/* Move it (define the animation) */
-@-moz-keyframes example2 {
- 0%   { -moz-transform: translateX(-100%); }
- 100% { -moz-transform: translateX(100%); }
+
+.tickerBorder {
+  border: 2px solid gray;
+  height: 30px;
+  margin-left: 10.0%;
+  margin-right: 10.0%; 
 }
-@-webkit-keyframes example2 {
- 0%   { -webkit-transform: translateX(-100%); }
- 100% { -webkit-transform: translateX(100%); }
-}
-@keyframes example2 {
- 0%   {
- -moz-transform: translateX(-100%); /* Firefox bug fix */
- -webkit-transform: translateX(-100%); /* Firefox bug fix */
- transform: translateX(-100%);
- }
- 100% {
- -moz-transform: translateX(100%); /* Firefox bug fix */
- -webkit-transform: translateX(100%); /* Firefox bug fix */
- transform: translateX(100%);
- }
+
+@keyframes marquee {
+  0% { left: 0; }
+  100% { left: -100%; }
 }
 
 .errorMessage {
