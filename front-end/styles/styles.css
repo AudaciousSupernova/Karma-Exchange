@@ -44,7 +44,6 @@ div.view{
   width: 200px;
   height: 100px;
 }
-
 .right{
   float:right;
   padding-right: 10px;
@@ -329,5 +328,9 @@ md-input-container .md-errors-spacer {
 .dialog {
   background-color: rgb(234,234,234);
 }
+
+
+
+
 
 
