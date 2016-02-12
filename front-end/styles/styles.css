@@ -1,17 +1,48 @@
-/*@font-face {
+@font-face {
   font-family: "sfText";
   src: url("./font.ttf") format("truetype");
-}*/
+}
   /*font-family: 'sfText';*/
 
 
 html, body {
   background-color: rgb(234, 234, 234);
+  font-family: 'sfText';
 }
 div.view{
   width: 80%;
   margin: 0% 10% 0 10%;
   background-color: rgb(234, 234, 234);
+}
+
+.md-display-3{
+  width: 800px;
+  margin: 0px auto;
+  font-size: 80px;
+  color: rgb(66,66,66);
+}
+.splash-logo {
+  width: 200px;
+  margin-left: 39%;
+  margin-right: 39%;
+  opacity:0.4;
+}
+
+.splash-name {
+  text-align: center;
+  opacity:0.6;
+}
+
+.splash-description {
+  text-align: center;
+  font-size: 25px;
+  color: rgb(66,66,66);
+  opacity: 0.6;
+}
+
+.facebook-login {
+  width: 200px;
+  height: 100px;
 }
 
 .right{
@@ -75,7 +106,7 @@ div.navbar > span {
 }
 
 md-content{
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(234, 234, 234);
   overflow:hidden;
 }
 
@@ -101,7 +132,7 @@ a {
 
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
   background:rgb(66, 66, 66);
-  opacity: 0.8
+  opacity: 0.8;
 }
 
 
@@ -208,7 +239,8 @@ td{
 }
 
 img.center {
-  margin-left: 55%;
+  margin-left: 40%;
+  margin-top: 10%;
 }
 
 .img-circle {
@@ -219,12 +251,25 @@ img.center {
 
 .username {
   text-align: center;
+  margin-top: 5%;
+  font-size: 40px;
 }
 
 .currentScore {
   text-align: center;
 }
 
+.isNegative {
+  color: red;
+  font-size: 30px;
+  text-align: center;
+}
+
+.positive {
+  color:green;
+  font-size: 30px;
+  text-align: center;
+}
 .viewReport {
   text-align: center;
 }
@@ -274,5 +319,9 @@ md-input-container .md-errors-spacer {
 .dialog {
   background-color: rgb(234,234,234);
 }
+
+
+
+
 
 

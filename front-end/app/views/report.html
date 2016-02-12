@@ -1,12 +1,16 @@
 <md-dialog>
   <md-dialog-content>
    <div> 
-    <p> User {{user.name}} has the following current statistics </p>
-    <p> Current score is {{user.currentScore}}. </p>
-    <p> Current social score is {{user.social}}. </p>
-    <p> Expected social score change was {{user.last_week_expected_social_change}} </p>
-    <p> Actual social score change was {{user.last_week_actual_social_change}} </p>
-    <p> Next week's expected social score change is {{user.next_week_expected_social_change}} </p>
+    <h2 style="text-align:center;color:rgb(66,66,66)"> <b>Score Breakdown</b> </h2>
+    <span style=> Current score is </span><span style="color:rgb(225,78,78);font-size:30px"> {{user.currentScore}} </span>
+    <br><br>
+    <span> Current social score is </span> <span style="color:rgb(225,78,78);font-size:30px">{{user.social}} </span>
+    <br><br>
+    <span> Expected social score change was </span><span style="color:rgb(225,78,78);font-size:30px"> {{user.last_week_expected_social_change}} </span>
+    <br><br>
+    <span> Actual social score change was </span> <span style="color:rgb(225,78,78);font-size:30px">{{user.last_week_actual_social_change}} </span>
+    <br><br>
+    <span> Next week's expected social score change is </span> <span style="color:rgb(225,78,78);font-size:30px"> {{user.next_week_expected_social_change}} </span>
     </div>
 
     <md-button ng-click="exit()" class="md-primary" aria-label="Complete"> Close Report </md-button>

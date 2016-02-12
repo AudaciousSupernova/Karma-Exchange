@@ -10,7 +10,9 @@ angular.module('app.profile', [])
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
-  $scope.isUser = false;
+  $scope.isUser = false; 
+  $scope.isPositive = false;
+  $scope.changeDisplay;
 
   //Button press calls this function that retrieves the profile user's latest Facebook score.
   $scope.getFacebookData = function() {
@@ -30,6 +32,19 @@ angular.module('app.profile', [])
         }
         if ($scope.user.email === null) {
           $scope.user.email = "No Email Provided";
+        }
+
+        if ($scope.user.last_week_actual_social_change !== "0%") {
+          $scope.changeDisplay = Number($scope.user.last_week_actual_social_change).toFixed(2);
+        } else if ($scope.user.last_week_actual_social_change === "0%") {
+          $scope.changeDisplay = 0;
+        }
+        if ($scope.changeDisplay >= 0) {
+          $scope.changeDisplay = "+ " + $scope.changeDisplay.toString();
+          $scope.isPositive = true;
+          console.log("is it positive", $scope.isPositive)
+        } else if ($scope.changeDisplay < 0) {
+          $scope.changeDisplay = $scope.changeDisplay.toString();
         }
         var date = new Date();
         console.log("ID's",$scope.user.id,$rootScope.loggedinUserInfo.id)

@@ -27,7 +27,7 @@
             <md-icon md-png-src="./styles/assets/search.png"></md-icon>
             <input ng-model = "searchQuery" ng-change = "findUsersByPartial()" type="text"/>
             <div ng-repeat = "user in searchResults" ng-click = "resetSearch()">
-              <md-card flex style="min-width:200px">
+              <md-card flex style="min-width:200px;background-color:white">
                 <a href="/#/profile/{{user.id}}">
                   <md-card-content>
                 <span> <img class="searchimage" src="{{user.profile_photo}}"> </span>
@@ -61,8 +61,8 @@
     <div class = "view" ui-view> </div>
 
     <md-toolbar layout="row" ng-show="loggedinUserInfo">
-    <span class="logo"> karma exchange. </span>
-      <div flex>
+    <span style="padding-top:8px"class="logo"> learn more about karma exchange. </span>
+      <div flex style="padding-top:8px">
         <span flex></span>
         <md-button class="footer" ng-click="viewProfile()" class="md-warn">  About Us  
          </md-button>

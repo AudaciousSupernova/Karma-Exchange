@@ -4,19 +4,21 @@
   <md-card flex="40" style="height: 300px;">
     <md-card-title style="margin-bottom: 20px;">
       <md-card-title-media>
-        <img class="img-circle center" ng-src="{{ user.profile_photo }}"/>
+        <img class="img-circle center" style="width:200px;height:220px" ng-src="{{ user.profile_photo }}"/>
       </md-card-title-media>
     </md-card-title>
   </md-card>
   <!-- 2nd CARD -->
   <md-card flex="60" style="height: 300px;">
-    <md-card-title style="margin-bottom: 20px;">
+    <md-card-title>
       <md-card-title-text>
         <span class="md-headline username">{{ user.name }}</span>
-        <span class="md-subhead currentScore">Current Score: {{ user.currentScore }}
+        <br>
+        <span class="isNegative"ng-class="{'positive': isPositive}">{{changeDisplay}} </span>
+        <span class="md-subhead score currentScore" style="font-size:25px">Score: {{ user.currentScore }}
           <md-button class="buyButton md-raised" ng-show="!isUser" ng-click="clickBuy()">Buy</md-button>
         </span>
-        <span class="md-subhead viewReport"><md-button ng-show="wednesday || isUser" ng-click="clickReport()" class="buyButton md-raised"> View Report </md-button></span>
+        <span class="md-subhead viewReport"><md-button ng-show="wednesday || isUser" ng-click="clickReport()" class="buyButton md-raised"> Score Breakdown </md-button></span>
       </md-card-title-text>
     </md-card-title>
   </md-card>
