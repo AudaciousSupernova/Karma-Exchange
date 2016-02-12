@@ -8,6 +8,7 @@ var session = require('express-session');
 var transactionUtil = require('./utils/transactionUtil');
 var scoresUtil = require('./utils/scoresUtil');
 var socket = require('./socket.js');
+var cors = require('cors');
 //adding in socket.io dependency
 
 
@@ -54,11 +55,11 @@ var socket = require('./socket.js');
 // mainController.addScore(sampleScoreObj, console.log)
 // mainController.getScores(243, console.log)
 
-
 app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/../front-end'));
+app.use(cors());
 
 //this listens to all socket events from socket.js on connection
 
