@@ -70,6 +70,10 @@ div.navbar > span {
   color: rgb((92,91,91));
 }
 
+.modal-selector {
+  background-color: white;
+}
+
 md-content{
   background-color: rgb(240, 240, 240);
   overflow:hidden;
@@ -267,6 +271,8 @@ md-input-container .md-errors-spacer {
   min-height:0px;
   min-width: 0px
 }
-
+.dialog {
+  background-color: rgb(234,234,234);
+}
 
 
