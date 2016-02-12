@@ -222,6 +222,8 @@ td{
   position: absolute;
   overflow:hidden;
   animation: marquee 10s linear infinite;
+  font-weight: bold;
+  font-style: italic;
 }
 
 .tickerBorder {
