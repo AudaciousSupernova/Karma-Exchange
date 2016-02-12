@@ -59,6 +59,9 @@ div.view{
   border: 0.1px solid white;
 }
 
+.selectedProfile {
+  background-color:rgb(225, 78, 78);
+}
 
 
 .fortune {
@@ -69,6 +72,9 @@ div.view{
   border: 0.1px solid white;
 }
 
+.selectedFortune {
+  background-color: rgb(225,78,78);
+}
 
 .fixed {
   position:fixed;
@@ -281,10 +287,12 @@ img.center {
 .buyButton.md-raised {
   background-color: rgb(225, 78, 78);
   color: white;
+  opacity: 0.8;
 }
 .md-button.md-raised:not([disabled]):hover {
   background-color: rgb(275, 100, 100);
 }
+
 
 .table {
   border: 1px solid gray;

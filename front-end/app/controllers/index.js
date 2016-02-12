@@ -7,7 +7,8 @@ angular.module('app.index', [])
   $scope.searchQuery = "";
   $scope.transactions = [];
   $scope.recentTransactions; 
-
+  $scope.selectedProfile = true;
+  $scope.selectedFortune = false;
 
   //getUserById finds a user in the database by passing a sql id
   $scope.getUserById = function(id) {
@@ -25,11 +26,15 @@ angular.module('app.index', [])
 
   //viewProfile redirects the user to his/her profile
   $scope.viewProfile = function () {
+    $scope.selectedProfile = true;
+    $scope.selectedFortune = false;
     $location.path('/profile/' + $rootScope.loggedinUserInfo.id);
   }
 
   //viewPortfolio redirects the user to his/her fortune page
   $scope.viewPortfolio = function () {
+    $scope.selectedFortune = true;
+    $scope.selectedProfile = false;
     $location.path('/portfolio/' + $rootScope.loggedinUserInfo.id);
   }
 

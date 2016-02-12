@@ -18,9 +18,9 @@
     <span class="karma"> {{loggedinUserInfo.karma}} </span>
       <div flex>
         <span flex></span>
-        <md-button class="profile" ng-click="viewProfile()">  Profile  
+        <md-button class="profile" ng-click="viewProfile()" ng-class="{'selectedProfile': selectedProfile}">  Profile  
          </md-button>
-        <md-button class="fortune" ng-click="viewPortfolio()" class="md-accent">  Fortune  </md-button>
+        <md-button class="fortune" ng-click="viewPortfolio()" class="md-accent" ng-class="{'selectedFortune': selectedFortune}">  Fortune  </md-button>
         <md-button class="navBar logout right" ng-click="logout()" > Logout </md-button>
           <md-input-container class="right md-warn md-hue-1">
             <label><img class="search-white" src="./styles/assets/search_white2.png"> </label>
