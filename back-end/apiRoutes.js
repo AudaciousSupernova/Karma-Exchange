@@ -25,6 +25,7 @@ module.exports = function (app, express) {
 
 
   app.get('/mobile/login/:token', function(req,res){
+    console.log("logging in mobile user")
     var access_token = req.params.token
     fbRequests.getFacebookProfileFromAccessToken(access_token, function(err, fbUserObject){
       if(err){
@@ -37,6 +38,7 @@ module.exports = function (app, express) {
             var token = jwt.sign(userObj, 'supernova', {
               expiresIn: "1d"
             });
+            console.log("token", token)
             res.send({token: token,
                       userObj: userObj})
           }
