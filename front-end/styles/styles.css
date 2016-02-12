@@ -1,17 +1,48 @@
-/*@font-face {
+@font-face {
   font-family: "sfText";
   src: url("./font.ttf") format("truetype");
-}*/
+}
   /*font-family: 'sfText';*/
 
 
 html, body {
   background-color: rgb(234, 234, 234);
+  font-family: 'sfText';
 }
 div.view{
   width: 80%;
   margin: 0% 10% 0 10%;
   background-color: rgb(234, 234, 234);
+}
+
+.md-display-3{
+  width: 800px;
+  margin: 0px auto;
+  font-size: 80px;
+  color: rgb(66,66,66);
+}
+.splash-logo {
+  width: 200px;
+  margin-left: 39%;
+  margin-right: 39%;
+  opacity:0.4;
+}
+
+.splash-name {
+  text-align: center;
+  opacity:0.6;
+}
+
+.splash-description {
+  text-align: center;
+  font-size: 25px;
+  color: rgb(66,66,66);
+  opacity: 0.6;
+}
+
+.facebook-login {
+  width: 200px;
+  height: 100px;
 }
 
 .right{
@@ -22,12 +53,15 @@ div.view{
 .profile {
   background-color: rgb(66, 66, 66);
   color: white;
-  margin-left: 27%;
+  margin-left: 2%;
   margin-top: 1.5%;
   font-size: 15px;
   border: 0.1px solid white;
 }
 
+.selectedProfile {
+  background-color:rgb(225, 78, 78);
+}
 
 
 .fortune {
@@ -38,6 +72,9 @@ div.view{
   border: 0.1px solid white;
 }
 
+.selectedFortune {
+  background-color: rgb(225,78,78);
+}
 
 .fixed {
   position:fixed;
@@ -75,7 +112,7 @@ div.navbar > span {
 }
 
 md-content{
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(234, 234, 234);
   overflow:hidden;
 }
 
@@ -101,15 +138,15 @@ a {
 
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
   background:rgb(66, 66, 66);
-  opacity: 0.8
+  opacity: 0.8;
 }
 
 
 md-input-container {
   font-size: 14px;
   max-height: 20px;
-  max-width: 150px;
-  margin-right: 27%;
+  max-width: 240px;
+  margin-right: 3%;
 }
 md-input-container:not(.md-input-has-value) input:not(:focus), md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-ampm-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-day-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-hour-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-millisecond-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-minute-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-month-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-second-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-week-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-year-field, md-input-container:not(.md-input-has-value) input:not(:focus)::-webkit-datetime-edit-text {
   border-color: white;
@@ -208,7 +245,8 @@ td{
 }
 
 img.center {
-  margin-left: 55%;
+  margin-left: 40%;
+  margin-top: 10%;
 }
 
 .img-circle {
@@ -219,12 +257,25 @@ img.center {
 
 .username {
   text-align: center;
+  margin-top: 5%;
+  font-size: 40px;
 }
 
 .currentScore {
   text-align: center;
 }
 
+.isNegative {
+  color: red;
+  font-size: 30px;
+  text-align: center;
+}
+
+.positive {
+  color:green;
+  font-size: 30px;
+  text-align: center;
+}
 .viewReport {
   text-align: center;
 }
@@ -236,10 +287,12 @@ img.center {
 .buyButton.md-raised {
   background-color: rgb(225, 78, 78);
   color: white;
+  opacity: 0.8;
 }
 .md-button.md-raised:not([disabled]):hover {
   background-color: rgb(275, 100, 100);
 }
+
 
 .table {
   border: 1px solid gray;
@@ -260,7 +313,6 @@ table.table {
 
 .footer {
   margin-left: 1%;
-  margin-top: 1%;
   border: 1px solid white;
 }
 

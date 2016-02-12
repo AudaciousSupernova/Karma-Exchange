@@ -1,22 +1,12 @@
 angular.module('app.auth', [])
 
-.controller('AuthController', function ($scope, $location, Auth) {
-  $scope.test = "hello testing auth";
+.controller('AuthController', function ($scope, $location, Auth, $rootScope) {
 
-
-  // Auth.checkLoggedIn().then(function(loggedIn) {
-  //   console.log(loggedIn,"what is logged in")
-  //   if (loggedIn === false) {
-  //     $location.path('/')
-  //   } else {
-  //     $location.path('/#/newsfeed')
-  //   }
-  // })
-  
-
-  // if (!Auth.isAuth()) {
-  //   $location.path('/signin');
-  // } else {
-  //   $scope.getQuestion();
-  // }
+  Auth.checkLoggedIn().then(function(boolean) {
+    if (boolean === false) {
+      $location.path('/')
+    } else {
+      $location.path('/profile/' + $rootScope.loggedinUserInfo.id)
+    }
+  })
 });
