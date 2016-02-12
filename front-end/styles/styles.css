@@ -224,6 +224,7 @@ td{
   animation: marquee 10s linear infinite;
   font-weight: bold;
   font-style: italic;
+  color: black;
 }
 
 .tickerBorder {
