@@ -49,14 +49,14 @@ module.exports = function (app, express) {
 
   app.get('/mobile/loggedin/:sessionToken', function (req, res){
     var token = req.params.sessionToken
- 
-    jwt.verify(token, 'supernova' , function(err, decoded) {      
+
+    jwt.verify(token, 'supernova' , function(err, decoded) {
       if (err) {
         console.log("Error in mobile login, failed to authenticate token")
-        res.send({loggedin: false, message: 'Failed to authenticate token.' });    
+        res.send({loggedin: false, message: 'Failed to authenticate token.' });
       } else {
         // if everything is good, save to request for use in other routes
-        res.send({loggedin: true})    
+        res.send({loggedin: true})
       }
     });
   })
@@ -185,7 +185,7 @@ module.exports = function (app, express) {
     res.send(201);
   })
 
-  //Get all recent transactions
+  //Responds with an array contiaining all transactions
   app.get('/transaction/all/', function (req, res) {
     mainController.getAllTransactions(function (err, transactions) {
       if (err) {
@@ -218,6 +218,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Gets the
   app.get('/transaction/queueSells', function (req, res) {
     var target_id = req.param('target_id');
     var user_id = req.param('user_id');

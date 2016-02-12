@@ -2,7 +2,6 @@
   <md-dialog-content layout-padding>
     <md-content>
       <div layout="row" layout-align="center center">
-
         <div layout="row" layout-align="center center">
           <div layout-align="center center">
             <md-input-container>
@@ -28,22 +27,54 @@
         <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
       </md-button>
     </div>
-    <p ng-show = "revealOptions">You have selected more shares than are currently available. You have the following options:</p>
+    <p ng-show="revealOptions">There are {{availableShares}} shares available.</p>
+    <div layout="column" layout-align="center start">
 
-    <p ng-show = "revealOptions"> You may choose to make a partial purchase of {{availableShares}} shares and allow the rest of your transaction to be completed upon market availability.</p>
+      <div layout="row" layout-align="center center">
+        <div layout="column" layout-align="center start">
+          <p ng-show="revealOptions">Buy {{availableShares}} now and buy the rest later.</p>
+        </div>
+        <div layout="column" layout-align="center end">
+          <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show="revealOptions" style="background-color:#29a329;">
+            <md-icon md-svg-src="../../styles/assets/ic_watch_later_black_24px.svg"></md-icon>
+          </md-button>
+        </div>
+      </div>
 
-    <p ng-show = "revealOptions">You may choose to make a partial purchase of {{availableShares}} shares and immediately buy the remaining shares in your order from Karma Exchange at 110% of current market value.</p>
+      <div layout="row" layout-align="center center">
+        <div layout="column" layout-align="center start">
+          <p ng-show="revealOptions" style="margin-right: 50%;">Buy {{availableShares}} shares and pay 110% market value for the remaining {{sharesToBuy - availableShares}} shares.</p>
+        </div>
+        <div layout="column" layout-align="center end">
+          <md-button class="md-primary md-raised" ng-click="buyDirect()" aria-label="Complete" ng-show="revealOptions" style="background-color:#29a329; margin-left:-20%;">
+            <md-icon md-svg-src="../../styles/assets/ic_done_black_48px.svg"></md-icon>
+          </md-button>
+        </div>
+      </div>
 
-    <p ng-show="revealOptions">Or you may cancel your request</p>
+      <div layout="row" layout-align="center center">
+        <div layout="column" layout-align="center start">
+          <p ng-show="revealOptions">Or you may cancel your request.</p>
+        </div>
+        <div layout="column" layout-align="center end">
+          <md-button class="md-primary md-raised" ng-click="exit()" aria-label="Complete" ng-show="revealOptions" style="background-color: #8c8c8c;">
+            <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
+          </md-button>
+        </div>
+      </div>
 
+    </div>
     <p class="errorMessage" ng-show="errorMessage"> Sorry, you do not have enough karma. Please change the amount of shares you'd like to buy. </p>
 
-    <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show="revealOptions"> Wait For Availability</md-button>
 
-    <md-button class="md-primary" ng-click="buyDirect()" aria-label="Complete" ng-show="revealOptions"> Buy From Karma Exchange</md-button>
+<!--     <div layout="row" layout-align="center center">
 
-    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show="revealOptions"> Cancel Your Order</md-button>
-
+      <md-button class="md-primary md-raised" ng-click="buyDirect()" aria-label="Complete" ng-show="revealOptions" style="background-color:#29a329;">
+        <md-icon md-svg-src="../../styles/assets/ic_done_black_48px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-primary md-raised" ng-click="exit()" aria-label="Complete" ng-show="revealOptions" style="background-color: #8c8c8c;">
+        <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
+      </md-button>
+    </div> -->
   </md-dialog-content>
-
 </md-dialog>

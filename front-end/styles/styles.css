@@ -9,14 +9,13 @@ html, body {
   background-color: rgb(234, 234, 234);
 }
 div.view{
-	width: 80%;
-	margin: 0% 10% 0 10%;
+  width: 80%;
+  margin: 0% 10% 0 10%;
   background-color: rgb(234, 234, 234);
 }
 
-
 .right{
-	float:right;
+  float:right;
   padding-right: 10px;
 }
 
@@ -112,7 +111,7 @@ md-input-container:not(.md-input-has-value) input:not(:focus), md-input-containe
   border-color: white;
 }
 
-md-input-container .md-input-focused {
+md-input-container:{
   border-color: red;
 }
 md-input-container label {
@@ -133,13 +132,13 @@ span.dropdown{
   margin-left: -200px;
   margin-top: 25px;
   width: 300px;
-	max-height: 400px;
-	overflow: auto;
-	background-color: white;
-	position: fixed;
-	border-radius: 5px;
-	z-index: 10;
-	color:black;
+  max-height: 400px;
+  overflow: auto;
+  background-color: white;
+  position: fixed;
+  border-radius: 5px;
+  z-index: 10;
+  color:black;
 }
 
 .logout {
@@ -147,7 +146,7 @@ span.dropdown{
 }
 
 td{
-	text-align: center;
+  text-align: center;
 }
 
 .fb-test {
@@ -162,7 +161,7 @@ td{
 }
 
 /*tr, td, th{
-	outline: thin solid;
+  outline: thin solid;
 }*/
 
 /* Enables Top Leaders (ranked by current score) and most Recent Transaction to scroll across each pg */
@@ -268,5 +267,6 @@ md-input-container .md-errors-spacer {
   min-height:0px;
   min-width: 0px
 }
+
 
 
