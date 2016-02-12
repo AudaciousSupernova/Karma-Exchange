@@ -1,6 +1,6 @@
-<md-dialog ng-init="checkSharesReq(); getUsersOpenSellTransactionsForTarget()">
-  <md-dialog-content layout-padding>
-  <md-content>
+<md-dialog ng-init="checkSharesReq(); getUsersOpenSellTransactionsForTarget()" style="width:30%">
+  <md-dialog-content layout-padding class="dialog">
+  <md-content class="modal-selector">
     <div layout="row" layout-align="center center">
 
       <div layout="row" layout-align="center center">
@@ -27,22 +27,23 @@
         <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
       </md-button>
     </div>
-    <p class="errorMessage" ng-show="errorMessage"> You do not own that many shares. Make sure you are not selling shares that are in your pending transactions. Please change the amount of shares you'd like to sell. </p>
-
-    <p ng-show='revealOptions'>There are not enough buy requests to sell all of your shares. You have the following options.:</p>
-
-    <p ng-show='revealOptions'>You may choose to make a partial sale of your shares and allow the rest of your transaction to be completed upon market demand.</p>
-
-    <p ng-show='revealOptions'>You may choose to choose to make a partial sale of your shares and immediately sell the remaining shares in your transaction to Karma Exchange at 90% of current market value.</p>
-
-    <p ng-show='revealOptions'>Or you may cancel your request</p>
-
-    <md-button class="md-primary" ng-click="wait()" aria-label="Complete" ng-show='revealOptions'> Wait For Availability</md-button>
-
-    <md-button class="md-primary" ng-click="sellDirect()" aria-label="Complete" ng-show='revealOptions'> Sell to Karma Exchange</md-button>
-
-    <md-button class="md-primary" ng-click="exit()" aria-label="Complete" ng-show='revealOptions'> Cancel Your Sale</md-button>
-
+    <div layout="column" layout-align="center start">
+      <p ng-show='revealOptions'>There are not enough buy requests to sell all of your shares. You have the following options.:</p>
+      <p ng-show='revealOptions'>Sell {{requestedShares}} now and make the rest available to buy.</p>
+      <p ng-show='revealOptions'>Sell {{requestedShares}} now and recieve 90% market value for the remaining {{sharesToSell - requestedShares}} shares.</p>
+      <p ng-show='revealOptions'>Or you may cancel your request</p>
+    </div>
+    <div layout="row" layout-align="center center">
+      <md-button class="md-primary md-raised" ng-click="wait()" aria-label="Complete" ng-show='revealOptions' style="background-color:#29a329;">
+        <md-icon md-svg-src="../../styles/assets/ic_watch_later_black_24px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-primary md-raised" ng-click="sellDirect()" aria-label="Complete" ng-show='revealOptions' style="background-color:#29a329;">
+        <md-icon md-svg-src="../../styles/assets/ic_done_black_48px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-primary md-raised" ng-click="exit()" aria-label="Complete" ng-show="revealOptions" style="background-color: #8c8c8c;">
+        <md-icon md-svg-src="../../styles/assets/ic_close_black_48px.svg"></md-icon>
+      </md-button>
+    </div>
+    <p class="errorMessage" ng-show="errorMessage"> You do not own that many shares. Make sure you are not selling shares in your pending transactions.</p>
   </md-dialog-content>
-
 </md-dialog>

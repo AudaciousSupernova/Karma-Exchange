@@ -10,7 +10,7 @@ angular.module('app.profile', [])
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
-  $scope.isUser = false; 
+  $scope.isUser = false;
 
   //Button press calls this function that retrieves the profile user's latest Facebook score.
   $scope.getFacebookData = function() {
@@ -45,7 +45,7 @@ angular.module('app.profile', [])
   // getScores grabs all scores associated with the profile id
   $scope.getScores = function () {
     $scope.series = ["Total Score", "Social Score"];
-    
+
     Scores.getScores($scope.profileId)
     .then(function (results) {
       for(var i = 0; i < results.length; i++){
@@ -110,6 +110,7 @@ angular.module('app.profile', [])
     $scope.profile = profile;
     $scope.score = $rootScope.loggedinUserInfo.currentScore;
     $scope.sharesToBuy = 0;
+    $scope.buyingOneShare = $scope.sharesToBuy <= 1;
     $scope.availableShares;
     $scope.availableSharesInfo;
     $scope.revealOptions = false;
@@ -222,7 +223,6 @@ angular.module('app.profile', [])
       TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
         $scope.availableShares = response[0];
         $scope.availableSharesInfo = response[1][0];
-        console.log($scope.availableSharesInfo, 'availableSharesInfo')
       });
     }
 
