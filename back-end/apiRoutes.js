@@ -134,7 +134,7 @@ module.exports = function (app, express) {
       if (err) {
         console.log('error on leaders/top users', err);
       } else {
-        // console.log("These are my results", results);
+        console.log("These are my results", results);
         res.send(results);
       }
     })
@@ -192,7 +192,6 @@ module.exports = function (app, express) {
         console.log("Was unable to get all transactions", err);
       } else {
         transactions.forEach(function(transaction, index) {
-          console.log("what is my index", index);
           mainController.findUserById(transaction.user_id, function(err, user) {
             transaction.user_name = user[0].name;
             mainController.findUserById(transaction.target_id, function(err, target) {

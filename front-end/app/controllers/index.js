@@ -45,7 +45,7 @@ angular.module('app.index', [])
   $scope.getAllTransactions = function() {
     TransactionHist.getAllTransactions()
     .then(function(results) {
-      $scope.recentTransactions = results.slice(0, 9); 
+      $scope.recentTransactions = results; 
     })
   }
 
@@ -90,6 +90,7 @@ angular.module('app.index', [])
       //Socket listener for latest transactions
       Socket.on('transaction', function(transaction) {
         $scope.transactions.unshift(transaction.transaction.transaction);
+        $scope.transactions.pop();
       })
     }
   })
