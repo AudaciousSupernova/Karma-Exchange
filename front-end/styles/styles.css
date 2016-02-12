@@ -330,4 +330,11 @@ md-input-container .md-errors-spacer {
   background-color: rgb(234,234,234);
 }
 
+.mobile {
+  display:block;
+}
+
+div.auth{
+  background-color: black;
+}
 
