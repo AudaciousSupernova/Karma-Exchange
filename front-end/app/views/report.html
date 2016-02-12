@@ -1,19 +1,17 @@
-<md-dialog>
-  <md-dialog-content>
-   <div> 
-    <h2 style="text-align:center;color:rgb(66,66,66)"> <b>Score Breakdown</b> </h2>
-    <span style=> Current score is </span><span style="color:rgb(225,78,78);font-size:30px"> {{user.currentScore}} </span>
-    <br><br>
-    <span> Current social score is </span> <span style="color:rgb(225,78,78);font-size:30px">{{user.social}} </span>
-    <br><br>
-    <span> Expected social score change was </span><span style="color:rgb(225,78,78);font-size:30px"> {{user.last_week_expected_social_change}} </span>
-    <br><br>
-    <span> Actual social score change was </span> <span style="color:rgb(225,78,78);font-size:30px">{{user.last_week_actual_social_change}} </span>
-    <br><br>
-    <span> Next week's expected social score change is </span> <span style="color:rgb(225,78,78);font-size:30px"> {{user.next_week_expected_social_change}} </span>
-    </div>
+<md-dialog style="background-color:rgb(234,234,234);width:30%;height:65%">
 
-    <md-button ng-click="exit()" class="md-primary" aria-label="Complete"> Close Report </md-button>
-  </md-dialog-content>
+    <div>
+    <md-list >
+    <h2 class="md-display-1" style="text-align:center;"> <b>Score Breakdown</b> </h2>
+      <md-list-item class="md-1-line" ng-repeat="detail in reportUser">
+        <div class="md-list-item-text">
+        {{detail}}
+        </div>
+        <md-divider> </md-divider>
+      </md-list-item>
+    </md-list>
+</div>
+
+    <md-button ng-click="exit()" class="md-primary closeReport" style="background-color:rgb(66,66,66);color:white;opacity:0.6" aria-label="Complete"> Close Report </md-button>
 
 </md-dialog>

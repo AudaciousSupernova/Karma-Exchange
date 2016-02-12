@@ -1,14 +1,12 @@
 <div ng-module="app.portfolio" ng-controller="PortfolioController as ctrl">
 
 
-  <h2 ng-show = "currentInvestmentsView"> Current Investments </h2>
-  <h2 ng-show = "transactionHistoryView"> Transaction History </h2>
-  <h2 ng-show = "openTransactionsView"> Open Transactions </h2>
+  <h2 ng-show = "currentInvestmentsView" class="md-display-2"> Current Investments </h2>
+  <h2 ng-show = "transactionHistoryView" class="md-display-2"> Transaction History </h2>
+  <h2 ng-show = "openTransactionsView" class="md-display-2"> Open Transactions </h2>
     <md-button class="md-raised" ng-click = "toggleViews('currentInvestments')">Show Current Investments</md-button>
     <md-button class="md-raised" ng-click = "toggleViews('transactionHistory')">Show Transaction History</md-button>
     <md-button class="md-raised" ng-click = "toggleOpenTransactions()">Show Open Transactions</md-button>
- <br/>
- <br/>
  <br/>
  <md-card>
   <md-table-container>
@@ -41,33 +39,45 @@
 
   </md-table-container>
 
-  <md-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{investments.length}}" md-on-paginate="onPaginate" md-page-select></md-table-pagination>
-
 </md-card>
      <!-- Current Investments View -->
   <div ng-show = "transactionHistoryView"><span><md-button ng-click = "tableVersion = false" class="md-raised">Human friendly Version</md-button><md-button ng-click = "tableVersion = true" class="md-raised">Table version</md-button></span>
   </div>
 
     <!-- Transaction History View -->
-    <table>
-    <div ng-repeat="transaction in transactions" ng-init = "buildHistString(transaction)" ng-show = "transactionHistoryView && !tableVersion">
-      <p>{{transaction.string}}</p>
-    </div>
+    <md-list>
+      <md-list-item class="md-2-line" ng-repeat="transaction in transactions" ng-init="buildHistString(transaction)" ng-show="transactionHistoryView && !tableVersion">
+        <div class="md-list-item-text">
+          <h3>{{transaction.string}}</h3>
+        </div>
+        <md-divider ng-if="!$last"></md-divider>
+      </md-list-item>
+    </md-list>
 
-    <table ng-show = 'transactionHistoryView &&tableVersion'>
-      <tr>
-        <th> Name </th>
-        <th> Transaction Type </th>
-        <th> Shares </th>
-        <th> Karma </th>
-      </tr>
-      <tr ng-repeat="transaction in transactions">
-        <td> {{transaction.target_name}} </td>
-        <td> {{transaction.type}} </td>
-        <td> {{transaction.numberShares}}</td>
-        <td> {{transaction.karma}} </td>
-      </tr>
+     <md-card>
+  <md-table-container>
+    <table md-table ng-show="transactionHistoryView && tableVersion">
+      <thead md-head class="table">
+        <tr md-row class="table">
+          <th md-column colspan="10"> Name </th>
+          <th md-column colspan="10"> Transaction Type </th>
+          <th md-column> Shares </th>
+          <th md-column> Karma </th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row ng-repeat="transaction in transactions">
+          <td md-cell colspan="10"> {{transaction.target_name}} </td>
+          <td md-cell colspan="10"> {{transaction.type}} </td>
+          <td md-cell colspan="10"> {{transaction.numberShares}} </td>
+          <td md-cell colspan="10"> {{transaction.karma}} </td>
+        </tr>
+      </tbody>
     </table>
+
+  </md-table-container>
+
+</md-card>
 
 <!-- Open Transactions View -->
 <!--   <div ng-repeat="openTransaction in openTransactions" ng-init = "" ng-show = "openTransactionsView && !tableVersion">

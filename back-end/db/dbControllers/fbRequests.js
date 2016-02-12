@@ -209,8 +209,8 @@ var updateScores = function(newScore, social_subScores, user) {
                 generalVelocity = linearRegression(generalYVals, generalXVals).slope;
                 console.log("The recent velocity of " + user.name + " is: ", recentVelocity);
                 console.log("The general velocity of " + user.name + " is: ", generalVelocity);
-                user.last_week_actual_social_change = JSON.stringify(recentVelocity);
-                user.next_week_expected_social_change = JSON.stringify((0.6*recentVelocity + 0.4*generalVelocity));
+                user.last_week_actual_social_change = JSON.stringify(recentVelocity.toFixed());
+                user.next_week_expected_social_change = JSON.stringify((0.6*recentVelocity + 0.4*generalVelocity).toFixed());
                 mainController.updateUser(user, function(err, results) {
                   if (err) {
                     console.log("Unable to update user", err);

@@ -13,6 +13,7 @@ angular.module('app.profile', [])
   $scope.isUser = false; 
   $scope.isPositive = false;
   $scope.changeDisplay;
+  $scope.reportUser = [];
 
   //Button press calls this function that retrieves the profile user's latest Facebook score.
   $scope.getFacebookData = function() {
@@ -54,6 +55,12 @@ angular.module('app.profile', [])
           $scope.isUser = true;
         }
         $scope.getScores();
+        $scope.reportUser.push("Current score is: " + $scope.user.currentScore);
+        $scope.reportUser.push("Social score is: " + $scope.user.social);
+        $scope.reportUser.push("Expected social change was: " + $scope.user.last_week_expected_social_change);
+        $scope.reportUser.push("Actual social change was: " + $scope.user.last_week_actual_social_change);
+        $scope.reportUser.push("Next week expected social change is: " + $scope.user.next_week_expected_social_change);
+        console.log("here is the report user", $scope.reportUser, typeof $scope.reportUser);
       })
   }
 
@@ -111,7 +118,8 @@ angular.module('app.profile', [])
     $mdDialog.show({
       templateUrl: '../app/views/report.html',
       locals: {
-        user: $scope.user
+        user: $scope.user, 
+        reportUser: $scope.reportUser
       },
       controller: ReportModalController
     })
@@ -249,8 +257,10 @@ angular.module('app.profile', [])
   }
 
   //<h3> ReportModalController Function </h3>
-  function ReportModalController($scope, $mdDialog, user) {
+  function ReportModalController($scope, $mdDialog, user, reportUser) {
     $scope.user = user;
+    $scope.reportUser = reportUser;
+
     //Exit closes the Report modal
     $scope.exit = function() {
       $mdDialog.hide();
