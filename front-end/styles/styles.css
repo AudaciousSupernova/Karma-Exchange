@@ -10,9 +10,9 @@ html, body {
   font-family: 'sfText';
 }
 div.view{
-  width: 80%;
-  margin: 0% 10% 0 10%;
-  background-color: rgb(234, 234, 234);
+  width: 100%;
+  height:70%;
+  background-color: red;
 }
 
 .md-display-3{
@@ -329,8 +329,10 @@ md-input-container .md-errors-spacer {
   background-color: rgb(234,234,234);
 }
 
-
-
+.team-member {
+  width:10px;
+  height:10px;
+}
 
 
 

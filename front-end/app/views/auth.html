@@ -1,22 +1,130 @@
-<div ng-module="app.auth" style="background-image:url('../styles/assets/KarmaGif.gif');background-repeat:no-repeat;background-size:24% 100%; background-position:right;margin-right: 10%">
+<div ng-module="app.auth">
   
-  <div style = "margin-right: 20%;">
+  <section>
+    <div>
 
-    <span><img class="splash-logo" src="../../styles/assets/kx_grey_large.png"></span>
-    <br><br>
-    <span><h1 class="md-display-3 splash-name">karma exchange</h1></span>
-    <h3 class="splash-description">invest in your friends. manage your online presence.</h3>
-    <div md-content  layout-align='center center'layout='row'layout-align ='center center' class=cardContainer>
-      <div flex-sm="50" flex-xs="50" >
-          <md-button class="md-raised md-primary" style="margin-left:12%;"ng-href='/auth/facebook'>
+      <span><img class="splash-logo" src="../../styles/assets/kx_grey_large.png"></span>
+      <br><br>
+      <span><h1 class="md-display-3 splash-name">karma exchange</h1></span>
+      <h3 class="splash-description">invest in your friends. manage your online presence.</h3>
+      <div md-content  layout-align='center center'layout='row'layout-align ='center center' class=cardContainer>
+        <div flex-sm="50" flex-xs="50" >
+            <md-button class="md-raised md-primary"ng-href='/auth/facebook'>
 
-              <span class="text">
-                <img class="png-icon" src="/styles/assets/facebook-box.png"style="width: 24px; height: 24px;">sign in with facebook
-              </span>
-          </md-button>
+                <span class="text">
+                  <img class="png-icon" src="/styles/assets/facebook-box.png"style="width: 24px; height: 24px;">sign in with facebook
+                </span>
+            </md-button>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <section>
+    <img src="../styles/assets/KarmaGif.gif">
+  </section>
+
+  <section>
+    <h1 style="text-align:center;"> About the Team </h1>
+    <md-content layout="row" layout-align="center">
+
+     <md-card flex="20">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Neeraj Kohirkar</span>
+            <span class="md-subhead">Product Owner and Full Stack Engineer</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="space-between">
+          <div class="md-media-xl card-media"> <img src="../../styles/assets/neeraj.png" style="width:100px;height:200px"></div>
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Favorite">
+              <md-icon md-svg-icon="../../styles/assets/linkedin-logo-button.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings">
+              <md-icon md-svg-icon="../../styles/assets/github.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Share">
+              <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card-content>
+      </md-card>
+
+      <md-card flex="20">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Kyle Morehead</span>
+            <span class="md-subhead">SCRUM Master and Full Stack Engineer</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="space-between">
+          <div class="md-media-xl card-media"> <img src="../../styles/assets/neeraj.png" style="width:100px;height:200px"></div>
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Favorite">
+              <md-icon md-svg-icon="../../styles/assets/linkedin-logo-button.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings">
+              <md-icon md-svg-icon="../../styles/assets/github.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Share">
+              <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card-content>
+      </md-card>
+
+      <md-card flex="20">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Ranjit Rao</span>
+            <span class="md-subhead">Full Stack Engineer</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="space-between">
+          <div class="md-media-xl card-media"> <img src="../../styles/assets/neeraj.png" style="width:100px;height:200px"></div>
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Favorite">
+              <md-icon md-svg-icon="../../styles/assets/linkedin-logo-button.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings">
+              <md-icon md-svg-icon="../../styles/assets/github.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Share">
+              <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card-content>
+      </md-card>
+
+      <md-card flex="20">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Kartik Vempati</span>
+            <span class="md-subhead">Full Stack Engineer</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="space-between">
+          <div class="md-media-xl card-media"> <img src="../../styles/assets/neeraj.png" style="width:100px;height:200px"></div>
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Favorite">
+              <md-icon md-svg-icon="../../styles/assets/linkedin-logo-button.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings">
+              <md-icon md-svg-icon="../../styles/assets/github.svg"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Share">
+              <md-icon md-svg-icon="img/icons/share-arrow.svg"></md-icon>
+            </md-button>
+          </md-card-actions>
+        </md-card-content>
+      </md-card>
+
+
+  
+  </md-content>
+
+  </section>
 
   <!-- <a href="/auth/facebook"> Login to Facebook </a> -->
 </div>
