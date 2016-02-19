@@ -12,7 +12,6 @@
   </head>
   
   <body ng-controller="IndexController">
-
     <md-toolbar class="fixed" layout="row" ng-show="loggedinUserInfo">
     <span class="logo"> <img src="./styles/assets/kx_grey.png"> </span>
     <span class="karma"> {{loggedinUserInfo.karma}} </span>
@@ -61,13 +60,9 @@
     <div class = "view" ui-view> </div>
 
     <md-toolbar layout="row" ng-show="loggedinUserInfo">
-    <span style="padding-top:8px"class="logo"> learn more about karma exchange. </span>
+    <span style="padding-top:8px"class="logo"> learn more about karma exchange by emailing us at neerajk1208@gmail.com </span>
       <div flex style="padding-top:8px">
         <span flex></span>
-        <md-button class="footer" ng-click="viewProfile()" class="md-warn">  About Us  
-         </md-button>
-        <md-button class="footer" ng-click="viewPortfolio()" class="md-accent">  Privacy  </md-button>
-        <md-button class="footer" ng-click="viewPortfolio()" class="md-accent">  Careers  </md-button>
       </div>
     </md-toolbar>
 
