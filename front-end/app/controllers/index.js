@@ -2,7 +2,7 @@ angular.module('app.index', [])
 
 // <h3> Main Controller </h3>
 
-.controller('IndexController', function($scope, Socket, $rootScope, $location, $http, Auth, User, TransactionHist) {
+.controller('IndexController', function($scope, Socket, $rootScope, $location, $http, User, TransactionHist) {
   $scope.searchResults;
   $scope.searchQuery = "";
   $scope.transactions = [];
@@ -86,17 +86,10 @@ angular.module('app.index', [])
     $scope.searchResults = [];
   }
 
-  //Check if the user is logged in
-  Auth.checkLoggedIn().then(function(boolean) {
-    if (boolean === false) {
-      $location.path('/')
-    } else {
-      $scope.getAllTransactions();
-      //Socket listener for latest transactions
-      Socket.on('transaction', function(transaction) {
-        $scope.transactions.unshift(transaction.transaction.transaction);
-        $scope.transactions.pop();
-      })
-    }
+  $scope.getAllTransactions();
+  //Socket listener for latest transactions
+  Socket.on('transaction', function(transaction) {
+    $scope.transactions.unshift(transaction.transaction.transaction);
+    $scope.transactions.pop();
   })
 });

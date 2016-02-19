@@ -266,17 +266,9 @@ angular.module('app.profile', [])
       $mdDialog.hide();
     }
   }
-
-  Auth.checkLoggedIn().then(function(boolean) {
-    if (boolean === false) {
-      $location.path('/')
-    } else {
-      //Grabs the profile id from the path and grabs the corresponding profile information
-      var currentPath = $location.path();
-      currentPath = currentPath.split("");
-      $scope.profileId = currentPath.splice(9).join("");
-      $scope.getUserById($scope.profileId);
-      $scope.addLabels(30);
-    }
-  })
+  var currentPath = $location.path();
+  currentPath = currentPath.split("");
+  $scope.profileId = currentPath.splice(9).join("");
+  $scope.getUserById($scope.profileId);
+  $scope.addLabels(30);
 });

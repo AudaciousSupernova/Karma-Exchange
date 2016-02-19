@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, Root, $rootScope, Scores, TransactionHist, User) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Root, $rootScope, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.currentUserInfo = "invalid";
@@ -17,16 +17,6 @@ angular.module('app.portfolio', ["chart.js"])
     page: 1
   };
 
-  //Auth check on portfolio view
-  Auth.checkLoggedIn().then(function(boolean) {
-    if (boolean === false) {
-      $location.path('/')
-    } else {
-      $scope.getTransactionHist();
-      $scope.addLabels(30)
-    }
-  })
-
   //getUserById grabs the logged in user's portfolio information
   $scope.getUserById = function(id) {
     User.getUser(id)
@@ -35,6 +25,13 @@ angular.module('app.portfolio', ["chart.js"])
     })
   }
 
+
+  var setupCalls = function(){
+    console.log("getting the things")
+    
+    $scope.getTransactionHist();
+    $scope.addLabels(30)
+  }
   //getInvestment grabs all the current investment of the logged in user
   //properties on an investment object
   // currentScore: 45
@@ -213,6 +210,8 @@ their current stocks.
     $scope.getOpenUserTransactions()
     $scope.toggleViews('openTransactions')
   }
+
+  setupCalls()
 
   //The Sell Modal Controller, which handles all possible sell actions
   function SellModalController($scope, $mdDialog, $location, investment, TransactionHist, Socket, Scores, User, $rootScope) {
