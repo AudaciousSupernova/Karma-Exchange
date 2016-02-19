@@ -27,8 +27,6 @@ angular.module('app.portfolio', ["chart.js"])
 
 
   var setupCalls = function(){
-    console.log("getting the things")
-    
     $scope.getTransactionHist();
     $scope.addLabels(30)
   }

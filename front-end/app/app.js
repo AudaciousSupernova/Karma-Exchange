@@ -80,7 +80,6 @@ angular.module('app', [
 
 .run(function ($rootScope, $state, Auth) {
   $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-    console.log("changing state")
     Auth.checkLoggedIn().then(function(loggedIn){
       if (toState.authenticate && !loggedIn) {
         // User isn’t authenticated
