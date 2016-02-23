@@ -1,10 +1,9 @@
 angular.module('app.transactionHist', [])
 
 .controller('TransactionHistController', function($scope, $location, TransactionHist, Auth, Root) {
-  $scope.test = "hello testing buy";
-
   $scope.transactions = []
 
+  //Gets all the transactions a user has made.
   $scope.getTransactions = function() {
     TransactionHist.getTransactions($scope.loggedinUserInfo.id)
     .then(function(results) {

@@ -25,11 +25,4 @@ angular.module('app.newsfeed', [])
       console.log("I made it in here");
     }
   })
-
-
-  // if (!Auth.isAuth()) {
-  //   $location.path('/signin');
-  // } else {
-  //   $scope.getQuestion();
-  // }
 });
