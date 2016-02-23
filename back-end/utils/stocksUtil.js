@@ -1,17 +1,18 @@
 var mainController = require('../db/dbControllers/mainController')
 
-var sampleTransactionObj = {
-	user_id: 3,
-	target_id: 2,
-	type: "sell",
-	numberShares: 8, 
-}
 
 //<h3>Update or add stocks</h3>
-//usefull when you are not sure if the stocks exist in the current
+
+//Useful when you are not sure if the stocks exist in the current
 //users portfolio, updates, deletes, or adds depeding on the type
 //of transaction and the number of shares in the portfolio
 
+// var sampleTransactionObj = {
+// 	user_id: 3,
+// 	target_id: 2,
+// 	type: "sell",
+// 	numberShares: 8,
+// }
 var updateOrAddStocks = function(transactionObj, callback){
 	var transactionObj = {
 		user_id: transactionObj.user_id,
@@ -70,9 +71,6 @@ var updateOrAddStocks = function(transactionObj, callback){
 		}
 	})
 }
-
-
-// mainController.getStockRow(3, 2, console.log)
 
 module.exports = {
 	updateOrAddStocks: updateOrAddStocks,
