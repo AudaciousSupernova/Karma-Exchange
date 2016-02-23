@@ -218,7 +218,7 @@ module.exports = function (app, express) {
     })
   })
 
-  //Gets the
+  //Gets the open transactions for a user and a target user
   app.get('/transaction/queueSells', function (req, res) {
     var target_id = req.param('target_id');
     var user_id = req.param('user_id');
@@ -296,58 +296,6 @@ module.exports = function (app, express) {
     fbRequests.getFacebookUserData(id);
     var string = "Successfully updated scores for all users in database!";
     res.send(string);
-  })
-
-
-  //This is a test route
-  app.get('/trending', function (req, res) {
-    var test = {
-      data: [
-        {
-          name: 'John',
-          scores: [
-            {
-              name: 'John',
-              score: 98,
-              date: 'January 1 2013'
-            },
-            {
-              name: 'John',
-              score: 99,
-              date: 'February 22, 2014'
-            },
-            {
-              name: 'John',
-              score: 22,
-              date: 'June 2, 2010'
-            }
-          ],
-          currentScore: 99
-        },
-        {
-          name: 'Bobby',
-          scores: [
-            {
-              name: 'Bobby',
-              score: 98,
-              date: 'January 1 2013'
-            },
-            {
-              name: 'Bobby',
-              score: 99,
-              date: 'February 22, 2014'
-            },
-            {
-              name: 'Bobby',
-              score: 22,
-              date: 'June 2, 2010'
-            }
-          ],
-          currentScore: 99
-        }
-      ]
-    }
-    res.send(test);
   })
 
   app.get('/api/updateInvestmentScore/:id', function (req, res) {
