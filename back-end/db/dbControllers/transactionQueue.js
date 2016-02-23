@@ -16,15 +16,15 @@ connection.connect(function(err){
 });
 
 //<h3>Transaction Queue function</h3>
-// adds a transaction to the queue
-// example transactionQueue obj
-var transactionObj = {
-	user_id: 1,
-	type: "sell",
-	target_id: 100,
-	numberShares: 9
-}
+// Adds a transaction to the queue
 
+// Example transactionQueue obj:
+// var transactionObj = {
+// 	user_id: 1,
+// 	type: "sell",
+// 	target_id: 100,
+// 	numberShares: 9
+// }
 var addTransactionToQueue = function(transactionObj, callback){
 	connection.query('INSERT INTO openTransactions SET ?', transactionObj, function(err, res){
 		if(err){
@@ -37,15 +37,10 @@ var addTransactionToQueue = function(transactionObj, callback){
 	})
 }
 
-
-// addTransactionToQueue(transactionObj, console.log)
-
-
-// addTransactionToQueue(transactionObj, console.log)
-//finds all transactions associated with a target_id
-//returns an array of all open tranasctions for the target
-//can be multiple sell requests or buy requests open
-//not likely to have both buy and sell
+//Finds all transactions associated with a target_id
+//Callback operates on err and an array of all open tranasctions for the target
+//Can be multiple sell requests or buy requests open
+//Not likely to have both buy and sell
 var findOpenTransaction = function(target_id, type, callback){
 	callback = arguments[arguments.length - 1]
 	connection.query('SELECT * FROM openTransactions WHERE target_id=? AND type=?', [target_id, type], function(err, rows){
@@ -58,11 +53,12 @@ var findOpenTransaction = function(target_id, type, callback){
 	})
 }
 
+//Queries for a requested transaction in the transaction queue where a user wants to buy/sell another specific user
 var findOpenUserTransactionForTarget = function(user_id, target_id, type, callback){
   callback = arguments[arguments.length - 1]
   connection.query('SELECT * FROM openTransactions Where user_id=? AND target_id=? AND type=?', [user_id, target_id, type], function(err, rows){
     if(err){
-      console.log("Error finding sell transactions for user" + user_id + " and target " + target_id, err)
+      console.log("Error finding "+ type + " transactions for user" + user_id + " and target " + target_id, err)
       callback(err, null);
     } else{
       callback(null, rows);
@@ -70,6 +66,7 @@ var findOpenUserTransactionForTarget = function(user_id, target_id, type, callba
   })
 }
 
+//Queries for all open transactions in the transaction queue for a specific user
 var findOpenUserTransactions = function(user_id, callback){
 	connection.query('SELECT * FROM openTransactions WHERE user_id=?', user_id, function(err, rows){
 		if(err){
@@ -82,7 +79,7 @@ var findOpenUserTransactions = function(user_id, callback){
 }
 
 
-//removes an open transaction from the Queue
+//Removes an open transaction from the Queue
 var deleteOpenTransaction = function(transactionId, callback){
 	connection.query('DELETE FROM openTransactions WHERE id = ?',transactionId, function (err, response) {
     if (err) {
@@ -95,7 +92,7 @@ var deleteOpenTransaction = function(transactionId, callback){
   });
 }
 
-//updates a the number of shares available/desired in the queue
+//Updates a the number of shares available/desired in the queue
 var updateOpenTransaction = function(transactionId, sharesChange, callback){
 	connection.query('UPDATE openTransactions SET numberShares = numberShares-? Where ID = ?',[sharesChange, transactionId], function (err, response) {
     if (err){
