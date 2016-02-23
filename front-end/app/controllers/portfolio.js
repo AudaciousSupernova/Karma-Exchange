@@ -201,9 +201,9 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.getOpenUserTransactions()
     $scope.toggleViews('openTransactions')
   }
-
   setupCalls()
 
+  //<h3>Sell Modal Controller</h3>
   //The Sell Modal Controller, which handles all possible sell actions
   function SellModalController($scope, $mdDialog, $location, investment, TransactionHist, Socket, Scores, User, $rootScope) {
     $scope.investment = investment;
