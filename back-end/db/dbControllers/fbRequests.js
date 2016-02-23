@@ -87,7 +87,7 @@ setInterval(function () {
   }
 }, 7100000)
 
-//Essentially a replica of the above function definition, but only grabs user data for one user by user_id
+//Similar to the function above, but only grabs facebook user data for one user by user_id
 var getFacebookUserData = function(id) {
   var users;
   mainController.findUserById(id, function(err, user) {
@@ -139,6 +139,7 @@ var getFacebookUserData = function(id) {
   })
 }
 
+// Gets the basic facebook information using an API call to the Facebook Graph
 var getFacebookProfileFromAccessToken = function(access_token, callback){
   request('https://graph.facebook.com/v2.2/me?fields=id,name,picture&access_token=' + access_token, function(err, response, body){
     if(err){
@@ -150,7 +151,7 @@ var getFacebookProfileFromAccessToken = function(access_token, callback){
   })
 }
 
-
+//Updates the facebook score, or social score for a given user.
 var updateScores = function(newScore, social_subScores, user) {
   user.social = newScore;
   var soc_weight = (user.social/(user.social + user.social_investment));
@@ -158,10 +159,8 @@ var updateScores = function(newScore, social_subScores, user) {
   user.currentScore = Math.round(Math.sqrt(user.social_investment * user.social) + user.social);
   user.social_subScores = social_subScores;
   //change the social_subScores
-  // console.log(user.name + "'s social score is: ", user.social);
-  // console.log(user.name + "'s social_investment score is: ", user.social_investment);
-  // console.log(user.name + "'s total current score is: ", user.currentScore)
   var date = new Date();
+  // If it's Wednesday, compile information for score reports
   if (date.getDay() === 3) {
     console.log("Today is Wednesday.");
     var scoreObj = {
@@ -181,6 +180,7 @@ var updateScores = function(newScore, social_subScores, user) {
         var recentYVals = [];
         var recentXVals = [];
         var velocity;
+        //Get the last week of scores for the user
         mainController.getRecentScores(user.id, function(err, recentScores) {
           if (err) {
             console.log("There was an error retrieving the recent scores", err);
@@ -190,6 +190,7 @@ var updateScores = function(newScore, social_subScores, user) {
               recentYVals.push(recentScores[i].social);
               recentXVals.push(i);
             }
+            //Get the history of scores for the user
             mainController.getScores(user.id, function(err, scores) {
               if (err) {
                 console.log("Unable to retrieve all scores for user", err);
@@ -199,17 +200,21 @@ var updateScores = function(newScore, social_subScores, user) {
                     generalYVals.push(scores[i].social);
                     generalXVals.push(i);
                 }
+                //Linear regression will not work if there is only 1 score in the recent or general history.
+                //In this case, populate the trend arrays with a duplicate value.
+                //NOTE: This does not alter the scores history in the database
                 if (generalXVals.length < 2) {
                   generalXVals.push(generalXVals[0]);
                   generalYVals.push(generalYVals[0]);
                   recentXVals.push(recentXVals[0]);
                   recentYVals.push(recentYVals[0]);
                 }
+                //Get the slope of the best fit line for the recent and general score trends over time
                 recentVelocity = linearRegression(recentYVals, recentXVals).slope;
                 generalVelocity = linearRegression(generalYVals, generalXVals).slope;
-                console.log("The recent velocity of " + user.name + " is: ", recentVelocity);
-                console.log("The general velocity of " + user.name + " is: ", generalVelocity);
+                //Gather the last weeks social change information
                 user.last_week_actual_social_change = JSON.stringify(recentVelocity.toFixed());
+                //Provide an estimate for next week's social change information based on the current trajectories
                 user.next_week_expected_social_change = JSON.stringify((0.6*recentVelocity + 0.4*generalVelocity).toFixed());
                 mainController.updateUser(user, function(err, results) {
                   if (err) {
@@ -228,6 +233,7 @@ var updateScores = function(newScore, social_subScores, user) {
       }
     })
   } else {
+    // Update the user as normal on all other days
     mainController.updateUser(user, function(err, results) {
       if (err) {
         console.log("Unable to update user", err);
