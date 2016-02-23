@@ -1,7 +1,7 @@
 var faker = require('faker');
 var mainController = require('./mainController')
-//'./db/dbControllers/populateMainDb'
 
+//<h3>Internal Use Functions For Faker Data Popoulation </h3>
 //Sets the number of new users to add to the database
 var numberOfNewUsers = 100;
 var insertedUser = 1;

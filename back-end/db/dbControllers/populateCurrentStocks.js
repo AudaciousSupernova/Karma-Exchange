@@ -1,7 +1,9 @@
 var faker = require('faker');
 var mainController = require('./mainController')
 
-//gets all users and then adds some random scores to their history
+
+//<h3>Internal Use Functions For Faker Data Popoulation </h3>
+//Gets all users and then adds some random scores to their history
 mainController.getAllUsers(function(err, users){
 	var users = users;
 	var length = users.length;
@@ -12,7 +14,7 @@ mainController.getAllUsers(function(err, users){
 	// for(var i = 0; i < users.length; i++){
 		var numberOfNewStocks = Math.floor(Math.random() * 10);
 		totalAdditions += numberOfNewStocks;
-		
+
 		for(var subI = 0; subI < numberOfNewStocks; subI++){
 			var randomStockObj = {
 				user_id: i+1,
@@ -27,6 +29,6 @@ mainController.getAllUsers(function(err, users){
 				}
 				currentAddition++;
 			})
-		}		
+		}
 	}
 })
