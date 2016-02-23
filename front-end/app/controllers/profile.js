@@ -63,7 +63,7 @@ angular.module('app.profile', [])
         console.log("here is the report user", $scope.reportUser, typeof $scope.reportUser);
       })
   }
-
+  //<h3> Profile Graph Functions </h3>
   // getScores grabs all scores associated with the profile id
   $scope.getScores = function () {
     $scope.series = ["Total Score", "Social Score"];
@@ -127,7 +127,7 @@ angular.module('app.profile', [])
       })
   }
 
-  //Controller for the Buy Modal
+  //<h3> Buy Modal Controller </h3>
   function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket, Scores) {
 
     $scope.profile = profile;
@@ -148,16 +148,12 @@ angular.module('app.profile', [])
         type: "buy",
         numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
-
-      // var investment = {
-      //   user_id: $rootScope.loggedinUserInfo.id,
-      //   target_id: $scope.profile.id,
-      //   numberShares: $scope.sharesToBuy
-      // }
       if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.sharesToBuy) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
+        //Presented with wait and buyDirect options if user attempts to buy more shares than are currently available for buy
+        //in the transaction queue
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
         } else {
@@ -184,10 +180,12 @@ angular.module('app.profile', [])
         type: "buy",
         numberShares: $scope.availableShares
       }
+      //Prevents users from buying more karma than they can afford
       if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * ($scope.sharesToBuy - transaction.numberShares)) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
+        //Buys the available shares and places the remaining shares in the transaction queue
         TransactionHist.makeTransaction(transaction).then(function()  {
           transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
           TransactionHist.addTransactionToQueue(transaction);
@@ -210,12 +208,15 @@ angular.module('app.profile', [])
       }
 
       var newScore = $scope.profile.currentScore * 1.1;
+      //Prevents users from buying more karma than they can afford
       if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.availableShares + newScore*($scope.sharesToBuy - $scope.availableShares)) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
         if ($scope.availableShares) {
+          //buys available shares
           TransactionHist.makeTransaction(transaction).then(function() {
+            //makes sure the transaction is actually finished before updating the transaction and closing the request
             setTimeout(function() {
               transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
               TransactionHist.closeTransactionRequest(transaction, newScore);
@@ -241,7 +242,7 @@ angular.module('app.profile', [])
         $mdDialog.hide();
       }
     }
-
+    //Returns the number of shares available (sell requests) that the user can buy.
     $scope.checkSharesAvail = function() {
       TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
         $scope.availableShares = response[0];
@@ -250,7 +251,6 @@ angular.module('app.profile', [])
     }
 
     //Exit closes the Buy modal
-    //is this really necessary?
     $scope.exit = function() {
       $mdDialog.hide();
     }
