@@ -79,7 +79,7 @@ angular.module('app.services', [])
 
 .factory('Auth', function ($http, $location, $rootScope) {
   return {
-    checkLoggedIn: function () {
+    checkLoggedIn   : function () {
       return $http({
         method: 'GET',
         url: '/api/loggedin'

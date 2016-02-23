@@ -41,16 +41,12 @@ angular.module('app', [
       authenticate: true
     })
     .state('buy', {
-      url: '/buy', 
       templateUrl: 'app/views/buy.html', 
       controller: 'BuyController',
-      authenticate: true
     })
     .state('sell', {
-      url: '/sell', 
       templateUrl: 'app/views/sell.html', 
       controller: 'SellController',
-      authenticate: true
     })
     .state('portfolio', {
       url: '/portfolio/:id', 
@@ -80,4 +76,17 @@ angular.module('app', [
       authenticate: false
     })
   $urlRouterProvider.otherwise('/')
+})
+
+.run(function ($rootScope, $state, Auth) {
+  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+    Auth.checkLoggedIn().then(function(loggedIn){
+      if (toState.authenticate && !loggedIn) {
+        // User isn’t authenticated
+        $state.transitionTo("home");
+        event.preventDefault(); 
+      }
+      
+    })
+  });
 })
