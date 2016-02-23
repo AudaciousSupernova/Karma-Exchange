@@ -1,7 +1,6 @@
 angular.module('app.services', [])
 
-// Questions factory handles all requests to add, retrieve, or modify questions in the database
-
+// Users factory handles all requests to add, retrieve, or modify users in the database
 .factory('User', function($http, $location) {
   return {
     // add a question from ask
@@ -38,9 +37,9 @@ angular.module('app.services', [])
   }
 })
 
+//Portfolio factory provides functions to get and add investsments for users and of users.
 .factory('Portfolio', function($http, $location) {
   return {
-    // add a question from ask
     getInvestments: function(id) {
       return $http({
         method: 'GET',
@@ -61,22 +60,8 @@ angular.module('app.services', [])
   }
 })
 
-.factory('Newsfeed', function($http, $location) {
-  return {
-    // add a question from ask
-    getTrending: function() {
-
-      return $http({
-        method: 'GET',
-        url: '/trending',
-      })
-      .then(function(res) {
-        return res.data;
-      })
-    }
-  }
-})
-
+//Provides a function to determine whether a user is loggedIn. If the user is logged in, the user's information
+//will be stored in the global angular $rootScope to personalize each view.
 .factory('Auth', function ($http, $location, $rootScope) {
   return {
     checkLoggedIn   : function () {
@@ -97,15 +82,10 @@ angular.module('app.services', [])
   }
 })
 
-.factory('Root', function ($http, $location, $rootScope) {
-  return {
-    addUserInfo: function(info) {
-      this.currentUserInfo = info;
-    }
-  }
-})
 
-
+//The TransactionHist factory makes http calls that will get information on the transaction history of a user,
+//add new transactions to the history, place transactions in the transaction queue, or check the contents of the
+//transaction queue.
 .factory('TransactionHist', function ($http, $location) {
   return {
     // calls addTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.
@@ -208,7 +188,8 @@ angular.module('app.services', [])
 
   }
 })
-
+//The scores factory will get the scores associated for a user, or provide the route to update the users
+//social investment score.
 .factory('Scores', function ($http, $location) {
   return {
     getScores: function(id) {
@@ -229,7 +210,7 @@ angular.module('app.services', [])
     }
   }
 })
-
+//The FB factory makes an http call that makes calls to Facebook's  Graph API and updates the user's social score
 .factory('FB', function ($http, $location) {
   return {
     test: function(id) {
@@ -243,7 +224,8 @@ angular.module('app.services', [])
     }
   }
 })
-
+//The socket facotry defines the socket on and emit functions that listen and send socket events to the backend.
+//Sockets are used in creating ticker.
 .factory('Socket', function($rootScope) {
 
   // socket.on('test', function(results) {
