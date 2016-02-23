@@ -2,7 +2,7 @@ angular.module('app.profile', [])
 
 //<h3>Profile Controller</h3>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB, $rootScope) {
+.controller('ProfileController', function($scope, $location, User, Auth, Scores, $mdDialog, FB, $rootScope) {
 
   $scope.user;
   $scope.leaders;
@@ -10,7 +10,7 @@ angular.module('app.profile', [])
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
-  $scope.isUser = false; 
+  $scope.isUser = false;
   $scope.isPositive = false;
   $scope.changeDisplay;
   $scope.reportUser = [];
@@ -118,7 +118,7 @@ angular.module('app.profile', [])
     $mdDialog.show({
       templateUrl: '../app/views/report.html',
       locals: {
-        user: $scope.user, 
+        user: $scope.user,
         reportUser: $scope.reportUser
       },
       controller: ReportModalController

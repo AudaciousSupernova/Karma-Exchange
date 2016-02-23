@@ -82,16 +82,6 @@ angular.module('app.services', [])
   }
 })
 
-.factory('Root', function ($http, $location, $rootScope) {
-  return {
-    addUserInfo: function(info) {
-      this.currentUserInfo = info;
-    }
-  }
-})
-
-
-
 //The TransactionHist factory makes http calls that will get information on the transaction history of a user,
 //add new transactions to the history, place transactions in the transaction queue, or check the contents of the
 //transaction queue.

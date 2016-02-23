@@ -1,7 +1,7 @@
 angular.module('app.portfolio', ["chart.js"])
 
   //<h3> Portfolio Controller </h3>
-.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Root, $rootScope, Scores, TransactionHist, User) {
+.controller('PortfolioController', function($scope, $location, $mdDialog, Portfolio, Auth, $rootScope, Scores, TransactionHist, User) {
   $scope.investments;
   $scope.clickedInvestment;
   $scope.currentUserInfo = "invalid";
