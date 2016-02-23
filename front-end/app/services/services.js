@@ -88,6 +88,7 @@ angular.module('app.services', [])
 //transaction queue.
 .factory('TransactionHist', function ($http, $location) {
   return {
+
     // calls addTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.
     addTransaction: function(transactionObj) {
       return $http({
@@ -96,6 +97,7 @@ angular.module('app.services', [])
         data: {transactionObj: transactionObj}
       })
     },
+
     //get all past transactions for given user_id
     getTransactions: function(user_id) {
       return $http({
@@ -116,6 +118,7 @@ angular.module('app.services', [])
         return res.data;
       })
     },
+
     //gets all of the open transactions for a specific user, used in the portfolio to help close those transactions
     getOpenUserTransactions: function(user_id){
       return $http({
@@ -126,6 +129,7 @@ angular.module('app.services', [])
         return res.data;
       })
     },
+
     //gets all of the open transactions for a specific user and a specific target, used in the sell controller to determine how many shares a user can actually sell
     getOpenUserSellTransactionsForTarget: function(user_id, target_id){
       return $http({
@@ -137,6 +141,7 @@ angular.module('app.services', [])
         return res.data;
       })
     },
+
     // returns number of shares available for given target_id
     checkSharesAvail: function(target_id, type) {
       console.log('targetid', target_id, 'type', type);
@@ -224,15 +229,11 @@ angular.module('app.services', [])
     }
   }
 })
-//The socket facotry defines the socket on and emit functions that listen and send socket events to the backend.
+//The socket factory defines the socket on and emit functions that listen and send socket events to the backend.
 //Sockets are used in creating ticker.
 .factory('Socket', function($rootScope) {
 
-  // socket.on('test', function(results) {
-  //   console.log("hello", results);
-  // })
   return {
-
     on: function(eventName, callback) {
       window.socket.on(eventName, function() {
 
