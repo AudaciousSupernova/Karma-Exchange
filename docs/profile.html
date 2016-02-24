@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>profile.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="auth.html">
+                  auth.js
+                </a>
+              
+                
+                <a class="source" href="index.html">
+                  index.js
+                </a>
+              
+                
+                <a class="source" href="newsfeed.html">
+                  newsfeed.js
+                </a>
+              
+                
+                <a class="source" href="portfolio.html">
+                  portfolio.js
+                </a>
+              
+                
+                <a class="source" href="profile.html">
+                  profile.js
+                </a>
+              
+                
+                <a class="source" href="transactionHist.html">
+                  transactionHist.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>profile.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'app.profile'</span>, [])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2>Profile Controller</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+.controller(<span class="hljs-string">'ProfileController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, $location, User, Auth, Scores, $mdDialog, FB, $rootScope</span>) </span>{
+
+  $scope.user;
+  $scope.leaders;
+  $scope.profileId;
+  $scope.scores = [[],[]];
+  $scope.labels = [];
+  $scope.wednesday = <span class="hljs-literal">false</span>;
+  $scope.isUser = <span class="hljs-literal">false</span>;
+  $scope.isPositive = <span class="hljs-literal">false</span>;
+  $scope.changeDisplay;
+  $scope.reportUser = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>$scope.getFacebookData</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Retrieves the profile user’s latest Facebook score.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getFacebookData = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    FB.test($scope.user.id)
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">results</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(results);
+      })
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h3>$scope.getUserById</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Grabs user information of the current profile id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getUserById = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+    User.getUser(id)
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user</span>) </span>{
+        $scope.user = user[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">if</span> ($scope.user.profile_photo === <span class="hljs-literal">null</span>) {
+          $scope.user.profile_photo = <span class="hljs-string">"http://www.caimontebelluna.it/CAI_NEW_WP/wp-content/uploads/2014/11/face-placeholder-male.jpg"</span>;
+        }
+        <span class="hljs-keyword">if</span> ($scope.user.email === <span class="hljs-literal">null</span>) {
+          $scope.user.email = <span class="hljs-string">"No Email Provided"</span>;
+        }
+
+        <span class="hljs-keyword">if</span> ($scope.user.last_week_actual_social_change !== <span class="hljs-string">"0%"</span>) {
+          $scope.changeDisplay = <span class="hljs-built_in">Number</span>($scope.user.last_week_actual_social_change).toFixed(<span class="hljs-number">2</span>);
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($scope.user.last_week_actual_social_change === <span class="hljs-string">"0%"</span>) {
+          $scope.changeDisplay = <span class="hljs-number">0</span>;
+        }
+        <span class="hljs-keyword">if</span> ($scope.changeDisplay &gt;= <span class="hljs-number">0</span>) {
+          $scope.changeDisplay = <span class="hljs-string">"+ "</span> + $scope.changeDisplay.toString();
+          $scope.isPositive = <span class="hljs-literal">true</span>;
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"is it positive"</span>, $scope.isPositive)
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($scope.changeDisplay &lt; <span class="hljs-number">0</span>) {
+          $scope.changeDisplay = $scope.changeDisplay.toString();
+        }
+        <span class="hljs-keyword">var</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"ID's"</span>,$scope.user.id,$rootScope.loggedinUserInfo.id)
+        <span class="hljs-keyword">if</span> (date.getDay() === <span class="hljs-number">3</span>) {
+          $scope.wednesday = <span class="hljs-literal">true</span>;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ($scope.user.id === $rootScope.loggedinUserInfo.id) {
+          $scope.isUser = <span class="hljs-literal">true</span>;
+        }
+        $scope.getScores();
+        $scope.reportUser.push(<span class="hljs-string">"Current score is: "</span> + $scope.user.currentScore);
+        $scope.reportUser.push(<span class="hljs-string">"Social score is: "</span> + $scope.user.social);
+        $scope.reportUser.push(<span class="hljs-string">"Expected social change was: "</span> + $scope.user.last_week_expected_social_change);
+        $scope.reportUser.push(<span class="hljs-string">"Actual social change was: "</span> + $scope.user.last_week_actual_social_change);
+        $scope.reportUser.push(<span class="hljs-string">"Next week expected social change is: "</span> + $scope.user.next_week_expected_social_change);
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"here is the report user"</span>, $scope.reportUser, <span class="hljs-keyword">typeof</span> $scope.reportUser);
+      })
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3> Profile Graph Functions </h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h3>$scope.getScores</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Grabs all scores associated with the profile id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getScores = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    $scope.series = [<span class="hljs-string">"Total Score"</span>, <span class="hljs-string">"Social Score"</span>];
+
+    Scores.getScores($scope.profileId)
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">results</span>) </span>{
+      <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; results.length; i++) {
+        <span class="hljs-keyword">var</span> scoreObj = results[i];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>If the actual user OR if it’s wednesday (day to reveal social scores), show both total/current score AND social score</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ($scope.isUser === <span class="hljs-literal">true</span> || $scope.wednesday) {
+          $scope.scores[<span class="hljs-number">0</span>].push(scoreObj.currentScore);
+          $scope.scores[<span class="hljs-number">1</span>].push(scoreObj.social);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Else just show total/current score</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        } <span class="hljs-keyword">else</span> {
+          $scope.scores[<span class="hljs-number">0</span>].push(scoreObj.currentScore);
+        }
+      }
+      <span class="hljs-keyword">var</span> daysBeforeUserJoined = $scope.labels.length - $scope.scores[<span class="hljs-number">0</span>].length;
+      <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; daysBeforeUserJoined; i++) {
+        $scope.scores[<span class="hljs-number">0</span>].unshift(<span class="hljs-number">0</span>);
+        $scope.scores[<span class="hljs-number">1</span>].unshift(<span class="hljs-number">0</span>);
+      }
+    })
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h3>$scope.AddLabels</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Adds labels for the angular chart associated with profile id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.addLabels = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">daysInPast</span>) </span>{
+    <span class="hljs-keyword">for</span>(; daysInPast &gt;= <span class="hljs-number">0</span>; daysInPast--) {
+      <span class="hljs-keyword">if</span>(daysInPast % <span class="hljs-number">5</span> === <span class="hljs-number">0</span>) {
+        $scope.labels.push(daysInPast);
+      } <span class="hljs-keyword">else</span> {
+        $scope.labels.push(<span class="hljs-string">""</span>);
+      }
+    }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h3>$scope.clickBuy</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Opens up the Buy Modal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.clickBuy = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    $mdDialog.show({
+      templateUrl: <span class="hljs-string">'../app/views/buy.html'</span>,
+      locals: {
+        profile: $scope.user
+      },
+      controller: BuyModalController
+    })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clickedItem</span>) </span>{
+      });
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h3>$scope.clickReport</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Opens up the Report Modal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.clickReport = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    $mdDialog.show({
+      templateUrl: <span class="hljs-string">'../app/views/report.html'</span>,
+      locals: {
+        user: $scope.user,
+        reportUser: $scope.reportUser
+      },
+      controller: ReportModalController
+    })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clickedItem</span>) </span>{
+      });
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h3> Buy Modal Controller </h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Houses all the functions used to communicate a buy of a users shares</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">BuyModalController</span>(<span class="hljs-params">$scope, $mdDialog, profile, TransactionHist, Portfolio, Socket, Scores</span>) </span>{
+
+    $scope.profile = profile;
+    $scope.score = $rootScope.loggedinUserInfo.currentScore;
+    $scope.sharesToBuy = <span class="hljs-number">0</span>;
+    $scope.buyingOneShare = $scope.sharesToBuy &lt;= <span class="hljs-number">1</span>;
+    $scope.availableShares;
+    $scope.availableSharesInfo;
+    $scope.revealOptions = <span class="hljs-literal">false</span>;
+    $scope.errorMessage = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h3>$scope.confirm</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>On confirm click, this function evaluates the transaction validity
+If the transaction is invalid, user will be notified</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $scope.confirm = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> transaction = {
+        user_id: $rootScope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: <span class="hljs-string">"buy"</span>,
+        numberShares: $scope.availableShares &gt; $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
+      }
+      <span class="hljs-keyword">if</span> ($rootScope.loggedinUserInfo.karma &lt; $scope.profile.currentScore * $scope.sharesToBuy) {
+        $scope.errorMessage = <span class="hljs-literal">true</span>;
+      } <span class="hljs-keyword">else</span> {
+        $scope.errorMessage = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Presented with wait and buyDirect options if user attempts to buy more shares than are currently available for buy
+in the transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>($scope.sharesToBuy &gt; $scope.availableShares){
+          $scope.revealOptions = <span class="hljs-literal">true</span>;
+        } <span class="hljs-keyword">else</span> {
+          TransactionHist.makeTransaction(transaction)
+            .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>On a successfull transaction, socket emit event to send recent transactions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              Socket.emit(<span class="hljs-string">'transaction'</span>, {
+                transaction: transaction
+              });
+              <span class="hljs-keyword">if</span> ($scope.availableSharesInfo &amp;&amp; $scope.availableSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()) {
+                $rootScope.loggedinUserInfo.karma = $rootScope.loggedinUserInfo.karma - ($scope.score * transaction.numberShares);
+              }
+              $mdDialog.hide();
+            })
+        }
+      }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h3>$scope.wait</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>This function adds a transaction to the transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $scope.wait = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> transaction = {
+        user_id: $rootScope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: <span class="hljs-string">"buy"</span>,
+        numberShares: $scope.availableShares
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Prevents users from buying more karma than they can afford</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ($rootScope.loggedinUserInfo.karma &lt; $scope.profile.currentScore * ($scope.sharesToBuy - transaction.numberShares)) {
+        $scope.errorMessage = <span class="hljs-literal">true</span>;
+      } <span class="hljs-keyword">else</span> {
+        $scope.errorMessage = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Buys the available shares and places the remaining shares in the transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        TransactionHist.makeTransaction(transaction).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)  </span>{
+          transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+          TransactionHist.addTransactionToQueue(transaction);
+        })
+        Scores.updateSocialInvestment($scope.profile.id);
+        <span class="hljs-keyword">if</span> ($scope.availableSharesInfo &amp;&amp; $scope.availableSharesInfo.user_id !== $rootScope.loggedinUserInfo.id.toString()) {
+          $rootScope.loggedinUserInfo.karma -= $scope.profile.currentScore*($scope.availableShares);
+        }
+        $mdDialog.hide();
+      }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h3>$scope.buyDirect</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>This function directly makes a transaction with increased cost</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $scope.buyDirect = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> transaction = {
+        user_id: $rootScope.loggedinUserInfo.id,
+        target_id: $scope.profile.id,
+        type: <span class="hljs-string">"buy"</span>,
+        numberShares: $scope.availableShares
+      }
+
+      <span class="hljs-keyword">var</span> newScore = $scope.profile.currentScore * <span class="hljs-number">1.1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Prevents users from buying more karma than they can afford</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ($rootScope.loggedinUserInfo.karma &lt; $scope.profile.currentScore * $scope.availableShares + newScore*($scope.sharesToBuy - $scope.availableShares)) {
+        $scope.errorMessage = <span class="hljs-literal">true</span>;
+      } <span class="hljs-keyword">else</span> {
+        $scope.errorMessage = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> ($scope.availableShares) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Buys available shares</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          TransactionHist.makeTransaction(transaction).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Makes sure the transaction is actually finished before updating the transaction and closing the request</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+              transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
+              TransactionHist.closeTransactionRequest(transaction, newScore);
+            }, <span class="hljs-number">100</span>)
+          })
+        } <span class="hljs-keyword">else</span> {
+          transaction.numberShares = $scope.sharesToBuy;
+          TransactionHist.closeTransactionRequest(transaction, newScore);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>If the user you are buying from is you, you only lose the money that will go to the server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ($scope.availableSharesInfo &amp;&amp; $scope.availableSharesInfo.user_id === $rootScope.loggedinUserInfo.id.toString()) {
+          $rootScope.loggedinUserInfo.karma -= <span class="hljs-built_in">Math</span>.round(newScore * ($scope.sharesToBuy - $scope.availableShares));
+        } <span class="hljs-keyword">else</span> {
+          $rootScope.loggedinUserInfo.karma -= <span class="hljs-built_in">Math</span>.round($scope.profile.currentScore * $scope.availableShares + newScore * ($scope.sharesToBuy - $scope.availableShares));
+        }
+
+        Scores.updateSocialInvestment($scope.profile.id);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Socket emit event to update recent transactions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        Socket.emit(<span class="hljs-string">'transaction'</span>, {
+          transaction: transaction
+        });
+        $mdDialog.hide();
+      }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <h3>$scope.CheckSharesAvail</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Returns the number of shares available (sell requests) that the user can buy.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $scope.checkSharesAvail = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      TransactionHist.checkSharesAvail($scope.profile.id, <span class="hljs-string">'sell'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">response</span>)</span>{
+        $scope.availableShares = response[<span class="hljs-number">0</span>];
+        $scope.availableSharesInfo = response[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>];
+      });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h3>$scope.exit</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Exit closes the Buy modal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $scope.exit = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      $mdDialog.hide();
+    }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h3> ReportModalController Function </h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Houses the functions and scoped variables that create the report modal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ReportModalController</span>(<span class="hljs-params">$scope, $mdDialog, user, reportUser</span>) </span>{
+    $scope.user = user;
+    $scope.reportUser = reportUser;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <h3>$scope.exit</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Exit closes the Report modal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $scope.exit = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      $mdDialog.hide();
+    }
+  }
+  <span class="hljs-keyword">var</span> currentPath = $location.path();
+  currentPath = currentPath.split(<span class="hljs-string">""</span>);
+  $scope.profileId = currentPath.splice(<span class="hljs-number">9</span>).join(<span class="hljs-string">""</span>);
+  $scope.getUserById($scope.profileId);
+  $scope.addLabels(<span class="hljs-number">30</span>);
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>passport.facebook.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="mobileLogin.html">
+                  mobileLogin.js
+                </a>
+              
+                
+                <a class="source" href="passport.facebook.html">
+                  passport.facebook.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>passport.facebook.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> passport = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport'</span>);
+<span class="hljs-keyword">var</span> mainController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../db/dbControllers/mainController'</span>)
+<span class="hljs-keyword">var</span> fbRequests = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../db/dbControllers/fbRequests'</span>)
+<span class="hljs-keyword">var</span> FacebookStrategy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'passport-facebook'</span>).Strategy;
+<span class="hljs-keyword">var</span> callbackURL;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h3> Facebook authentication with Passport </h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>If there is a development environment, set callbackURL to deployed.
+If there isn’t a development environment, set callbackURL to local.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span>(process.env.PORT){
+  callbackURL = <span class="hljs-string">"http://karmaexchange.io/auth/facebook/callback"</span>
+} <span class="hljs-keyword">else</span> {
+  callbackURL = <span class="hljs-string">"http://127.0.0.1:3000/auth/facebook/callback"</span>
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>The user profile is used to identify the user from passport.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>passport.serializeUser(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user, done</span>) </span>{
+  done(<span class="hljs-literal">null</span>, user);
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Passport will return the input user, since we are not actually serializing the user.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>passport.deserializeUser(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user, done</span>) </span>{
+  done(<span class="hljs-literal">null</span>, user);
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h3>Facebook Strategy for Passport</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>The strategy will update the user in the database if any information has changed, and will add any new users to database.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>passport.use(<span class="hljs-keyword">new</span> FacebookStrategy({
+    clientID: <span class="hljs-string">'767594746706952'</span>,
+    clientSecret: <span class="hljs-string">'d917065bc815ddf8ab8779c9f0b3c664'</span>,
+    callbackURL: callbackURL,
+    enableProof: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>fields from facebook profile that Karma Exchange uses</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    profileFields: [<span class="hljs-string">'id'</span>, <span class="hljs-string">'name'</span>,<span class="hljs-string">'picture.type(large)'</span>, <span class="hljs-string">'emails'</span>, <span class="hljs-string">'displayName'</span>, <span class="hljs-string">'about'</span>, <span class="hljs-string">'gender'</span>]
+  },
+  <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">accessToken, refreshToken, profile, done</span>) </span>{
+    process.nextTick(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> id = profile.id
+      <span class="hljs-keyword">var</span> displayName = profile.displayName;
+      <span class="hljs-keyword">var</span> photo = profile.photos[<span class="hljs-number">0</span>].value;
+      <span class="hljs-keyword">var</span> email = profile.emails[<span class="hljs-number">0</span>].value;
+      <span class="hljs-keyword">var</span> token = accessToken;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Passport will search the database for a record of a user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      mainController.findUserByFbKey(profile.id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, profile</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>If the user is not found, we will add the user using the authentication details
+obtained from Facebook Authentication</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!profile.length) {
+          <span class="hljs-keyword">var</span> addObj = {
+            <span class="hljs-string">'facebookKey'</span>: id,
+            <span class="hljs-string">'name'</span>: displayName,
+            <span class="hljs-string">'karma'</span>: <span class="hljs-number">5000</span>,
+            <span class="hljs-string">'profile_photo'</span>:photo,
+            <span class="hljs-string">'email'</span>: email,
+            <span class="hljs-string">'social'</span>: <span class="hljs-number">5</span>,
+            <span class="hljs-string">'social_investment'</span>:<span class="hljs-number">1</span>,
+            <span class="hljs-string">'currentScore'</span>:<span class="hljs-number">10</span>,
+            <span class="hljs-string">'access_token'</span>: token
+          };
+          mainController.addUser(addObj, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, userId</span>) </span>{
+            <span class="hljs-keyword">if</span> (err){
+              <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Error'</span>);
+            } <span class="hljs-keyword">else</span> {
+              <span class="hljs-keyword">var</span> scoreObj = {
+                user_id: userId,
+                social_investment: <span class="hljs-number">1</span>,
+                social: <span class="hljs-number">5</span>,
+                currentScore: <span class="hljs-number">10</span>
+              };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>New users are declared with an initial score object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              mainController.addScore(scoreObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>) </span>{
+                <span class="hljs-keyword">if</span> (err) {
+                  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"scoreObj was not added"</span>, err);
+                } <span class="hljs-keyword">else</span> {
+                  addObj.id = userId;
+                  fbRequests.getFacebookUserData(addObj.id)
+                  done(<span class="hljs-literal">null</span>, addObj);
+                }
+              })
+            }
+          })
+        } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>If the user is found, run a check to see if the users photo or access token has been changed
+since the last login.
+profile[0] is what is returned from the database when a user is found</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (profile[<span class="hljs-number">0</span>].profile_photo !== photo || profile[<span class="hljs-number">0</span>].access_token !== accessToken) {
+            profile[<span class="hljs-number">0</span>].access_token = accessToken;
+            profile[<span class="hljs-number">0</span>].profile_photo = photo;
+            mainController.updateUser(profile[<span class="hljs-number">0</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, user</span>) </span>{
+              <span class="hljs-keyword">if</span> (err) {
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Error'</span>);
+              }
+            });
+          }
+          done(<span class="hljs-literal">null</span>, profile[<span class="hljs-number">0</span>]);
+        }
+      })
+    });
+  }
+))
+
+<span class="hljs-built_in">module</span>.exports = passport;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

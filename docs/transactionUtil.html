@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>transactionUtil.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>transactionUtil.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mainController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../db/dbControllers/mainController'</span>)
+<span class="hljs-keyword">var</span> transactionQueueController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../db/dbControllers/transactionQueue'</span>)
+<span class="hljs-keyword">var</span> scoresUtil = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./scoresUtil'</span>)
+<span class="hljs-keyword">var</span> stocksUtil = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./stocksUtil'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h3>makeTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>MakeTransactoin checks for a transaction then, using the number of shares, updates
+the transaction queue for each open transaction present in the order added to the queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> makeTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj</span>) </span>{
+  <span class="hljs-keyword">var</span> desiredShares = transactionObj.numberShares;
+  <span class="hljs-keyword">var</span> savedDesiredShares = desiredShares;
+  <span class="hljs-keyword">var</span> type = transactionObj.type === <span class="hljs-string">"buy"</span>? <span class="hljs-string">"sell"</span> : <span class="hljs-string">"buy"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>checkTransaction returns a tuple with the first el being the number
+of shares available/desired and the second being an array of queued
+transactions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  checkTransaction(transactionObj.target_id, type, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, transactionQueueObj</span>) </span>{
+    mainController.findUserById(transactionObj.target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, targetUserObj</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>sets the current share value to be used in all interactions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> shareValue = targetUserObj[<span class="hljs-number">0</span>].currentScore;
+      <span class="hljs-keyword">var</span> currentShares = transactionQueueObj[<span class="hljs-number">0</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Does error checking to make sure the input is accurate</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(desiredShares &gt;  transactionQueueObj[<span class="hljs-number">0</span>]) {
+        <span class="hljs-keyword">var</span> errorMessage =<span class="hljs-string">"Error in transaction util.js. Number desired exceeds number available"</span>
+				<span class="hljs-built_in">console</span>.log(errorMessage);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">var</span> openTransactions = transactionQueueObj[<span class="hljs-number">1</span>];
+        <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">while</span>(desiredShares &gt; <span class="hljs-number">0</span>) {
+          <span class="hljs-keyword">var</span> sharesAvailable = openTransactions[i].numberShares;
+          <span class="hljs-keyword">if</span>(desiredShares &gt;= sharesAvailable) {
+            desiredShares -= sharesAvailable;
+            closeOpenTransaction(openTransactions[i], shareValue);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>if more available than desired make a partial transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          }	<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(desiredShares &lt; sharesAvailable) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>update the queue and update a partial transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            updateOpenTransactionAndStocks(openTransactions[i], desiredShares, shareValue);
+            desiredShares = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>in the 0 case close the transaction and exit the loop</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          }
+          i++;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>needs to close the overarching transaction and update karma</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        closeTransactionRequest(transactionObj, shareValue);
+      }
+    })
+  })
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h3>closeOpenTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Closes a transaction request that either goes through make transaction
+or one that goes directly through the server</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> closeOpenTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj, shareValue</span>)</span>{
+	<span class="hljs-keyword">var</span> desiredShares = transactionObj.numberShares
+	desiredShares = transactionObj.type === <span class="hljs-string">"buy"</span>? desiredShares : -desiredShares;
+	transactionObj.karma = shareValue * -desiredShares</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Add transaction to the transaction history</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.addTransaction(transactionObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Update the karma for the buyer/seller respectively</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.updateKarma(transactionObj.user_id, transactionObj.karma, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Update the stocks for the buyer and seller</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	stocksUtil.updateOrAddStocks(transactionObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+			scoresUtil.newSocialInvestmentScore(transactionObj.target_id);
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h3>closeTransactionRequest</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>If a transaction has been completed, close the transactoin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> closeTransactionRequest = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionQueueObj, shareValue</span>)</span>{
+	<span class="hljs-keyword">var</span> desiredShares = transactionQueueObj.numberShares
+	desiredShares = transactionQueueObj.type === <span class="hljs-string">"buy"</span>? desiredShares : -desiredShares;
+	<span class="hljs-keyword">var</span> transactionId = transactionQueueObj.id</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>converts the object so it can be stored in the transaction hist table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	transactionQueueObj.karma = shareValue * -desiredShares;
+	<span class="hljs-keyword">delete</span> transactionQueueObj[<span class="hljs-string">'id'</span>]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>If the transaction had a residual buy/sell, they will be added to the transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.addTransaction(transactionQueueObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Update the karma for the users as a result of the transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.updateKarma(transactionQueueObj.user_id, transactionQueueObj.karma, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Remove the transaction that was completed from the transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	transactionQueueController.deleteOpenTransaction(transactionId, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Update/add stocks that were bought and sold for the respective buyer/seller</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	stocksUtil.updateOrAddStocks(transactionQueueObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h3>updateOpenTransactionAndStocks</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Takes a tranasctionQueueObj adds the transaction to the users
+history, updates karma, and deleted the entry from the transaction Queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> updateOpenTransactionAndStocks = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionQueueObj, sharesChange, shareValue</span>)</span>{
+	<span class="hljs-keyword">var</span> karmaChange = transactionQueueObj.type === <span class="hljs-string">"sell"</span>? sharesChange * shareValue : -sharesChange * shareValue;
+	transactionQueueController.updateOpenTransaction(transactionQueueObj.id, sharesChange,<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, transactionQueueObj</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})
+	<span class="hljs-keyword">delete</span> transactionQueueObj[<span class="hljs-string">'id'</span>]
+	transactionQueueObj.karma = karmaChange;
+	transactionQueueObj.numberShares = sharesChange;
+	mainController.addTransaction(transactionQueueObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})
+	mainController.updateKarma(transactionQueueObj.user_id, karmaChange, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})
+	stocksUtil.updateOrAddStocks(transactionQueueObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(err)
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h3>checkTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Checks for transactions of a type from a specific target.
+Uses a callback on a tuple with the first value as the number
+of total shares available to buy/sell and the second value as an
+array of the transactionQueue objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> checkTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">target_id, type, callback</span>)</span>{
+	transactionQueueController.findOpenTransaction(target_id,type, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, rows</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			callback(err, <span class="hljs-literal">null</span>)
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">var</span> numberOfShares = <span class="hljs-number">0</span>;
+			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; rows.length; i++){
+				numberOfShares += rows[i].numberShares;
+			}
+			callback(<span class="hljs-literal">null</span>, [numberOfShares, rows])
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h3>getHistWithNames</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Callback operates on the transaction history with a target user’s name as an additional property</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> getHistWithNames = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id, callback</span>)</span>{
+	mainController.getTransactionHist(user_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, histObjs</span>)</span>{
+		<span class="hljs-keyword">var</span> newHistObjs = [];
+		<span class="hljs-keyword">if</span>(err){
+			callback(err)
+		}
+		<span class="hljs-keyword">var</span> addNamesToObjs = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">i, histObjs</span>)</span>{
+			<span class="hljs-keyword">if</span>(i === histObjs.length){
+				callback(<span class="hljs-literal">null</span>, histObjs)
+			} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">var</span> histObj = histObjs[i]
+			mainController.findUserById(histObj.target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, userObj</span>)</span>{
+				<span class="hljs-keyword">if</span>(err){
+					callback(err)
+				} <span class="hljs-keyword">else</span> {
+					histObj.target_name = userObj[<span class="hljs-number">0</span>].name
+					addNamesToObjs(i+<span class="hljs-number">1</span>, histObjs)
+				}
+			})
+			}
+		}
+		addNamesToObjs(<span class="hljs-number">0</span>, histObjs)
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <h3>reverseTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Turns the buyer into seller and switched the type
+so that both records are maintained</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> reverseTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Switches the type between buy and sell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> newType = transactionObj.type === <span class="hljs-string">"buy"</span>? <span class="hljs-string">"sell"</span> : <span class="hljs-string">"buy"</span>;
+	<span class="hljs-keyword">var</span> newUserId = transactionObj.target_id;
+	transactionObj.target_id = transactionObj.user_id;
+	transactionObj.user_id = newUserId;
+	transactionObj.type = newType;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h3>makePopulateTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Creates both the buy and sell transaction and adds them
+to the transactionHist database. Usefull for populating
+the database, also can be used for direct transactions which
+are not currently supported</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> makePopulateTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj, callback</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Set to a custom callback or a default that just logs errors</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	callback = callback || <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"error making transaction "</span>, err)
+		}
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Adds the first transaction, swaps the data then</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.addTransaction(transactionObj, callback)
+	reverseTransaction(transactionObj);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Adds the second transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.addTransaction(transactionObj, callback)
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+	makeTransaction: makeTransaction,
+	checkTransaction: checkTransaction,
+	makePopulateTransaction: makePopulateTransaction,
+	getHistWithNames: getHistWithNames,
+	closeTransactionRequest:closeTransactionRequest,
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

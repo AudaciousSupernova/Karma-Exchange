@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>index.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="auth.html">
+                  auth.js
+                </a>
+              
+                
+                <a class="source" href="index.html">
+                  index.js
+                </a>
+              
+                
+                <a class="source" href="newsfeed.html">
+                  newsfeed.js
+                </a>
+              
+                
+                <a class="source" href="portfolio.html">
+                  portfolio.js
+                </a>
+              
+                
+                <a class="source" href="profile.html">
+                  profile.js
+                </a>
+              
+                
+                <a class="source" href="transactionHist.html">
+                  transactionHist.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>index.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'app.index'</span>, [])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2> Main Controller </h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+.controller(<span class="hljs-string">'IndexController'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$scope, Socket, $rootScope, $location, $http, User, TransactionHist</span>) </span>{
+  $scope.searchResults;
+  $scope.searchQuery = <span class="hljs-string">""</span>;
+  $scope.transactions = [];
+  $scope.recentTransactions;
+  $scope.selectedProfile = <span class="hljs-literal">true</span>;
+  $scope.selectedFortune = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>$scope.getUserById</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>getUserById finds a user in the database by passing a sql id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getUserById = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+    User.getUser(id)
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>User is an array of one user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      $scope.loggedinUserInfo = user[<span class="hljs-number">0</span>];
+    })
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h3>$scope.viewProfile</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>viewProfile redirects the user to his/her profile</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.viewProfile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    $scope.selectedProfile = <span class="hljs-literal">true</span>;
+    $scope.selectedFortune = <span class="hljs-literal">false</span>;
+    $location.path(<span class="hljs-string">'/profile/'</span> + $rootScope.loggedinUserInfo.id);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h3>$scope.viewPortfolio</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>viewPortfolio redirects the user to his/her fortune page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.viewPortfolio = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    $scope.selectedFortune = <span class="hljs-literal">true</span>;
+    $scope.selectedProfile = <span class="hljs-literal">false</span>;
+    $location.path(<span class="hljs-string">'/portfolio/'</span> + $rootScope.loggedinUserInfo.id);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h3>$scope.getLeaders</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>getLeaders grabs the two users with the highest scores.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getLeaders = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    User.getLeaderData().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">leaders</span>) </span>{
+      $scope.userOne = leaders[<span class="hljs-number">0</span>].name;
+      $scope.userTwo = leaders[<span class="hljs-number">1</span>].name;
+    });
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h3>$scope.getAllTransactions</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>getAllTransactions grabs all of last week’s transactions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getAllTransactions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    TransactionHist.getAllTransactions()
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">results</span>) </span>{
+      $scope.recentTransactions = results;
+    })
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h3>$scope.logout</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>logout sets the $rootScope’s loggedinUserInfo to false and redirects the user to the root path</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.logout = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> $http({
+      method: <span class="hljs-string">'GET'</span>,
+      url: <span class="hljs-string">'/api/logout'</span>
+    }).then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">successCallback</span>(<span class="hljs-params">response</span>) </span>{
+      $rootScope.loggedinUserInfo = <span class="hljs-literal">false</span>;
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Successfully logged out."</span>)
+      $location.path(<span class="hljs-string">'/'</span>);
+      }, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">errorCallback</span>(<span class="hljs-params">response</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Something happened - log out failed."</span>);
+      });
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h3>$scope.findUsersByPartial</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>findUsersByPartial grabs user partials from the database based on the searchQuery</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.findUsersByPartial = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">if</span>($scope.searchQuery.length){
+      User.getUserByPartial($scope.searchQuery)
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">response</span>)</span>{
+        $scope.searchResults = response;
+      })
+    } <span class="hljs-keyword">else</span> {
+      $scope.searchResults = [];
+    }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h3>$scope.resetSearch</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>resetSearch clears the searchQuery after a query has been made</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.resetSearch = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    $scope.searchQuery = <span class="hljs-string">""</span>
+    $scope.searchResults = [];
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Gets all transactions so that the information is available on page load.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $scope.getAllTransactions();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Socket listener for latest transactions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Socket.on(<span class="hljs-string">'transaction'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transaction</span>) </span>{
+    $scope.transactions.unshift(transaction.transaction.transaction);
+    $scope.transactions.pop();
+  })
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
