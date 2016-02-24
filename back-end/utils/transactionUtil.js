@@ -49,11 +49,11 @@ var makeTransaction = function(transactionObj) {
   })
 }
 
-//<h3>closeTransactionRequest</h3>
+//<h3>closeOpenTransaction</h3>
 
 //Closes a transaction request that either goes through make transaction
 //or one that goes directly through the server
-var closeTransactionRequest = function(transactionObj, shareValue){
+var closeOpenTransaction = function(transactionObj, shareValue){
 	var desiredShares = transactionObj.numberShares
 	desiredShares = transactionObj.type === "buy"? desiredShares : -desiredShares;
 	transactionObj.karma = shareValue * -desiredShares
