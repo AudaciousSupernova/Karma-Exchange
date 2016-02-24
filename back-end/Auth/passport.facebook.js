@@ -6,11 +6,13 @@ var callbackURL;
 
 
 //<h3> Facebook authentication with Passport </h3>
+
+
+//If there is a development environment, set callbackURL to deployed.
+//If there isn't a development environment, set callbackURL to local.
 if(process.env.PORT){
-  //If there is a development environment, set callbackURL to deployed.
   callbackURL = "http://karmaexchange.io/auth/facebook/callback"
 } else {
-  //If there isn't a development environment, set callbackURL to local.
   callbackURL = "http://127.0.0.1:3000/auth/facebook/callback"
 }
 
@@ -23,7 +25,9 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+//<h3>Facebook Strategy for Passport</h3>
 
+//The strategy will update the user in the database if any information has changed, and will add any new users to database.
 passport.use(new FacebookStrategy({
     clientID: '767594746706952',
     clientSecret: 'd917065bc815ddf8ab8779c9f0b3c664',

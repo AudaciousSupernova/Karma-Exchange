@@ -15,8 +15,6 @@ var mainController = require("./mainController.js");
     //1. Update last_week_expected_social_change
     //2. Update last_week_actual_social_change
     //3. Update next_week_expected_social_change
-  //In the future, we may want to keep track of these trend changes.
-
 var getFacebookData = function() {
   var users;
   mainController.getAllUsers(function(err, results) {
@@ -256,6 +254,8 @@ var updateScores = function(newScore, social_subScores, user) {
     })
   }
 }
+
+//<h3>linearRegresssion<h3>
 
 //Linear regression function used to grab slope of scores, recent and general.
 function linearRegression(y,x){

@@ -5,50 +5,14 @@ var usefullVariables = require('./usefullVariables.js')
 
 var daysInMonthByIndex = usefullVariables.daysInMonthByIndex
 var monthIndexBy3Letters = usefullVariables.monthIndexBy3Letters
-// <h3>Utilities for controlling score functions</h3>
-// gets the score history for a given user and builds their
-// current total scores off of it
-//
-// currently only builds the social score, other scores can
-// be added later by extending the testObj and making the first
-// value of the tuple an object containing key value pairs of
-// scores in question
-
-// {social: {
-// 	base:
-// 	investment:
-// 	total:
-// }}
-
-//Update Investment Score Function
 
 
-/*
+//The various get scores functions call the getScores controller method which returns an array
+//populated with scoreObj's sorted by timestamp the array is then checked vs the time to return the
+//relevant information to the client. In the future it might be usefull to combine some of this information
+//to single days to limit the amount of information sent back to client.
 
-	target_id's social investment score is being affected
-	get all user info required to digest the score
-	run an algorithm
-	save new social-investment score
-
-	//then pump new social-investment score and current base score through gradient
-	//get new current score
-
-	//update current score and social-investment score for this target_user
-	//adding to score's historys
-
-*/
-
-//<h3>Get Scores Functions</h3>
-//The various get scores functions call the getScores controller method which returns an array populated with scoreObj's sorted by timestamp the array is then checked vs the time to return the relevant information to the client. In the future it might be usefull to combine some of this information to single days to limit the amount of information sent back to client.
-
-//var sampleScoresObj = {
-// 	currentScore: 63
-// 	id: 11749
-// 	social: 43
-// 	social_investment: 94
-// 	ts: "2015-11-03T03:24:29.000Z"
-// 	user_id: 2
-// }
+//<h3>getScoresFromDaysAway</h3>
 
 // returns the scores from x number of days into the past
 var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
@@ -105,6 +69,8 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 	})
 }
 
+//<h3>dayOfYear</h3>
+
 //Returns an integer value for the day of the year
 var dayOfYear = function(month, day){
 	var dayOfYear = day
@@ -116,6 +82,9 @@ var dayOfYear = function(month, day){
 	}
 	return dayOfYear
 }
+
+//<h3>newSocialInvestmentScore</h3>
+
 //Calculates the new social investment score based on supply, demand, number of shares on the market, and share velocity
 var newSocialInvestmentScore = function(target_id) {
 
@@ -229,6 +198,8 @@ var newSocialInvestmentScore = function(target_id) {
 	})
 }
 
+//<h3>updateScores</h3>
+
 //Stores the social_investment_subscores and social_investment_score of the user, and calculates a new currentScore
 //from the new social_investment_score that is passed in for a specified user.
 //Adds the scores to the scores history as well.
@@ -255,6 +226,8 @@ var updateScores = function(socialInvestmentScoresObj, user) {
 		}
 	})
 }
+
+//<h3>getScoresHistWithCurrentScores</h3>
 
 //Provides a callback that can act on either the resultObj, an object containing all scores (current, social, social_investment)
 //or the scoresObj from the scoresHist database.
@@ -294,6 +267,7 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 	})
 }
 
+
 //tests the test object
 var testTestObj = function(testObj){
 	for(var key in testObj){
@@ -315,6 +289,9 @@ var addTotalsToResultObj = function(resultObj){
 	}
 }
 
+//<h3>linearRegression</h3>
+
+//Used to determine score velocity
 function linearRegression(y,x){
 		var lr = {};
 		var n = y.length;

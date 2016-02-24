@@ -15,16 +15,11 @@ connection.connect(function(err){
 	console.log('Connected to transactionQueue Db')
 });
 
-//<h3>Transaction Queue function</h3>
-// Adds a transaction to the queue
+//<h2>Transaction Queue function</h2>
 
-// Example transactionQueue obj:
-// var transactionObj = {
-// 	user_id: 1,
-// 	type: "sell",
-// 	target_id: 100,
-// 	numberShares: 9
-// }
+//<h3>addTranscationToQueue</h3>
+
+// Adds a transaction to the queue
 var addTransactionToQueue = function(transactionObj, callback){
 	connection.query('INSERT INTO openTransactions SET ?', transactionObj, function(err, res){
 		if(err){
@@ -36,6 +31,8 @@ var addTransactionToQueue = function(transactionObj, callback){
 		}
 	})
 }
+
+//<h3>findOpenTranscation</h3>
 
 //Finds all transactions associated with a target_id
 //Callback operates on err and an array of all open tranasctions for the target
@@ -53,6 +50,8 @@ var findOpenTransaction = function(target_id, type, callback){
 	})
 }
 
+//<h3>findOpenUserTranscationForTarget</h3>
+
 //Queries for a requested transaction in the transaction queue where a user wants to buy/sell another specific user
 var findOpenUserTransactionForTarget = function(user_id, target_id, type, callback){
   callback = arguments[arguments.length - 1]
@@ -66,6 +65,8 @@ var findOpenUserTransactionForTarget = function(user_id, target_id, type, callba
   })
 }
 
+//<h3>findOpenUserTranscations</h3>
+
 //Queries for all open transactions in the transaction queue for a specific user
 var findOpenUserTransactions = function(user_id, callback){
 	connection.query('SELECT * FROM openTransactions WHERE user_id=?', user_id, function(err, rows){
@@ -78,6 +79,7 @@ var findOpenUserTransactions = function(user_id, callback){
 	})
 }
 
+//<h3>deleteOpenTransaction</h3>
 
 //Removes an open transaction from the Queue
 var deleteOpenTransaction = function(transactionId, callback){
@@ -91,6 +93,8 @@ var deleteOpenTransaction = function(transactionId, callback){
     }
   });
 }
+
+//<h3>updateOpenTransaction</h3>
 
 //Updates a the number of shares available/desired in the queue
 var updateOpenTransaction = function(transactionId, sharesChange, callback){

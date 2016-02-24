@@ -4,64 +4,54 @@ var scoresUtil = require('./scoresUtil')
 var stocksUtil = require('./stocksUtil')
 
 
-//<h3>Make transaction</h3>
-//this is the big function of the utils. It checks for a transaction
-//then, using the number of shares, updates the transaction queue for each
-//open transaction present in the order added to the queue
+//<h3>makeTransaction</h3>
 
-// var sampleTransaction = {
-// 	user_id: 5,
-// 	target_id: 4,
-// 	type: "buy",
-// 	numberShares: 12
-// }
-
-//Makes the transaction and updates the database with the results of a transaction
-var makeTransaction = function(transactionObj){
-	var desiredShares = transactionObj.numberShares
-	var savedDesiredShares = desiredShares
-	var type = transactionObj.type === "buy"? "sell" : "buy";
+//MakeTransactoin checks for a transaction then, using the number of shares, updates
+//the transaction queue for each open transaction present in the order added to the queue
+var makeTransaction = function(transactionObj) {
+  var desiredShares = transactionObj.numberShares;
+  var savedDesiredShares = desiredShares;
+  var type = transactionObj.type === "buy"? "sell" : "buy";
 
 	//checkTransaction returns a tuple with the first el being the number
 	//of shares available/desired and the second being an array of queued
 	//transactions.
-	checkTransaction(transactionObj.target_id, type, function(err, transactionQueueObj){
-
-		mainController.findUserById(transactionObj.target_id, function(err, targetUserObj){
-			//sets the current share value to be used in all interactions
-			var shareValue = targetUserObj[0].currentScore
-			var currentShares = transactionQueueObj[0]
-			console.log("What are my desired shares", desiredShares);
-			console.log("What is my transactionQueueObj", transactionQueueObj);
-			//Does error checking to make sure the input is accurate
-			if(desiredShares >  transactionQueueObj[0]){
-				var errorMessage ="Error in transaction util.js. Number desired exceeds number available"
-				console.log(errorMessage)
-			} else {
-				var openTransactions = transactionQueueObj[1]
-				var i = 0
-				while(desiredShares > 0){
-					var sharesAvailable = openTransactions[i].numberShares
-					if(desiredShares >= sharesAvailable){
-						desiredShares -= sharesAvailable
-						closeOpenTransaction(openTransactions[i], shareValue)
-					//if more available than desired make a partial transaction
-					}	else if(desiredShares < sharesAvailable){
+  checkTransaction(transactionObj.target_id, type, function(err, transactionQueueObj) {
+    mainController.findUserById(transactionObj.target_id, function(err, targetUserObj) {
+      //sets the current share value to be used in all interactions
+      var shareValue = targetUserObj[0].currentScore;
+      var currentShares = transactionQueueObj[0];
+      //Does error checking to make sure the input is accurate
+      if(desiredShares >  transactionQueueObj[0]) {
+        var errorMessage ="Error in transaction util.js. Number desired exceeds number available"
+				console.log(errorMessage);
+      } else {
+        var openTransactions = transactionQueueObj[1];
+        var i = 0;
+        while(desiredShares > 0) {
+          var sharesAvailable = openTransactions[i].numberShares;
+          if(desiredShares >= sharesAvailable) {
+            desiredShares -= sharesAvailable;
+            closeOpenTransaction(openTransactions[i], shareValue);
+            //if more available than desired make a partial transaction
+          }	else if(desiredShares < sharesAvailable) {
 						//update the queue and update a partial transaction
-					  updateOpenTransactionAndStocks(openTransactions[i], desiredShares, shareValue)
-						desiredShares = 0
-					//in the 0 case close the transaction and exit the loop
-					}
-					i++;
-				}
-				//needs to close the overarching transaction and update karma
-				closeTransactionRequest(transactionObj, shareValue)
-			}
-		})
-	})
+            updateOpenTransactionAndStocks(openTransactions[i], desiredShares, shareValue);
+            desiredShares = 0;
+            //in the 0 case close the transaction and exit the loop
+          }
+          i++;
+        }
+        //needs to close the overarching transaction and update karma
+        closeTransactionRequest(transactionObj, shareValue);
+      }
+    })
+  })
 }
 
-//closes a transaction request that either goes through make transaction
+//<h3>closeTransactionRequest</h3>
+
+//Closes a transaction request that either goes through make transaction
 //or one that goes directly through the server
 var closeTransactionRequest = function(transactionObj, shareValue){
 	var desiredShares = transactionObj.numberShares
@@ -88,8 +78,10 @@ var closeTransactionRequest = function(transactionObj, shareValue){
 	})
 }
 
+//<h3>closeTransactionRequest</h3>
+
 //If a transaction has been completed, close the transactoin
-var closeOpenTransaction = function(transactionQueueObj, shareValue){
+var closeTransactionRequest = function(transactionQueueObj, shareValue){
 	var desiredShares = transactionQueueObj.numberShares
 	desiredShares = transactionQueueObj.type === "buy"? desiredShares : -desiredShares;
 	var transactionId = transactionQueueObj.id
@@ -122,17 +114,10 @@ var closeOpenTransaction = function(transactionQueueObj, shareValue){
 	})
 }
 
+//<h3>updateOpenTransactionAndStocks</h3>
 
 //Takes a tranasctionQueueObj adds the transaction to the users
 //history, updates karma, and deleted the entry from the transaction Queue
-
-// var sampleQueueObj = {
-// 	user_id:3,
-// 	type:'sell',
-// 	target_id:2,
-// 	numberShares:8,
-// 	id:78
-// }
 var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange, shareValue){
 	var karmaChange = transactionQueueObj.type === "sell"? sharesChange * shareValue : -sharesChange * shareValue;
 	transactionQueueController.updateOpenTransaction(transactionQueueObj.id, sharesChange,function(err, transactionQueueObj){
@@ -161,7 +146,8 @@ var updateOpenTransactionAndStocks = function(transactionQueueObj, sharesChange,
 }
 
 
-//<h3>Transaction Queue Checkers</h3>
+//<h3>checkTransaction</h3>
+
 //Checks for transactions of a type from a specific target.
 //Uses a callback on a tuple with the first value as the number
 //of total shares available to buy/sell and the second value as an
@@ -179,6 +165,8 @@ var checkTransaction = function(target_id, type, callback){
 		}
 	})
 }
+
+//<h3>getHistWithNames</h3>
 
 //Callback operates on the transaction history with a target user's name as an additional property
 var getHistWithNames = function(user_id, callback){
@@ -207,6 +195,8 @@ var getHistWithNames = function(user_id, callback){
 }
 
 
+//<h3>reverseTransaction</h3>
+
 //Turns the buyer into seller and switched the type
 //so that both records are maintained
 var reverseTransaction = function(transactionObj){
@@ -217,6 +207,8 @@ var reverseTransaction = function(transactionObj){
 	transactionObj.user_id = newUserId;
 	transactionObj.type = newType;
 }
+
+//<h3>makePopulateTransaction</h3>
 
 //Creates both the buy and sell transaction and adds them
 //to the transactionHist database. Usefull for populating
