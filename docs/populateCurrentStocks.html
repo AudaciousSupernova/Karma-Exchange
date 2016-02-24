@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>populateCurrentStocks.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="fbRequests.html">
+                  fbRequests.js
+                </a>
+              
+                
+                <a class="source" href="mainController.html">
+                  mainController.js
+                </a>
+              
+                
+                <a class="source" href="populateCurrentStocks.html">
+                  populateCurrentStocks.js
+                </a>
+              
+                
+                <a class="source" href="populateScoresHist.html">
+                  populateScoresHist.js
+                </a>
+              
+                
+                <a class="source" href="populateTransactionHist.html">
+                  populateTransactionHist.js
+                </a>
+              
+                
+                <a class="source" href="populateTransactionHistWithCurrentShares.html">
+                  populateTransactionHistWithCurrentShares.js
+                </a>
+              
+                
+                <a class="source" href="populateUserTable.html">
+                  populateUserTable.js
+                </a>
+              
+                
+                <a class="source" href="transactionQueue.html">
+                  transactionQueue.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>populateCurrentStocks.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> faker = <span class="hljs-built_in">require</span>(<span class="hljs-string">'faker'</span>);
+<span class="hljs-keyword">var</span> mainController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./mainController'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p><h3>Internal Use Functions For Faker Data Popoulation </h3>
+Gets all users and then adds some random scores to their history</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>mainController.getAllUsers(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, users</span>)</span>{
+	<span class="hljs-keyword">var</span> users = users;
+	<span class="hljs-keyword">var</span> length = users.length;
+	<span class="hljs-keyword">var</span> totalAdditions = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">var</span> currentAddition = <span class="hljs-number">1</span>;
+
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; length; i++){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>for(var i = 0; i &lt; users.length; i++){</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">var</span> numberOfNewStocks = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">10</span>);
+		totalAdditions += numberOfNewStocks;
+
+		<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> subI = <span class="hljs-number">0</span>; subI &lt; numberOfNewStocks; subI++){
+			<span class="hljs-keyword">var</span> randomStockObj = {
+				user_id: i+<span class="hljs-number">1</span>,
+				target_id: <span class="hljs-built_in">Math</span>.ceil(<span class="hljs-built_in">Math</span>.random() * length),
+				numberShares: <span class="hljs-built_in">Math</span>.ceil(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">100</span>),
+			}
+			mainController.addStock(randomStockObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>)</span>{
+				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"inserting stock # "</span> + currentAddition)
+				<span class="hljs-built_in">console</span>.log(currentAddition + <span class="hljs-string">":"</span> + totalAdditions)
+				<span class="hljs-keyword">if</span>(currentAddition === totalAdditions){
+					process.exit();
+				}
+				currentAddition++;
+			})
+		}
+	}
+})</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

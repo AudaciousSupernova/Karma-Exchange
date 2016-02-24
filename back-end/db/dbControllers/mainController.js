@@ -15,8 +15,11 @@ connection.connect(function(err){
 	console.log('Connected to Main Db')
 });
 
-//<h3> User database functions </h3>
-//takes a userObj with name, email, karma, facebookKey, id, password
+//<h2> User database functions </h2>
+
+//<h3>addUser</h3>
+
+//Takes a userObj with name, email, karma, facebookKey, id, password
 var addUser = function (userObj, callback) {
 	connection.query('INSERT INTO users SET ?', userObj, function(err, res){
 		if(err){
@@ -29,7 +32,9 @@ var addUser = function (userObj, callback) {
 	})
 }
 
-//finds a user based on the name and password inserted
+//<h3>findUser</h3>
+
+//Finds a user based on the name and password inserted
 //returns an array of obj's (should only be one) usefull for login
 var findUser = function(name, password, callback){
 	connection.query('SELECT * FROM users where name=? and password=?', [name, password], function(err, rows){
@@ -42,6 +47,9 @@ var findUser = function(name, password, callback){
 	})
 }
 
+//<h3>findUserByPartial</h3>
+
+//Finds a user by providing partial name information. Used in search
 var findUsersByPartial = function(string, callback){
 	string+= "%"
 	connection.query('SELECT * FROM users WHERE name LIKE ?', string, function(err, rows){
@@ -55,7 +63,9 @@ var findUsersByPartial = function(string, callback){
 	})
 }
 
-//finds the user by id, useful for buy/sell events
+//<h3>findUserById</h3>
+
+//Finds the user by id, useful for buy/sell events
 //returns an array of obj's (should only be one)
 var findUserById = function(userId, callback){
 	connection.query('SELECT * FROM users WHERE id=?', [userId], function(err, rows){
@@ -68,8 +78,9 @@ var findUserById = function(userId, callback){
 	})
 }
 
+//<h3>findUserByFbKey</h3>
 
-//finds the user by facebookKey, useful for buy/sell events
+//Finds the user by facebookKey, useful for buy/sell events
 //returns an array of obj's (should only be one)
 var findUserByFbKey = function(fbKey, callback){
 	connection.query('SELECT * FROM users WHERE facebookKey=?', [fbKey], function(err, rows){
@@ -82,36 +93,41 @@ var findUserByFbKey = function(fbKey, callback){
 	})
 }
 
-//returns a count of the number of users in the Db
+//<h3>countUsers</h3>
+
+//Returns a count of the number of users in the Db
 var countUsers = function(callback){
 	connection.query('select count(*) from users', function(err, count){
 		if(err){
 			console.log("Error counting users :", err)
 			callback(err, null)
 		} else{
-			// the response is an array of objects with the "count(*)" key
+			// Response is an array of objects with the "count(*)" key
 			// since we are actually doing the wildcard count that will be our key
 			callback(null, count[0]['count(*)'])
 		}
 	})
 }
 
-//returns an array of all users, can be used for populating
+//<h3>getAllUsers</h3>
+
+//Returns an array of all users, can be used for populating
 var getAllUsers = function(callback){
 	connection.query('select * from users', function(err, users){
 		if(err){
 			console.log("Error collecting users :", err)
 			callback(err, null)
 		} else{
-			// the response is an array of objects with the "count(*)" key
+			// Response is an array of objects with the "count(*)" key
 			// since we are actually doing the wildcard count that will be our key
 			callback(null, users)
 		}
 	})
-
 }
 
-// returns array of top n users, ranked by current score
+//<h3>getTopUsers</h3>
+
+// Returns array of top n users, ranked by current score
 var getTopUsers = function(limit, callback) {
 	connection.query('SELECT * FROM users ORDER BY currentScore DESC LIMIT ?',limit, function(err, res) {
 		if (err) {
@@ -123,10 +139,10 @@ var getTopUsers = function(limit, callback) {
 	})
 }
 
+//<h3>updateUser</h3>
 
-
-//even though this leverages two controller methods since it is
-//essentially just an update it is here
+//Even though this leverages two controller methods since it is
+//essentially just an update it is here.
 //newUserObj must have user_id and the new properties
 var updateUser = function(newUserObj, callback){
 	var user_id = newUserObj.id
@@ -146,7 +162,9 @@ var updateUser = function(newUserObj, callback){
 	})
 }
 
-//updates the karma of a specified user this is kept as a
+//<h3>updateKarma</h3>
+
+//Updates the karma of a specified user this is kept as a
 //seperate function because it utilized the difference rather
 //than just overwriting the property, this leads to fewer
 //db interactions. It CAN accept a negative value for karmaChange
@@ -163,8 +181,9 @@ var updateKarma = function(userId, karmaChange, callback){
 	);
 }
 
+//<h3>updatePhoto</h3>
 
-//updates the photo of a specified user
+//Updates the photo of a specified user
 var updatePhoto = function (userId, newPhoto, callback){
 	connection.query('UPDATE users SET profile_photo = ? Where facebookKey = ?',[newPhoto, userId], function (err, response) {
 	    if (err){
@@ -178,7 +197,9 @@ var updatePhoto = function (userId, newPhoto, callback){
 	);
 }
 
-//deletes user
+//<h3>deleteUser</h3>
+
+//Deletes a user specified by a userId
 var deleteUser = function(userId, callback){
 	connection.query('DELETE FROM users WHERE id = ?',userId, function (err, response) {
     if (err) {
@@ -192,21 +213,16 @@ var deleteUser = function(userId, callback){
 }
 
 
-//<h3>Transaction History functions</h3>
-//userId and type
-//transaction object = {user_id,target_id,type,numberShares,karma}
-//type = buy/sell
-//userId and target are foreign keys referencing the user schema
-// var sampleTransaction = {
-// 	user_id: 1,
-// 	target_id: 2,
-// 	type: "sell",
-// 	numberShares: 15,
-// 	karma: 44
-// }
-// addTransaction(sampleTransaction)
+//<h2>Transaction History functions</h2>
+//transaction object = {user_id, target_id, type, numberShares, karma}
 
-//takes a transaction object and adds it to the transaction history table
+//type = buy/sell
+
+//userId and target are foreign keys referencing the user schema
+
+//<h3>addTransaction</h3>
+
+//Takes a transaction object and adds it to the transaction history table
 var addTransaction = function(transactionObj, callback){
 	connection.query('INSERT INTO transactionHist SET ?', transactionObj, function(err, res){
 		if(err){
@@ -219,20 +235,23 @@ var addTransaction = function(transactionObj, callback){
 	})
 }
 
-//takes a userId and returns a transaction history for that userId
+//<h3>getTransactionHist</h3>
+
+//Takes a userId and returns a transaction history for that userId
 var getTransactionHist = function(userId, callback){
 	connection.query('SELECT * FROM transactionHist where user_id=?', userId, function(err, rows){
 		if(err){
 			console.log("Error finding transactionHist of user_id :" + userId, err)
 			callback(err, null);
 		} else{
-			// console.log(rows)
 			callback(null, rows);
 		}
 	})
 };
 
-//takes a targetId and returns a transaction history including that targetId
+//<h3>targetTransactionHist</h3>
+
+//Takes a targetId and returns a transaction history including that targetId
 var targetTransactionHist = function(targetId, callback) {
 	connection.query('SELECT * FROM transactionHist where target_id=?', targetId, function(err, rows) {
 		if (err) {
@@ -244,7 +263,9 @@ var targetTransactionHist = function(targetId, callback) {
 	})
 }
 
-//retrieves transactions from the last week involving any users
+//<h3>getAllTransactions</h3>
+
+//Retrieves transactions from the last week involving any users
 var getAllTransactions = function(callback) {
 	var oneWeekAgo = new Date();
 	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -258,19 +279,20 @@ var getAllTransactions = function(callback) {
 	})
 }
 
-//<h3>Score History functions</h3>
-//adds a score to the users history, which will also update the user's scores(social, social_investment, currentScore) property
-//in the user table
-//do not pass a timestamp, mysql will do this for you
-//type can be social or social-investment
-//other types will be available in the future
+//<h2>Score History functions</h2>
+
+//<h3>addScore</h3>
+//Adds a score to the users history, which will also update the user's scores(social, social_investment, currentScore) property
+//in the user table.
+//Do not pass a timestamp, MySQL will do this for you
+//Type can be social or social-investment
+//Other types will be available in the future
+
 // var sampleScoreObj = {
 // 	user_id: 243,
 // 	type: "social-investment",
 // 	score: 95
 // }
-
-//takes a score object and adds it to the scores' history table
 var addScore = function(scoreObj, subscoresObj,callback) {
 	callback = arguments[arguments.length-1];
 	connection.query('INSERT INTO scoresHist SET ?', scoreObj, function(err, res){
@@ -290,24 +312,9 @@ var addScore = function(scoreObj, subscoresObj,callback) {
 	})
 }
 
-// var scoreObj = {
-//                 user_id: userId,
-//                 social_investment: 5,
-//                 social: 5,
-//                 currentScore: 10
-//               };
+//<h3>getScores</h3>
 
-// var testObj = {
-// 	user_id: 4,
-// 	social_investment:7,
-// 	social:9,
-// 	currentScore:15
-// }
-// addScore(testObj, function (whatever) {
-// 	console.log(whatever);
-// })
-
-//grabs all scores for a target user
+//Queries all scores for a target user
 var getScores = function(userId, callback){
 	connection.query('SELECT * FROM scoresHist where user_id=? ORDER BY ts', userId, function(err, rows){
 		if(err){
@@ -320,7 +327,9 @@ var getScores = function(userId, callback){
 	})
 }
 
-//grabs all scores for a target user in the last week
+//<h3>getRecentScores</h3>
+
+//Queries all scores for a target user in the last week
 var getRecentScores = function(userId, callback) {
 	var oneWeekAgo = new Date();
 	oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -334,6 +343,9 @@ var getRecentScores = function(userId, callback) {
 	})
 }
 
+//<h3>getScoresLastThreeMonths</h3>
+
+//Queries all scores for a target user in the last three months
 var getScoresLastThreeMonths = function(userId, callback) {
 	var threeMonthsAgo = new Date();
 	threeMonthsAgo.setDate(threeMonthsAgo.getDate() - 90);
@@ -347,7 +359,9 @@ var getScoresLastThreeMonths = function(userId, callback) {
 	})
 }
 
-// grabs x users, sorted by current score
+//<h3>getTopScores</h3>
+
+//Queries n users, sorted by current score
 var getTopScores = function(limit, callback) {
 	connection.query('SELECT * FROM users ORDER BY currentScore LIMIT=?',limit, function(err, res) {
 		if (err) {
@@ -359,7 +373,9 @@ var getTopScores = function(limit, callback) {
 	})
 }
 
-//<h3>Current Stocks</h3>
+//<h2>Current Stocks</h2>
+
+//<h3>addStock</h3>
 
 // Adds a stock
 //example investmentObj
@@ -368,8 +384,6 @@ var getTopScores = function(limit, callback) {
 // 	target_id:2,
 // 	numberShares:5
 // }
-// Adds a stock
-
 var addStock = function(investmentObj, callback) {
 	connection.query('INSERT INTO currentStocks SET ?', investmentObj, function(err, res) {
 		if (err) {
@@ -381,7 +395,9 @@ var addStock = function(investmentObj, callback) {
 	})
 }
 
-// Gets all stocks for a specified user
+//<h3>getStocks</h3>
+
+//Queries all stocks for a specified user
 var getStocks = function(userId, callback){
   connection.query('SELECT * FROM currentStocks WHERE user_id=?', [userId], function(err, rows){
     if(err){
@@ -393,7 +409,9 @@ var getStocks = function(userId, callback){
   })
 }
 
-// Get all stocks that include the inputted targetId as the target user
+//<h3>getTargetStocks</h3>
+
+//Queries all stocks that include the inputted targetId as the target user
 var getTargetStocks = function(targetId, callback) {
 	connection.query('SELECT * from currentStocks WHERE target_id=?', [targetId], function(err, rows) {
 		if (err) {
@@ -404,7 +422,9 @@ var getTargetStocks = function(targetId, callback) {
 	})
 }
 
-//returns stocks of a target user for a given user
+//<h3>getStockRow</h3>
+
+//Queries stocks of a target user for a given user
 var getStockRow = function(userId, targetId, callback){
   connection.query('SELECT * FROM currentStocks WHERE user_id=? and target_id=?', [userId, targetId], function(err, rows){
     if(err){
@@ -415,6 +435,8 @@ var getStockRow = function(userId, targetId, callback){
     }
   })
 }
+
+//<h3>updateStock</h3>
 
 // Updates the stock of a specified user
 var updateStock = function(userId, targetId, changeShares, callback) {
@@ -428,6 +450,8 @@ var updateStock = function(userId, targetId, changeShares, callback) {
 		}
 	})
 }
+
+//<h3>deleteStock</h3>
 
 // Deletes the stock of a specified user
 var deleteStock = function(userId, targetId, callback) {

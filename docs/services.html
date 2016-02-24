@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>services.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>services.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>angular.module(<span class="hljs-string">'app.services'</span>, [])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2>User factory</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>.factory(<span class="hljs-string">'User'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$http, $location</span>) </span>{
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>getUser</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getUser: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/profile/'</span> + id,
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h3>getUserByPartial</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getUserByPartial: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">partial</span>)</span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/users/partial/'</span> + partial,
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h3>getLeaderData</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getLeaderData: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/leaders'</span>,
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(res.data, <span class="hljs-string">'res.data'</span>);
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    }
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2>Portfolio factory</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>.factory(<span class="hljs-string">'Portfolio'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$http, $location</span>) </span>{
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3>getInvestments</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getInvestments: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/portfolio/'</span> + id,
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h3>addInvestments</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addInvestment: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">investment</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'POST'</span>,
+        url: <span class="hljs-string">'/profile/buy'</span>,
+        data: {investment: investment}
+      })
+    }
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2>Auth Factory</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+.factory(<span class="hljs-string">'Auth'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$http, $location, $rootScope</span>) </span>{
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h3>checkedLoggedIn</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Function to determine whether a user is loggedIn. If the user is logged in, the user’s information
+will be stored in the global angular $rootScope to personalize each view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    checkLoggedIn   : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/api/loggedin'</span>
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">user</span>) </span>{
+        <span class="hljs-keyword">if</span> (user.data[<span class="hljs-number">0</span>].id) {
+          $rootScope.loggedinUserInfo = user.data[<span class="hljs-number">0</span>];
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"error authenticating user"</span>);
+          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+      });
+    }
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h2>Transaction History Factory</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>TransactionHist factory makes http calls that will get information on the transaction history of a user,
+add new transactions to the history, place transactions in the transaction queue, or check the contents of the
+transaction queue.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>.factory(<span class="hljs-string">'TransactionHist'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$http, $location</span>) </span>{
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h3>addTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Calls addTransaction, which adds transaction to TransactionHist - affecting transactionQueue, karma, stocks, share price.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addTransaction: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'POST'</span>,
+        url: <span class="hljs-string">'/transaction/add'</span>,
+        data: {transactionObj: transactionObj}
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h3>getTransactions</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Get all past transactions for given user_id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getTransactions: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/transaction/get/'</span> + user_id
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h3>getAllTransactions</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    getAllTransactions: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/transaction/all/'</span>
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h3>getOpenUserTransactions</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Gets all of the open transactions for a specific user, used in the portfolio to help close those transactions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getOpenUserTransactions: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id</span>)</span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/transaction/queue/'</span> + user_id
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h3>getOpenUserSellTransactionsForTarget</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Gets all of the open transactions for a specific user and a specific target, used in the sell controller to determine how many shares a user can actually sell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getOpenUserSellTransactionsForTarget: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id, target_id</span>)</span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/transaction/queueSells'</span>,
+        params: {user_id: user_id, target_id: target_id}
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h3>checkSharesAvail</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Returns number of shares available for given target_id</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    checkSharesAvail: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">target_id, type</span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'targetid'</span>, target_id, <span class="hljs-string">'type'</span>, type);
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/transaction/check/'</span>,
+        params: {target_id: target_id, type: type}
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h3>makeTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Calls makeTransaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeTransaction: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'POST'</span>,
+        url: <span class="hljs-string">'/transaction/make'</span>,
+        data: {transactionObj: transactionObj}
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h3>addTransactionToQueue</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Calls addTransactionToQueue, which adds specified transaction to transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addTransactionToQueue: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj</span>) </span>{
+
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'POST'</span>,
+        url: <span class="hljs-string">'/transaction/queue'</span>,
+        data: {transactionObj: transactionObj}
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <h3>closeTransactionRequest</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Calls closeTransactionRequest, which closes specified transaction request</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    closeTransactionRequest: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj, shareValue</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'POST'</span>,
+        url: <span class="hljs-string">'/transaction/close'</span>,
+        data: {transactionObj: transactionObj, shareValue: shareValue}
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h3>deleteOpenTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Deletes an open transaction from the queue. Used in portfolio view to cancel a transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    deleteOpenTransaction: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionId</span>)</span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'DELETE'</span>,
+        url: <span class="hljs-string">'/transaction/queue/delete/'</span> + transactionId
+      })
+    }
+
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2>Scores Factory</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>The scores factory will get the scores associated for a user, or provide the route to update the users
+social investment score.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>.factory(<span class="hljs-string">'Scores'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$http, $location</span>) </span>{
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <h3>getScores</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>HTTP request to API route to get score data for a user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getScores: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/profile/score/month/'</span> + id
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h3>updateSocialInvestment</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>HTTP request to API route to update the social investment score</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    updateSocialInvestment: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/api/updateInvestmentScore/'</span> + id
+      })
+    }
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h2>Facebook Factory</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>The FB factory makes an HTTP call that makes calls to Facebook’s Graph API and updates the user’s social score</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>.factory(<span class="hljs-string">'FB'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$http, $location</span>) </span>{
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p><h3>Test (Facebook Score)</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>HTTP request to API Route to make Facebook Graph API call</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    test: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id</span>) </span>{
+      <span class="hljs-keyword">return</span> $http({
+        method: <span class="hljs-string">'GET'</span>,
+        url: <span class="hljs-string">'/facebook/'</span> + id
+      })
+      .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+        <span class="hljs-keyword">return</span> res.data;
+      })
+    }
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <h2>Socket Factory</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>The socket factory defines the socket on and emit functions that listen and send socket events to the backend.
+Sockets are used in creating ticker.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>.factory(<span class="hljs-string">'Socket'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">$rootScope</span>) </span>{
+
+  <span class="hljs-keyword">return</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <h3>On</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Socket listener</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    on: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">eventName, callback</span>) </span>{
+      <span class="hljs-built_in">window</span>.socket.on(eventName, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">arguments</span>;
+        $rootScope.$apply(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+          callback.apply(<span class="hljs-built_in">window</span>.socket, args);
+        })
+      });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h3>Emit</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Socket emitter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    emit: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">eventName, data, callback</span>) </span>{
+      <span class="hljs-built_in">window</span>.socket.emit(eventName, data, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">arguments</span>;
+        $rootScope.$apply(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+          <span class="hljs-keyword">if</span> (callback) {
+            callback.apply(<span class="hljs-built_in">window</span>.socket, args);
+          }
+        })
+      });
+    }
+  }
+
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

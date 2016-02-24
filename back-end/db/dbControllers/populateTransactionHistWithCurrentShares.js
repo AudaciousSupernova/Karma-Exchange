@@ -2,7 +2,8 @@ var faker = require('faker');
 var mainController = require('./mainController')
 var transactionUtil = require('../../utils/transactionUtil')
 
-//gets all users and then adds some random transactions to them
+//<h3>Internal Use Functions For Faker Data Popoulation </h3>
+//Gets all users and then adds some random transactions to them
 mainController.getAllUsers(function(err, users){
 	var users = users;
 	var length = users.length;

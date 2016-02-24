@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>scoresUtil.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="scoresUtil.html">
+                  scoresUtil.js
+                </a>
+              
+                
+                <a class="source" href="stocksUtil.html">
+                  stocksUtil.js
+                </a>
+              
+                
+                <a class="source" href="transactionUtil.html">
+                  transactionUtil.js
+                </a>
+              
+                
+                <a class="source" href="usefullVariables.html">
+                  usefullVariables.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>scoresUtil.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mainController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../db/dbControllers/mainController'</span>)
+<span class="hljs-keyword">var</span> transactionQueue = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../db/dbControllers/transactionQueue'</span>)
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'underscore'</span>)
+<span class="hljs-keyword">var</span> usefullVariables = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./usefullVariables.js'</span>)
+
+<span class="hljs-keyword">var</span> daysInMonthByIndex = usefullVariables.daysInMonthByIndex
+<span class="hljs-keyword">var</span> monthIndexBy3Letters = usefullVariables.monthIndexBy3Letters</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The various get scores functions call the getScores controller method which returns an array
+populated with scoreObj’s sorted by timestamp the array is then checked vs the time to return the
+relevant information to the client. In the future it might be usefull to combine some of this information
+to single days to limit the amount of information sent back to client.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>getScoresFromDaysAway</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>returns the scores from x number of days into the past</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> getScoresFromDaysAway = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">target_id, daysIntoPast, callback</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>daysInMonthByIndex</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mainController.getScores(target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, scoresObjs</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			callback(err)
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">var</span> arrayOfScores = []
+			<span class="hljs-keyword">var</span> currentDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>;
+			<span class="hljs-keyword">var</span> currentMonth = currentDate.getUTCMonth();
+			<span class="hljs-keyword">var</span> currentDay = currentDate.getUTCDate();
+
+			<span class="hljs-keyword">var</span> currentDayOfYear = dayOfYear(currentMonth, currentDay)
+			<span class="hljs-keyword">if</span>(currentDayOfYear &lt;= daysIntoPast){
+				currentDayOfYear += <span class="hljs-number">365</span>
+			}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>bellow is an array, the first elements has the current day being checked and the second is all of the scores for that day which will be averaged. The third element in the array will be a saved obj that will be used to store the averaged value and passed back to the user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">var</span> singleDayValues = [<span class="hljs-number">-1</span>,{<span class="hljs-string">"social"</span>:[],<span class="hljs-string">"currentScore"</span>:[]}]
+			<span class="hljs-keyword">var</span> scoreObj;
+			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = scoresObjs.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span> ; i--){
+				scoreObj = scoresObjs[i];
+
+				<span class="hljs-keyword">var</span> scoreTime = scoreObj.ts.toString().split(<span class="hljs-string">" "</span>)
+				<span class="hljs-keyword">var</span> scoreMonth = scoreTime[<span class="hljs-number">1</span>]
+				<span class="hljs-keyword">var</span> scoreDay = <span class="hljs-built_in">Number</span>([scoreTime[<span class="hljs-number">2</span>]])
+				<span class="hljs-keyword">var</span> scoreDayOfYear = dayOfYear(scoreMonth, scoreDay)
+				<span class="hljs-keyword">var</span> scoreDiff = currentDayOfYear - scoreDayOfYear
+				<span class="hljs-keyword">if</span>(scoreDiff &lt; <span class="hljs-number">0</span> || (scoreDiff &gt; daysIntoPast &amp;&amp; scoreDiff &lt; <span class="hljs-number">365</span>)){
+					<span class="hljs-keyword">break</span>;
+				}
+				<span class="hljs-keyword">delete</span> scoreObj[<span class="hljs-string">'social_investment'</span>]
+				<span class="hljs-keyword">if</span>(singleDayValues[<span class="hljs-number">0</span>] === scoreDayOfYear){
+					singleDayValues[<span class="hljs-number">1</span>].social.push(scoreObj.social)
+					singleDayValues[<span class="hljs-number">1</span>].currentScore.push(scoreObj.currentScore)
+					singleDayValues[<span class="hljs-number">2</span>] = scoreObj
+				}<span class="hljs-keyword">else</span>{
+					<span class="hljs-keyword">if</span>(singleDayValues[<span class="hljs-number">1</span>].social.length &gt; <span class="hljs-number">1</span>){
+						<span class="hljs-keyword">var</span> yesterdaysScoreObj = singleDayValues[<span class="hljs-number">2</span>]
+						<span class="hljs-keyword">var</span> sumScore = _.reduce(singleDayValues[<span class="hljs-number">1</span>].social, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>)</span>{<span class="hljs-keyword">return</span> a + b})
+						yesterdaysScoreObj.social = <span class="hljs-built_in">Math</span>.round(sumScore / singleDayValues[<span class="hljs-number">1</span>].social.length)
+						sumScore = _.reduce(singleDayValues[<span class="hljs-number">1</span>].currentScore, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>)</span>{<span class="hljs-keyword">return</span> a + b})
+						yesterdaysScoreObj.currentScore = <span class="hljs-built_in">Math</span>.round(sumScore / singleDayValues[<span class="hljs-number">1</span>].currentScore.length)
+						arrayOfScores.unshift(yesterdaysScoreObj)
+					} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(singleDayValues[<span class="hljs-number">2</span>]){
+						arrayOfScores.unshift(singleDayValues[<span class="hljs-number">2</span>])
+					}
+					singleDayValues = [scoreDayOfYear,{<span class="hljs-string">"social"</span>:[scoreObj.social],<span class="hljs-string">"currentScore"</span>:[scoreObj.currentScore]}, scoreObj]
+				}
+			}
+			arrayOfScores.unshift(scoreObj)
+			callback(<span class="hljs-literal">null</span>, arrayOfScores)
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3>dayOfYear</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Returns an integer value for the day of the year</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> dayOfYear = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">month, day</span>)</span>{
+	<span class="hljs-keyword">var</span> dayOfYear = day
+	<span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> month === <span class="hljs-string">"string"</span>){
+		month = monthIndexBy3Letters[month]
+	}
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; month; i++){
+		dayOfYear += daysInMonthByIndex[i]
+	}
+	<span class="hljs-keyword">return</span> dayOfYear
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h3>newSocialInvestmentScore</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Calculates the new social investment score based on supply, demand, number of shares on the market, and share velocity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> newSocialInvestmentScore = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">target_id</span>) </span>{
+
+	<span class="hljs-keyword">var</span> numInvestors;
+	<span class="hljs-keyword">var</span> sharesOnMarket = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">var</span> numTransactionsMade = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">var</span> newSocialInvestmentScore;
+	<span class="hljs-keyword">var</span> supply=<span class="hljs-number">0</span>;
+	<span class="hljs-keyword">var</span> demand=<span class="hljs-number">0</span>;
+	mainController.findUserById(target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, user</span>) </span>{
+		<span class="hljs-keyword">if</span> (err) {
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Error querying user by id'</span>, err);
+		} <span class="hljs-keyword">else</span> {
+      user = user[<span class="hljs-number">0</span>];
+			mainController.targetTransactionHist(target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, rows</span>) </span>{
+				<span class="hljs-keyword">if</span> (err) {
+					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"There was an error"</span>, err);
+				} <span class="hljs-keyword">else</span> {
+					numTransactionsMade = rows.length;
+					mainController.getTargetStocks(target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, stocks</span>) </span>{
+						<span class="hljs-keyword">if</span> (err) {
+						} <span class="hljs-keyword">else</span> {
+							numInvestors = stocks.length;
+							stocks.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">investment</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Calculate total number of shares on market by totaling number of shares in each current investment</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>								sharesOnMarket+= investment.numberShares;
+							})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Get the scores for the last week and store them in x,y format (x=index, y=score)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>							mainController.getRecentScores(target_id, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, recentScores</span>) </span>{
+								<span class="hljs-keyword">if</span> (err) {
+									<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"There was an error getting recent scores"</span>, err);
+								}
+								<span class="hljs-keyword">else</span> {
+									<span class="hljs-keyword">var</span> recentXVals = [];
+									<span class="hljs-keyword">var</span> recentYVals = [];
+									_.each(recentScores,<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">recentScore, index</span>) </span>{
+										recentXVals.push(index);
+                    recentYVals.push(recentScore.social_investment);
+                  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Prevent score histories with only 1 value from breaking linear regression</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                  <span class="hljs-keyword">if</span> (recentXVals.length &lt;<span class="hljs-number">2</span>) {
+                    recentXVals.push(recentXVals[<span class="hljs-number">0</span>]);
+                    recentYVals.push(recentYVals[<span class="hljs-number">0</span>]);
+                  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Get the scores for the last three months and treat as the general trend. Similar
+to recent scores, these values will also be placed in x,y format</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                  mainController.getScoresLastThreeMonths(target_id, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, generalScores</span>) </span>{
+                    <span class="hljs-keyword">var</span> generalXVals = [];
+                    <span class="hljs-keyword">var</span> generalYVals = [];
+                    _.each(generalScores, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">generalScore, index</span>) </span>{
+                      generalXVals.push(index);
+                      generalYVals.push(generalScore.social_investment);
+                    })
+                    <span class="hljs-keyword">if</span> (generalXVals.length &lt;<span class="hljs-number">2</span>) {
+                      generalXVals.push(generalXVals[<span class="hljs-number">0</span>]);
+                      generalYVals.push(generalYVals[<span class="hljs-number">0</span>]);
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Calculate recent velocity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">var</span> recentVelocity = linearRegression(recentYVals, recentXVals).slope;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>If there is no velocity (activity in the last week), set the velocity to 0.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (!recentVelocity) {
+                    	recentVelocity = <span class="hljs-number">0</span>;
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Calculate general velocity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">var</span> generalVelocity = linearRegression(generalYVals, generalXVals).slope;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Velocity is determined by giving greater weight to the recent velocity if it represents a great deviation
+from the general velocity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Math</span>.abs(recentVelocity/generalVelocity) &gt; <span class="hljs-number">1.5</span> || <span class="hljs-built_in">Math</span>.abs(generalVelocity/recentVelocity) &gt; <span class="hljs-number">1.5</span>) {
+                      velocity = recentVelocity * <span class="hljs-number">0.75</span> + generalVelocity * <span class="hljs-number">0.25</span>;
+                    } <span class="hljs-keyword">else</span> {
+                      velocity = recentVelocity * <span class="hljs-number">0.5</span> + generalVelocity * <span class="hljs-number">0.5</span>;
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Search the transaction queue to find open buy and sell requests to determine supply and demand</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    transactionQueue.findOpenTransaction(target_id, <span class="hljs-string">'buy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, buyRequests</span>) </span>{
+                      <span class="hljs-keyword">if</span> (err) {
+                        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error"</span>, err);
+                      } <span class="hljs-keyword">else</span> {
+                        _.each(buyRequests, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">buyRequest</span>) </span>{
+                          demand += buyRequest.numberShares;
+                        })
+                        transactionQueue.findOpenTransaction(target_id, <span class="hljs-string">'sell'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, sellRequests</span>) </span>{
+                          <span class="hljs-keyword">if</span> (err) {
+                            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error"</span>,err)
+                          }
+                          _.each(sellRequests, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sellRequest</span>) </span>{
+                            supply += sellRequest.numberShares;
+                          })
+                          social_investment_scores_object = {};
+                          social_investment_scores_object.subscores = {
+                            numShareHolder: numInvestors,
+                            sharesOnMarket: sharesOnMarket,
+                            numTransactions: numTransactionsMade
+                          }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Determine the new social investment score and update the score for the user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                          social_investment_scores_object.newSocialInvestmentScore = <span class="hljs-built_in">Math</span>.sqrt(sharesOnMarket+demand-supply) * ((<span class="hljs-built_in">Math</span>.atan(velocity) + <span class="hljs-built_in">Math</span>.PI/<span class="hljs-number">2</span>)*<span class="hljs-number">1.1</span>);
+                          updateScores(social_investment_scores_object, user)
+                        })
+                      }
+                    })
+                  })
+								}
+							})
+						}
+					})
+				}
+			})
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h3>updateScores</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Stores the social_investment_subscores and social_investment_score of the user, and calculates a new currentScore
+from the new social_investment_score that is passed in for a specified user.
+Adds the scores to the scores history as well.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> updateScores = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">socialInvestmentScoresObj, user</span>) </span>{
+  user.social_investment_subscores = <span class="hljs-built_in">JSON</span>.stringify(socialInvestmentScoresObj.subscores);
+	user.social_investment = socialInvestmentScoresObj.newSocialInvestmentScore;
+
+	<span class="hljs-keyword">var</span> gap = user.social - user.social_investment;
+	<span class="hljs-keyword">var</span> soc_weight = (user.social/(user.social + user.social_investment));
+	<span class="hljs-keyword">var</span> social_investment_weight = (<span class="hljs-number">1</span> - soc_weight);
+	user.currentScore = <span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">Math</span>.sqrt(user.social_investment * user.social) + user.social);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>add score to scores history</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">var</span> scoreObj = {
+		user_id: user.id,
+		social: user.social,
+		social_investment: user.social_investment,
+		currentScore: user.currentScore
+	}
+	mainController.addScore(scoreObj, user.social_investment_subscores, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, results</span>) </span>{
+		<span class="hljs-keyword">if</span> (err) {
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"There was an error adding the score to scores' history"</span>, err);
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Score was successfully added to scores' history"</span>);
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h3>getScoresHistWithCurrentScores</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Provides a callback that can act on either the resultObj, an object containing all scores (current, social, social_investment)
+or the scoresObj from the scoresHist database.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> getScoresHistWithCurrentScores = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id, callback</span>)</span>{
+	<span class="hljs-keyword">var</span> testObj = {
+		<span class="hljs-string">"social"</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">"social-investment"</span> : <span class="hljs-literal">false</span>
+	};
+	<span class="hljs-keyword">var</span> investmentTypes = {
+		<span class="hljs-string">"social"</span> : <span class="hljs-string">"social"</span>,
+		<span class="hljs-string">"social-investment"</span> : <span class="hljs-string">"social"</span>
+	}
+
+	mainController.getScores(user_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, scoreObjs</span>)</span>{
+		<span class="hljs-keyword">var</span> resultObj = {social:{}}
+
+		<span class="hljs-keyword">var</span> currentScore = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">var</span> currentIndex = scoreObjs.length - <span class="hljs-number">1</span>;
+
+		<span class="hljs-keyword">if</span> (currentIndex &lt; <span class="hljs-number">0</span>) {
+			callback(err, [])
+		} <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>builds out the first two values for each score element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>			<span class="hljs-keyword">while</span>(!testTestObj(testObj)){
+				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"what is type?"</span>, scoreObjs[currentIndex].type)
+				<span class="hljs-keyword">var</span> currentSubType = scoreObjs[currentIndex].type
+				<span class="hljs-keyword">var</span> currentInvestmentType = investmentTypes[currentSubType]
+				<span class="hljs-keyword">if</span>(!testObj[currentSubType]){
+					testObj[currentSubType] = <span class="hljs-literal">true</span>
+					resultObj[currentInvestmentType][currentSubType] = scoreObjs[currentIndex].score
+				}
+				currentIndex--;
+			}
+			addTotalsToResultObj(resultObj);
+			callback(<span class="hljs-literal">null</span>, [resultObj, scoreObjs]);
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>tests the test object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> testTestObj = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">testObj</span>)</span>{
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> testObj){
+		<span class="hljs-keyword">if</span>(!testObj[key]){
+			<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+		}
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+}
+
+
+<span class="hljs-keyword">var</span> addTotalsToResultObj = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resultObj</span>)</span>{
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> resultObj){
+	<span class="hljs-keyword">var</span> total = <span class="hljs-number">0</span>;
+	<span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> subKey <span class="hljs-keyword">in</span> resultObj[key]){
+		total += resultObj[key][subKey]
+	}
+	resultObj[key].total = total
+	}
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h3>linearRegression</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Used to determine score velocity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">linearRegression</span>(<span class="hljs-params">y,x</span>)</span>{
+		<span class="hljs-keyword">var</span> lr = {};
+		<span class="hljs-keyword">var</span> n = y.length;
+		<span class="hljs-keyword">var</span> sum_x = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">var</span> sum_y = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">var</span> sum_xy = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">var</span> sum_xx = <span class="hljs-number">0</span>;
+		<span class="hljs-keyword">var</span> sum_yy = <span class="hljs-number">0</span>;
+
+		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; y.length; i++) {
+
+			sum_x += x[i];
+			sum_y += y[i];
+			sum_xy += (x[i]*y[i]);
+			sum_xx += (x[i]*x[i]);
+			sum_yy += (y[i]*y[i]);
+		}
+
+		lr[<span class="hljs-string">'slope'</span>] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+		lr[<span class="hljs-string">'intercept'</span>] = (sum_y - lr.slope * sum_x)/n;
+		lr[<span class="hljs-string">'r2'</span>] = <span class="hljs-built_in">Math</span>.pow((n*sum_xy - sum_x*sum_y)/<span class="hljs-built_in">Math</span>.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),<span class="hljs-number">2</span>);
+
+		<span class="hljs-keyword">return</span> lr;
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+	getScoresFromDaysAway: getScoresFromDaysAway,
+	getScoresHistWithCurrentScores: getScoresHistWithCurrentScores,
+	newSocialInvestmentScore: newSocialInvestmentScore,
+	updateScores: updateScores
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

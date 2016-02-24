@@ -1,8 +1,8 @@
 angular.module('app.profile', [])
 
-//<h3>Profile Controller</h3>
+//<h2>Profile Controller</h2>
 
-.controller('ProfileController', function($scope, $location, User, Auth, Root, Scores, $mdDialog, FB, $rootScope) {
+.controller('ProfileController', function($scope, $location, User, Auth, Scores, $mdDialog, FB, $rootScope) {
 
   $scope.user;
   $scope.leaders;
@@ -10,12 +10,14 @@ angular.module('app.profile', [])
   $scope.scores = [[],[]];
   $scope.labels = [];
   $scope.wednesday = false;
-  $scope.isUser = false; 
+  $scope.isUser = false;
   $scope.isPositive = false;
   $scope.changeDisplay;
   $scope.reportUser = [];
 
-  //Button press calls this function that retrieves the profile user's latest Facebook score.
+  //<h3>$scope.getFacebookData</h3>
+
+  //Retrieves the profile user's latest Facebook score.
   $scope.getFacebookData = function() {
     FB.test($scope.user.id)
       .then(function(results) {
@@ -23,7 +25,9 @@ angular.module('app.profile', [])
       })
   }
 
-  //This function grabs user information of the current profile id
+  //<h3>$scope.getUserById</h3>
+
+  //Grabs user information of the current profile id
   $scope.getUserById = function(id) {
     User.getUser(id)
       .then(function(user) {
@@ -64,43 +68,51 @@ angular.module('app.profile', [])
       })
   }
 
-  // getScores grabs all scores associated with the profile id
+  //<h3> Profile Graph Functions </h3>
+
+  //<h3>$scope.getScores</h3>
+
+  //Grabs all scores associated with the profile id
   $scope.getScores = function () {
     $scope.series = ["Total Score", "Social Score"];
 
     Scores.getScores($scope.profileId)
     .then(function (results) {
-      for(var i = 0; i < results.length; i++){
+      for(var i = 0; i < results.length; i++) {
         var scoreObj = results[i];
-        // if the actual user OR if it's wednesday (day to reveal social scores), show both total/current score AND social score
+        //If the actual user OR if it's wednesday (day to reveal social scores), show both total/current score AND social score
         if ($scope.isUser === true || $scope.wednesday) {
           $scope.scores[0].push(scoreObj.currentScore);
           $scope.scores[1].push(scoreObj.social);
-          // else just show total/current score
+          //Else just show total/current score
         } else {
           $scope.scores[0].push(scoreObj.currentScore);
         }
       }
-      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length
-      for(var i = 0; i < daysBeforeUserJoined; i++){
+      var daysBeforeUserJoined = $scope.labels.length - $scope.scores[0].length;
+      for(var i = 0; i < daysBeforeUserJoined; i++) {
         $scope.scores[0].unshift(0);
         $scope.scores[1].unshift(0);
       }
     })
   }
 
-  //addLabels adds labels for the angular chart associated with profile id
-  $scope.addLabels = function(daysInPast){
-    for(; daysInPast >= 0; daysInPast--){
-      if(daysInPast % 5 === 0){
-        $scope.labels.push(daysInPast)
+  //<h3>$scope.AddLabels</h3>
+
+  //Adds labels for the angular chart associated with profile id
+  $scope.addLabels = function(daysInPast) {
+    for(; daysInPast >= 0; daysInPast--) {
+      if(daysInPast % 5 === 0) {
+        $scope.labels.push(daysInPast);
       } else {
-        $scope.labels.push("")
+        $scope.labels.push("");
       }
     }
   }
 
-  //clickBuy opens up the Buy Modal
+  //<h3>$scope.clickBuy</h3>
+
+  //Opens up the Buy Modal
   $scope.clickBuy = function() {
     $mdDialog.show({
       templateUrl: '../app/views/buy.html',
@@ -110,24 +122,28 @@ angular.module('app.profile', [])
       controller: BuyModalController
     })
       .then(function(clickedItem) {
-      })
+      });
   }
 
-  //clickReport opens up the Report Modal
+  //<h3>$scope.clickReport</h3>
+
+  //Opens up the Report Modal
   $scope.clickReport = function() {
     $mdDialog.show({
       templateUrl: '../app/views/report.html',
       locals: {
-        user: $scope.user, 
+        user: $scope.user,
         reportUser: $scope.reportUser
       },
       controller: ReportModalController
     })
       .then(function(clickedItem) {
-      })
+      });
   }
 
-  //Controller for the Buy Modal
+  //<h3> Buy Modal Controller </h3>
+
+  //Houses all the functions used to communicate a buy of a users shares
   function BuyModalController($scope, $mdDialog, profile, TransactionHist, Portfolio, Socket, Scores) {
 
     $scope.profile = profile;
@@ -139,6 +155,8 @@ angular.module('app.profile', [])
     $scope.revealOptions = false;
     $scope.errorMessage = false;
 
+    //<h3>$scope.confirm</h3>
+
     //On confirm click, this function evaluates the transaction validity
     //If the transaction is invalid, user will be notified
     $scope.confirm = function() {
@@ -148,16 +166,12 @@ angular.module('app.profile', [])
         type: "buy",
         numberShares: $scope.availableShares > $scope.sharesToBuy ? $scope.sharesToBuy : $scope.availableShares
       }
-
-      // var investment = {
-      //   user_id: $rootScope.loggedinUserInfo.id,
-      //   target_id: $scope.profile.id,
-      //   numberShares: $scope.sharesToBuy
-      // }
       if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.sharesToBuy) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
+        //Presented with wait and buyDirect options if user attempts to buy more shares than are currently available for buy
+        //in the transaction queue
         if($scope.sharesToBuy > $scope.availableShares){
           $scope.revealOptions = true;
         } else {
@@ -176,6 +190,8 @@ angular.module('app.profile', [])
       }
     }
 
+    //<h3>$scope.wait</h3>
+
     //This function adds a transaction to the transaction queue
     $scope.wait = function() {
       var transaction = {
@@ -184,10 +200,12 @@ angular.module('app.profile', [])
         type: "buy",
         numberShares: $scope.availableShares
       }
+      //Prevents users from buying more karma than they can afford
       if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * ($scope.sharesToBuy - transaction.numberShares)) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
+        //Buys the available shares and places the remaining shares in the transaction queue
         TransactionHist.makeTransaction(transaction).then(function()  {
           transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
           TransactionHist.addTransactionToQueue(transaction);
@@ -200,6 +218,8 @@ angular.module('app.profile', [])
       }
     }
 
+    //<h3>$scope.buyDirect</h3>
+
     //This function directly makes a transaction with increased cost
     $scope.buyDirect = function() {
       var transaction = {
@@ -210,12 +230,15 @@ angular.module('app.profile', [])
       }
 
       var newScore = $scope.profile.currentScore * 1.1;
+      //Prevents users from buying more karma than they can afford
       if ($rootScope.loggedinUserInfo.karma < $scope.profile.currentScore * $scope.availableShares + newScore*($scope.sharesToBuy - $scope.availableShares)) {
         $scope.errorMessage = true;
       } else {
         $scope.errorMessage = false;
         if ($scope.availableShares) {
+          //Buys available shares
           TransactionHist.makeTransaction(transaction).then(function() {
+            //Makes sure the transaction is actually finished before updating the transaction and closing the request
             setTimeout(function() {
               transaction.numberShares = $scope.sharesToBuy - $scope.availableShares;
               TransactionHist.closeTransactionRequest(transaction, newScore);
@@ -242,6 +265,9 @@ angular.module('app.profile', [])
       }
     }
 
+    //<h3>$scope.CheckSharesAvail</h3>
+
+    //Returns the number of shares available (sell requests) that the user can buy.
     $scope.checkSharesAvail = function() {
       TransactionHist.checkSharesAvail($scope.profile.id, 'sell').then(function(response){
         $scope.availableShares = response[0];
@@ -249,17 +275,22 @@ angular.module('app.profile', [])
       });
     }
 
+    //<h3>$scope.exit</h3>
+
     //Exit closes the Buy modal
-    //is this really necessary?
     $scope.exit = function() {
       $mdDialog.hide();
     }
   }
 
   //<h3> ReportModalController Function </h3>
+
+  //Houses the functions and scoped variables that create the report modal
   function ReportModalController($scope, $mdDialog, user, reportUser) {
     $scope.user = user;
     $scope.reportUser = reportUser;
+
+    //<h3>$scope.exit</h3>
 
     //Exit closes the Report modal
     $scope.exit = function() {

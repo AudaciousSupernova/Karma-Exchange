@@ -10,20 +10,21 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 
 module.exports = function (app, express) {
-  app.get('/auth/facebook',
-		// inside the scope array, we can include additional permissionns.
-	  passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
+  //Facebook callback. Directs users to facebook authentication
+  //Additional permissions are included inside the scope array
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
 
-	app.get('/auth/facebook/callback',
-	  passport.authenticate('facebook', { successRedirect: '/api/profileOnLogin'})
-  )
+  //Redirects on a successful auth to the logged in users profile
+  app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/api/profileOnLogin'}));
 
+  //Determines who the loggedInUser is from the object returned from authentication
+  //and directs the user to their profile
   app.get('/api/profileOnLogin', function (req, res) {
     var id = req.user.id
     res.redirect('/#/profile/' + id)
   })
 
-
+  //Gets an access token for facebook. Used in ionic implementation
   app.get('/mobile/login/:token', function(req,res){
     console.log("logging in mobile user")
     var access_token = req.params.token
@@ -47,6 +48,7 @@ module.exports = function (app, express) {
     })
   })
 
+  //Creates a jwt token to save a mobile users session
   app.get('/mobile/loggedin/:sessionToken', function (req, res){
     var token = req.params.sessionToken
 
@@ -218,7 +220,7 @@ module.exports = function (app, express) {
     })
   })
 
-  //Gets the
+  //Gets the open transactions for a user and a target user
   app.get('/transaction/queueSells', function (req, res) {
     var target_id = req.param('target_id');
     var user_id = req.param('user_id');
@@ -298,58 +300,7 @@ module.exports = function (app, express) {
     res.send(string);
   })
 
-
-  //This is a test route
-  app.get('/trending', function (req, res) {
-    var test = {
-      data: [
-        {
-          name: 'John',
-          scores: [
-            {
-              name: 'John',
-              score: 98,
-              date: 'January 1 2013'
-            },
-            {
-              name: 'John',
-              score: 99,
-              date: 'February 22, 2014'
-            },
-            {
-              name: 'John',
-              score: 22,
-              date: 'June 2, 2010'
-            }
-          ],
-          currentScore: 99
-        },
-        {
-          name: 'Bobby',
-          scores: [
-            {
-              name: 'Bobby',
-              score: 98,
-              date: 'January 1 2013'
-            },
-            {
-              name: 'Bobby',
-              score: 99,
-              date: 'February 22, 2014'
-            },
-            {
-              name: 'Bobby',
-              score: 22,
-              date: 'June 2, 2010'
-            }
-          ],
-          currentScore: 99
-        }
-      ]
-    }
-    res.send(test);
-  })
-
+  //Updates the social investment score in the database
   app.get('/api/updateInvestmentScore/:id', function (req, res) {
     var id = req.params.id;
     console.log(id)

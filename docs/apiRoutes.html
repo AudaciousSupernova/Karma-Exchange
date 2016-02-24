@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>apiRoutes.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="apiRoutes.html">
+                  apiRoutes.js
+                </a>
+              
+                
+                <a class="source" href="server.html">
+                  server.js
+                </a>
+              
+                
+                <a class="source" href="socket.html">
+                  socket.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>apiRoutes.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Required backend dependencies</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mobileLogin = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Auth/mobileLogin'</span>);
+<span class="hljs-keyword">var</span> passport = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Auth/passport.facebook'</span>);
+<span class="hljs-keyword">var</span> mainController = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./db/dbControllers/mainController.js'</span>);
+<span class="hljs-keyword">var</span> scoresUtil = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils/scoresUtil'</span>)
+<span class="hljs-keyword">var</span> transactionUtil = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils/transactionUtil'</span>)
+<span class="hljs-keyword">var</span> transactionQueue = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./db/dbControllers/transactionQueue'</span>);
+<span class="hljs-keyword">var</span> fbRequests = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./db/dbControllers/fbRequests.js'</span>);
+<span class="hljs-keyword">var</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jsonwebtoken'</span>); <span class="hljs-comment">// used to create, sign, and verify tokens</span>
+
+
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">app, express</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Facebook callback. Directs users to facebook authentication
+Additional permissions are included inside the scope array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/auth/facebook'</span>, passport.authenticate(<span class="hljs-string">'facebook'</span>, { scope: [<span class="hljs-string">'public_profile'</span>, <span class="hljs-string">'user_friends'</span>, <span class="hljs-string">'email'</span>, <span class="hljs-string">'user_photos'</span>, <span class="hljs-string">'user_posts'</span>] }));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Redirects on a successful auth to the logged in users profile</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/auth/facebook/callback'</span>, passport.authenticate(<span class="hljs-string">'facebook'</span>, { successRedirect: <span class="hljs-string">'/api/profileOnLogin'</span>}));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Determines who the loggedInUser is from the object returned from authentication
+and directs the user to their profile</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/api/profileOnLogin'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> id = req.user.id
+    res.redirect(<span class="hljs-string">'/#/profile/'</span> + id)
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Gets an access token for facebook. Used in ionic implementation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/mobile/login/:token'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req,res</span>)</span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"logging in mobile user"</span>)
+    <span class="hljs-keyword">var</span> access_token = req.params.token
+    fbRequests.getFacebookProfileFromAccessToken(access_token, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, fbUserObject</span>)</span>{
+      <span class="hljs-keyword">if</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error in API routes with mobile login"</span>, err)
+      } <span class="hljs-keyword">else</span> {
+        mobileLogin.verifyOrAddMobileUser(fbUserObject, access_token, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, userObj</span>)</span>{
+          <span class="hljs-keyword">if</span>(err){
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error in API routes confirming user with mobile login"</span>, err)
+          } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">var</span> token = jwt.sign(userObj, <span class="hljs-string">'supernova'</span>, {
+              expiresIn: <span class="hljs-string">"1d"</span>
+            });
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"token"</span>, token)
+            res.send({token: token,
+                      userObj: userObj})
+          }
+        })
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Creates a jwt token to save a mobile users session</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/mobile/loggedin/:sessionToken'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>)</span>{
+    <span class="hljs-keyword">var</span> token = req.params.sessionToken
+
+    jwt.verify(token, <span class="hljs-string">'supernova'</span> , <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, decoded</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error in mobile login, failed to authenticate token"</span>)
+        res.send({loggedin: <span class="hljs-literal">false</span>, message: <span class="hljs-string">'Failed to authenticate token.'</span> });
+      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>if everything is good, save to request for use in other routes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        res.send({loggedin: <span class="hljs-literal">true</span>})
+      }
+    });
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Get request on login attempt</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/api/loggedin'</span>,
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+      <span class="hljs-keyword">if</span> (req.isAuthenticated()) {
+        mainController.findUserById(req.user.id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, user</span>) </span>{
+          res.send(user);
+        })
+      } <span class="hljs-keyword">else</span> {
+        res.redirect(<span class="hljs-string">'/'</span>);
+      }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Get request on logout</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/api/logout'</span>,
+    <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req,res</span>) </span>{
+      req.logout();
+      res.redirect(<span class="hljs-string">'/#/'</span>)
+    })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Get request to access certain user’s profile</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/profile/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> id = req.params.id;
+    mainController.findUserById(id, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, response</span>) </span>{
+      <span class="hljs-keyword">if</span> (error) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error"</span>, error);
+      } <span class="hljs-keyword">else</span> {
+        res.send(response);
+      }
+    })
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>finds all users by a partial string and returns an array of them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/users/partial/:partial'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>)</span>{
+    <span class="hljs-keyword">var</span> partial = req.params.partial;
+    mainController.findUsersByPartial(partial, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, response</span>) </span>{
+      <span class="hljs-keyword">if</span> (error) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error getting the users by partial"</span>, error);
+      } <span class="hljs-keyword">else</span> {
+        res.send(response);
+      }
+    })
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Post request to complete buy transaction from certain user’s profile</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.post(<span class="hljs-string">'/profile/buy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> investment = req.body.investment;
+    mainController.addStock(investment, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"could not add investment"</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        res.status(<span class="hljs-number">201</span>).json(results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Get scores data from days away for a certain user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/profile/score/month/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> id = req.params.id;
+    scoresUtil.getScoresFromDaysAway(id, <span class="hljs-number">30</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log (<span class="hljs-string">'error'</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        res.send(results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Get top users from the user database based on current score</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/leaders'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    mainController.getTopUsers(<span class="hljs-number">2</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'error on leaders/top users'</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"These are my results"</span>, results);
+        res.send(results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Post request to add transaction to transaction history table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.post(<span class="hljs-string">'/transaction/add'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> transactionObj = req.body.transactionObj;
+    mainController.addTransaction(transactionObj, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error"</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        res.status(<span class="hljs-number">201</span>).json(results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Get request to retrieve transactions associated with a certain user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/transaction/get/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> user_id = req.params.id;
+    transactionUtil.getHistWithNames(user_id, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error"</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        res.send(results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Check transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/transaction/check'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> target_id = req.param(<span class="hljs-string">'target_id'</span>);
+    <span class="hljs-keyword">var</span> type = req.param(<span class="hljs-string">'type'</span>);
+    transactionUtil.checkTransaction(target_id, type, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, response</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(err, <span class="hljs-literal">null</span>);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'response'</span>, response);
+        res.json(response);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Post request to make a transaction, buy or sell: will also update user and add to scores’ history table</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.post(<span class="hljs-string">'/transaction/make'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> transactionObj = req.body.transactionObj;
+    transactionUtil.makeTransaction(transactionObj)
+    res.send(<span class="hljs-number">201</span>);
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Responds with an array contiaining all transactions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/transaction/all/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    mainController.getAllTransactions(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, transactions</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Was unable to get all transactions"</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        transactions.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transaction, index</span>) </span>{
+          mainController.findUserById(transaction.user_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, user</span>) </span>{
+            transaction.user_name = user[<span class="hljs-number">0</span>].name;
+            mainController.findUserById(transaction.target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, target</span>) </span>{
+              transaction.target_name = target[<span class="hljs-number">0</span>].name;
+              <span class="hljs-keyword">if</span> (index === transactions.length - <span class="hljs-number">1</span>) {
+                res.send(transactions);
+              }
+            })
+          })
+        })
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Post request to add a transaction to a transaction queue (buy or sell, when matching requests are unavailable)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/transaction/queue/:user_id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>)</span>{
+    <span class="hljs-keyword">var</span> user_id = req.params.user_id
+    transactionQueue.findOpenUserTransactions(user_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error in API routes looking for user transaction queue"</span>, err)
+      } <span class="hljs-keyword">else</span> {
+        res.send(results)
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Gets the open transactions for a user and a target user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/transaction/queueSells'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> target_id = req.param(<span class="hljs-string">'target_id'</span>);
+    <span class="hljs-keyword">var</span> user_id = req.param(<span class="hljs-string">'user_id'</span>);
+    transactionQueue.findOpenUserTransactionForTarget(user_id, target_id, <span class="hljs-string">'sell'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error in API Routes looking for a sell transaction for a specific user and target"</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        res.send(results);
+      }
+    });
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Adds transaction to transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.post(<span class="hljs-string">'/transaction/queue'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> transactionObj = req.body.transactionObj;
+    transactionQueue.addTransactionToQueue(transactionObj, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(err, <span class="hljs-string">'error!'</span>);
+      } <span class="hljs-keyword">else</span> {
+        res.status(<span class="hljs-number">201</span>).json(results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Closes a transaction</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.post(<span class="hljs-string">'/transaction/close'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> transactionObj = req.body.transactionObj;
+    <span class="hljs-keyword">var</span> shareValue = req.body.shareValue
+    transactionUtil.closeTransactionRequest(transactionObj, shareValue);
+    res.status(<span class="hljs-number">201</span>)
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Removes a transaction fron the transaction queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.delete(<span class="hljs-string">'/transaction/queue/delete/:transactionId'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req,res</span>)</span>{
+    <span class="hljs-keyword">var</span> transactionId = req.params.transactionId;
+    transactionQueue.deleteOpenTransaction(transactionId, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, response</span>)</span>{
+      <span class="hljs-keyword">if</span>(err){
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error in api routes deleting transaction of id: "</span> + transactionId)
+      } <span class="hljs-keyword">else</span> {
+        res.send(<span class="hljs-number">204</span>)
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Get request to retrieve all current stocks for logged-in user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/portfolio/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> id = req.params.id;
+    mainController.getStocks(id, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, results</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"here is the error"</span>, err);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">var</span> subRoutine = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">counter, results</span>) </span>{
+          <span class="hljs-keyword">if</span> (counter === results.length) {
+            res.send(results);
+          } <span class="hljs-keyword">else</span> {
+            mainController.findUserById(results[counter].target_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response</span>) </span>{
+              <span class="hljs-keyword">if</span> (err) {
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"there was an error"</span>, err);
+              } <span class="hljs-keyword">else</span> {
+                results[counter].name = response[<span class="hljs-number">0</span>].name;
+                counter++;
+                subRoutine(counter, results);
+              }
+            })
+          }
+        }
+        subRoutine(<span class="hljs-number">0</span>, results);
+      }
+    })
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Get request to update user’s social score - links to facebook graph api requests</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/facebook/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> id = req.params.id;
+    fbRequests.getFacebookUserData(id);
+    <span class="hljs-keyword">var</span> string = <span class="hljs-string">"Successfully updated scores for all users in database!"</span>;
+    res.send(string);
+  })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Updates the social investment score in the database</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  app.get(<span class="hljs-string">'/api/updateInvestmentScore/:id'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> id = req.params.id;
+    <span class="hljs-built_in">console</span>.log(id)
+    scoresUtil.newSocialInvestmentScore(id);
+    res.status(<span class="hljs-number">200</span>);
+  })
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

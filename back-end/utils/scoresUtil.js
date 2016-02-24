@@ -5,50 +5,15 @@ var usefullVariables = require('./usefullVariables.js')
 
 var daysInMonthByIndex = usefullVariables.daysInMonthByIndex
 var monthIndexBy3Letters = usefullVariables.monthIndexBy3Letters
-// <h3>Utilities for controlling score functions</h3>
-// gets the score history for a given user and builds their
-// current total scores off of it
-//
-// currently only builds the social score, other scores can
-// be added later by extending the testObj and making the first
-// value of the tuple an object containing key value pairs of
-// scores in question
-
-// {social: {
-// 	base:
-// 	investment:
-// 	total:
-// }}
-
-//Update Investment Score Function
 
 
-/*
+//The various get scores functions call the getScores controller method which returns an array
+//populated with scoreObj's sorted by timestamp the array is then checked vs the time to return the
+//relevant information to the client. In the future it might be usefull to combine some of this information
+//to single days to limit the amount of information sent back to client.
 
-	target_id's social investment score is being affected
-	get all user info required to digest the score
-	run an algorithm
-	save new social-investment score
+//<h3>getScoresFromDaysAway</h3>
 
-	//then pump new social-investment score and current base score through gradient
-	//get new current score
-
-	//update current score and social-investment score for this target_user
-	//adding to score's historys
-
-*/
-
-//<h3>Get Scores Functions</h3>
-//The various get scores functions call the getScores controller method which returns an array populated with scoreObj's sorted by timestamp the array is then checked vs the time to return the relevant information to the client. In the future it might be usefull to combine some of this information to single days to limit the amount of information sent back to client.
-
-//var sampleScoresObj = {
-// 	currentScore: 63
-// 	id: 11749
-// 	social: 43
-// 	social_investment: 94
-// 	ts: "2015-11-03T03:24:29.000Z"
-// 	user_id: 2
-// }
 // returns the scores from x number of days into the past
 var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 	//daysInMonthByIndex
@@ -104,7 +69,9 @@ var getScoresFromDaysAway = function(target_id, daysIntoPast, callback){
 	})
 }
 
+//<h3>dayOfYear</h3>
 
+//Returns an integer value for the day of the year
 var dayOfYear = function(month, day){
 	var dayOfYear = day
 	if(typeof month === "string"){
@@ -116,6 +83,9 @@ var dayOfYear = function(month, day){
 	return dayOfYear
 }
 
+//<h3>newSocialInvestmentScore</h3>
+
+//Calculates the new social investment score based on supply, demand, number of shares on the market, and share velocity
 var newSocialInvestmentScore = function(target_id) {
 
 	var numInvestors;
@@ -126,10 +96,9 @@ var newSocialInvestmentScore = function(target_id) {
 	var demand=0;
 	mainController.findUserById(target_id, function(err, user) {
 		if (err) {
-			console.log('This is an error', err);
+			console.log('Error querying user by id', err);
 		} else {
       user = user[0];
-      console.log(user,'user returned in newSocialInvestmentScore');
 			mainController.targetTransactionHist(target_id, function(err, rows) {
 				if (err) {
 					console.log("There was an error", err);
@@ -140,8 +109,10 @@ var newSocialInvestmentScore = function(target_id) {
 						} else {
 							numInvestors = stocks.length;
 							stocks.forEach(function(investment) {
+                //Calculate total number of shares on market by totaling number of shares in each current investment
 								sharesOnMarket+= investment.numberShares;
 							})
+              //Get the scores for the last week and store them in x,y format (x=index, y=score)
 							mainController.getRecentScores(target_id, function (err, recentScores) {
 								if (err) {
 									console.log("There was an error getting recent scores", err);
@@ -153,10 +124,13 @@ var newSocialInvestmentScore = function(target_id) {
 										recentXVals.push(index);
                     recentYVals.push(recentScore.social_investment);
                   })
+                  //Prevent score histories with only 1 value from breaking linear regression
                   if (recentXVals.length <2) {
                     recentXVals.push(recentXVals[0]);
                     recentYVals.push(recentYVals[0]);
                   }
+                  //Get the scores for the last three months and treat as the general trend. Similar
+                  //to recent scores, these values will also be placed in x,y format
                   mainController.getScoresLastThreeMonths(target_id, function (err, generalScores) {
                     var generalXVals = [];
                     var generalYVals = [];
@@ -168,18 +142,25 @@ var newSocialInvestmentScore = function(target_id) {
                       generalXVals.push(generalXVals[0]);
                       generalYVals.push(generalYVals[0]);
                     }
+                    //Calculate recent velocity
                     var recentVelocity = linearRegression(recentYVals, recentXVals).slope;
+                    //If there is no velocity (activity in the last week), set the velocity to 0.
                     if (!recentVelocity) {
                     	recentVelocity = 0;
                     }
+
+                    //Calculate general velocity
                     var generalVelocity = linearRegression(generalYVals, generalXVals).slope;
 
+                    //Velocity is determined by giving greater weight to the recent velocity if it represents a great deviation
+                    //from the general velocity
                     if (Math.abs(recentVelocity/generalVelocity) > 1.5 || Math.abs(generalVelocity/recentVelocity) > 1.5) {
                       velocity = recentVelocity * 0.75 + generalVelocity * 0.25;
-
                     } else {
                       velocity = recentVelocity * 0.5 + generalVelocity * 0.5;
                     }
+
+                    //Search the transaction queue to find open buy and sell requests to determine supply and demand
                     transactionQueue.findOpenTransaction(target_id, 'buy', function (err, buyRequests) {
                       if (err) {
                         console.log("there was an error", err);
@@ -200,8 +181,8 @@ var newSocialInvestmentScore = function(target_id) {
                             sharesOnMarket: sharesOnMarket,
                             numTransactions: numTransactionsMade
                           }
+                          //Determine the new social investment score and update the score for the user
                           social_investment_scores_object.newSocialInvestmentScore = Math.sqrt(sharesOnMarket+demand-supply) * ((Math.atan(velocity) + Math.PI/2)*1.1);
-                          console.log(social_investment_scores_object.newSocialInvestmentScore, "this is the newSocialInvestmentScore")
                           updateScores(social_investment_scores_object, user)
                         })
                       }
@@ -217,11 +198,11 @@ var newSocialInvestmentScore = function(target_id) {
 	})
 }
 
+//<h3>updateScores</h3>
 
-
-// newSocialInvestmentScore(4)
-
-
+//Stores the social_investment_subscores and social_investment_score of the user, and calculates a new currentScore
+//from the new social_investment_score that is passed in for a specified user.
+//Adds the scores to the scores history as well.
 var updateScores = function(socialInvestmentScoresObj, user) {
   user.social_investment_subscores = JSON.stringify(socialInvestmentScoresObj.subscores);
 	user.social_investment = socialInvestmentScoresObj.newSocialInvestmentScore;
@@ -244,33 +225,12 @@ var updateScores = function(socialInvestmentScoresObj, user) {
 			console.log("Score was successfully added to scores' history");
 		}
 	})
-
-	//update user with new current score and newSocialInvestmentScore
-
 }
 
-/*
+//<h3>getScoresHistWithCurrentScores</h3>
 
-calculate new social investment score
-
-
-
-
-*/
-
-// var sampleUser = {
-// 	name: "Kartik Test",
-// 	password: "test",
-// 	email: 'kartik@gmail.com',
-// 	social: 1000,
-// 	social_investment: 50,
-// 	currentScore: 50
-// }
-
-// updateScores(50, sampleUser);
-
-// newSocialInvestmentScore(22)
-
+//Provides a callback that can act on either the resultObj, an object containing all scores (current, social, social_investment)
+//or the scoresObj from the scoresHist database.
 var getScoresHistWithCurrentScores = function(user_id, callback){
 	var testObj = {
 		"social" : false,
@@ -307,6 +267,7 @@ var getScoresHistWithCurrentScores = function(user_id, callback){
 	})
 }
 
+
 //tests the test object
 var testTestObj = function(testObj){
 	for(var key in testObj){
@@ -316,6 +277,7 @@ var testTestObj = function(testObj){
 	}
 	return true
 }
+
 
 var addTotalsToResultObj = function(resultObj){
 	for(var key in resultObj){
@@ -327,6 +289,9 @@ var addTotalsToResultObj = function(resultObj){
 	}
 }
 
+//<h3>linearRegression</h3>
+
+//Used to determine score velocity
 function linearRegression(y,x){
 		var lr = {};
 		var n = y.length;
@@ -351,12 +316,6 @@ function linearRegression(y,x){
 
 		return lr;
 }
-
-var known_y = [4, 3, 1, 7, 8, 9];
-var known_x = [5.2, 5.7, 5.0, 4.2, 10, 14];
-
-// var lr = linearRegression(known_y, known_x);
-// console.log("what is lr", lr);
 
 module.exports = {
 	getScoresFromDaysAway: getScoresFromDaysAway,

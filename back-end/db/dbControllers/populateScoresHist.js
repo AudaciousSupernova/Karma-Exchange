@@ -1,7 +1,7 @@
 var faker = require('faker');
 var mainController = require('./mainController')
-
-//gets all users and then adds some random scores to their history
+//<h3>Internal Use Functions For Faker Data Popoulation </h3>
+//Gets all users and then adds some random scores to their history
 mainController.getAllUsers(function(err, users){
 	var users = users;
 	var length = users.length;

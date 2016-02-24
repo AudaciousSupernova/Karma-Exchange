@@ -1,12 +1,6 @@
 angular.module('app.auth', [])
 
-.controller('AuthController', function ($scope, $location, Auth, $rootScope) {
+//<h2>AuthController</h2>
 
-  // Auth.checkLoggedIn().then(function(boolean) {
-  //   if (boolean === false) {
-  //     $location.path('/')
-  //   } else {
-  //     $location.path('/profile/' + $rootScope.loggedinUserInfo.id)
-  //   }
-  // })
+.controller('AuthController', function ($scope, $location, Auth, $rootScope) {
 });

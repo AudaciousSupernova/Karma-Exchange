@@ -6,11 +6,13 @@ var callbackURL;
 
 
 //<h3> Facebook authentication with Passport </h3>
+
+
+//If there is a development environment, set callbackURL to deployed.
+//If there isn't a development environment, set callbackURL to local.
 if(process.env.PORT){
-  //If there is a development environment, set callbackURL to deployed.
   callbackURL = "http://karmaexchange.io/auth/facebook/callback"
 } else {
-  //If there isn't a development environment, set callbackURL to local.
   callbackURL = "http://127.0.0.1:3000/auth/facebook/callback"
 }
 
@@ -23,20 +25,19 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+//<h3>Facebook Strategy for Passport</h3>
 
+//The strategy will update the user in the database if any information has changed, and will add any new users to database.
 passport.use(new FacebookStrategy({
     clientID: '767594746706952',
     clientSecret: 'd917065bc815ddf8ab8779c9f0b3c664',
     callbackURL: callbackURL,
     enableProof: true,
-    //fields from facebook profile that Nova uses
+    //fields from facebook profile that Karma Exchange uses
     profileFields: ['id', 'name','picture.type(large)', 'emails', 'displayName', 'about', 'gender']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      // console.log('Facebook Profile',profile);
-      // console.log('Access Token', accessToken);
-      // console.log(profile.id)
       var id = profile.id
       var displayName = profile.displayName;
       var photo = profile.photos[0].value;
@@ -68,6 +69,7 @@ passport.use(new FacebookStrategy({
                 social: 5,
                 currentScore: 10
               };
+              //New users are declared with an initial score object.
               mainController.addScore(scoreObj, function(err, response) {
                 if (err) {
                   console.log("scoreObj was not added", err);
@@ -80,7 +82,7 @@ passport.use(new FacebookStrategy({
             }
           })
         } else {
-          //If the user is found, run a check to see if the users photo has been changed
+          //If the user is found, run a check to see if the users photo or access token has been changed
           //since the last login.
           //profile[0] is what is returned from the database when a user is found
           if (profile[0].profile_photo !== photo || profile[0].access_token !== accessToken) {

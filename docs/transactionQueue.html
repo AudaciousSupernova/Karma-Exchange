@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>transactionQueue.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="fbRequests.html">
+                  fbRequests.js
+                </a>
+              
+                
+                <a class="source" href="mainController.html">
+                  mainController.js
+                </a>
+              
+                
+                <a class="source" href="populateCurrentStocks.html">
+                  populateCurrentStocks.js
+                </a>
+              
+                
+                <a class="source" href="populateScoresHist.html">
+                  populateScoresHist.js
+                </a>
+              
+                
+                <a class="source" href="populateTransactionHist.html">
+                  populateTransactionHist.js
+                </a>
+              
+                
+                <a class="source" href="populateTransactionHistWithCurrentShares.html">
+                  populateTransactionHistWithCurrentShares.js
+                </a>
+              
+                
+                <a class="source" href="populateUserTable.html">
+                  populateUserTable.js
+                </a>
+              
+                
+                <a class="source" href="transactionQueue.html">
+                  transactionQueue.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>transactionQueue.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> mysql = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mysql'</span>);
+
+
+<span class="hljs-keyword">var</span> connection = mysql.createConnection({
+  user: <span class="hljs-string">"root"</span>,
+  password: <span class="hljs-string">"supernova"</span>,
+  database: <span class="hljs-string">"transactionQueue"</span>
+});
+
+connection.connect(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>)</span>{
+	<span class="hljs-keyword">if</span>(err){
+		<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"error connection to transactionQueue Db"</span>);
+		<span class="hljs-keyword">return</span>;
+	}
+	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Connected to transactionQueue Db'</span>)
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2>Transaction Queue function</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h3>addTranscationToQueue</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Adds a transaction to the queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> addTransactionToQueue = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionObj, callback</span>)</span>{
+	connection.query(<span class="hljs-string">'INSERT INTO openTransactions SET ?'</span>, transactionObj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"error inserting into transactionQueue"</span>, err)
+			callback(err, <span class="hljs-literal">null</span>)
+		} <span class="hljs-keyword">else</span>{
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"last inserted Id: "</span>, res.insertId);
+			callback(<span class="hljs-literal">null</span>, res.insertId)
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h3>findOpenTranscation</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Finds all transactions associated with a target_id
+Callback operates on err and an array of all open tranasctions for the target
+Can be multiple sell requests or buy requests open
+Not likely to have both buy and sell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> findOpenTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">target_id, type, callback</span>)</span>{
+	callback = <span class="hljs-built_in">arguments</span>[<span class="hljs-built_in">arguments</span>.length - <span class="hljs-number">1</span>]
+	connection.query(<span class="hljs-string">'SELECT * FROM openTransactions WHERE target_id=? AND type=?'</span>, [target_id, type], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, rows</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error finding transactions for target "</span> + target_id, err)
+			callback(err, <span class="hljs-literal">null</span>);
+		} <span class="hljs-keyword">else</span>{
+			callback(<span class="hljs-literal">null</span>, rows);
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3>findOpenUserTranscationForTarget</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Queries for a requested transaction in the transaction queue where a user wants to buy/sell another specific user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> findOpenUserTransactionForTarget = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id, target_id, type, callback</span>)</span>{
+  callback = <span class="hljs-built_in">arguments</span>[<span class="hljs-built_in">arguments</span>.length - <span class="hljs-number">1</span>]
+  connection.query(<span class="hljs-string">'SELECT * FROM openTransactions Where user_id=? AND target_id=? AND type=?'</span>, [user_id, target_id, type], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, rows</span>)</span>{
+    <span class="hljs-keyword">if</span>(err){
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error finding "</span>+ type + <span class="hljs-string">" transactions for user"</span> + user_id + <span class="hljs-string">" and target "</span> + target_id, err)
+      callback(err, <span class="hljs-literal">null</span>);
+    } <span class="hljs-keyword">else</span>{
+      callback(<span class="hljs-literal">null</span>, rows);
+    }
+  })
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h3>findOpenUserTranscations</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Queries for all open transactions in the transaction queue for a specific user</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> findOpenUserTransactions = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">user_id, callback</span>)</span>{
+	connection.query(<span class="hljs-string">'SELECT * FROM openTransactions WHERE user_id=?'</span>, user_id, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, rows</span>)</span>{
+		<span class="hljs-keyword">if</span>(err){
+			<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error finding transactions for user "</span> + user_id, err)
+			callback(err, <span class="hljs-literal">null</span>);
+		} <span class="hljs-keyword">else</span>{
+			callback(<span class="hljs-literal">null</span>, rows);
+		}
+	})
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h3>deleteOpenTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Removes an open transaction from the Queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> deleteOpenTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionId, callback</span>)</span>{
+	connection.query(<span class="hljs-string">'DELETE FROM openTransactions WHERE id = ?'</span>,transactionId, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, response</span>) </span>{
+    <span class="hljs-keyword">if</span> (err) {
+    	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"error deleting transaction "</span> + transactionId, err)
+    	callback(err, <span class="hljs-literal">null</span>)
+    }<span class="hljs-keyword">else</span>{
+	    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Deleted transaction number '</span> + transactionId);
+	    callback(<span class="hljs-literal">null</span>, response);
+    }
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h3>updateOpenTransaction</h3>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Updates a the number of shares available/desired in the queue</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> updateOpenTransaction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">transactionId, sharesChange, callback</span>)</span>{
+	connection.query(<span class="hljs-string">'UPDATE openTransactions SET numberShares = numberShares-? Where ID = ?'</span>,[sharesChange, transactionId], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, response</span>) </span>{
+    <span class="hljs-keyword">if</span> (err){
+    	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error updating numberShares of transactionId "</span> + transactionId)
+    	callback(err, <span class="hljs-literal">null</span>)
+    } <span class="hljs-keyword">else</span>{
+	    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Changed open transaction # '</span> + transactionId + <span class="hljs-string">'\'s shares by '</span> + sharesChange);
+	    callback(<span class="hljs-literal">null</span>, response);
+    }
+  });
+}
+
+
+<span class="hljs-built_in">module</span>.exports = {
+	connection: connection,
+	addTransactionToQueue: addTransactionToQueue,
+	findOpenTransaction: findOpenTransaction,
+	deleteOpenTransaction: deleteOpenTransaction,
+	updateOpenTransaction: updateOpenTransaction,
+	findOpenUserTransactions: findOpenUserTransactions,
+  findOpenUserTransactionForTarget: findOpenUserTransactionForTarget,
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
