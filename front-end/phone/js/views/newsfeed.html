@@ -1,0 +1,22 @@
+<div ng-module="app.newsfeed">
+
+  <h2> This is the newsfeed. Currently development in progress. </h2>
+    <table>
+      <tr>
+        <th> Name </th>
+        <th> Graph </th>
+        <th class='user-header'> Current Score </th>
+      </tr>
+      <tr ng-repeat="trend in trending">
+        <td> {{trend.name}} </td>
+        <td> {{trend.currentScore}} </td>
+        <td> Scores include {{trend.scores[0].score}} </td>
+        <td>
+          <md-content>
+              <md-button class="md-raised">Buy Shares</md-button>
+          </md-content>
+        </td>
+      </tr>
+    </table>
+
+</div>

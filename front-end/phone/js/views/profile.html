@@ -1,0 +1,34 @@
+
+
+<ion-view view-title="Profile" >
+  <ion-content class="padding">
+
+    <div ng-module="app.profile">
+      <section ng-model="user">
+        <div class="list card">
+          <div class="item item-avatar">
+            <img src="{{user.profile_photo}}">
+            <h2> Name: {{user.name}} </h2>
+            <h2> Market Value: {{user.currentScore}} </h2>
+            <h2 ng-show = 'isUser'> Social Score: {{user.social}}</h2>
+              <button ng-click="clickBuy()" class="button button-positive button-small" ng-hide = "isUser">Buy Shares
+              </button>
+<!--               <button ng-show="wednesday || isUser"ng-click="clickReport()" class="button button-positive button-small">
+                View Report
+              </button> -->
+          </div>
+          </div>
+          <div class="item item-body">
+            <h2 class = "center"> Score History over 30 Days</h2>
+            <div class = "pad-right">
+            <canvas id="line" class="chart chart-line" chart-data="scores" chart-labels="labels" chart-legend="true" chart-series="series" chart-hover = "false"></canvas> 
+            </div> 
+        </div>
+
+      </section>
+
+    </div>
+
+
+  </ion-content>
+</ion-view>
