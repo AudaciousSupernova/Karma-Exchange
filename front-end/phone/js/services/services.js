@@ -97,7 +97,6 @@ angular.module('app.services', [])
       });
     },
     login: function(access_token){
-      console.log("login", url + "/mobile/login/" + access_token)
       return $http({
         method: "GET",
         url: url + "/mobile/login/" + access_token
