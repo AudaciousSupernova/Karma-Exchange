@@ -152,7 +152,6 @@ angular.module('app.services', [])
     },
     // returns number of shares available for given target_id
     checkSharesAvail: function(target_id, type) {
-      console.log('targetid', target_id, 'type', type);
       return $http({
         method: 'GET',
         url:url + '/transaction/check/',

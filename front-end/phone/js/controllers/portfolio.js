@@ -184,14 +184,17 @@ angular.module('app.portfolio', ["chart.js"])
   //toggleViews switches to different views within the portfolio view
   $scope.toggleViews = function(viewToShow){
     if(viewToShow === "transactionHistory"){
+      $scope.getTransactionHist();
       $scope.transactionHistoryView = true;
       $scope.currentInvestmentsView = false;
       $scope.openTransactionsView = false;
     } else if (viewToShow === "currentInvestments"){
+      $scope.getInvestments($rootScope.user.id);
       $scope.currentInvestmentsView = true;
       $scope.transactionHistoryView = false;
       $scope.openTransactionsView = false;
     } else {
+      $scope.getOpenUserTransactions();
       $scope.openTransactionsView = true;
       $scope.currentInvestmentsView = false;
       $scope.transactionHistoryView = false;
@@ -203,7 +206,7 @@ angular.module('app.portfolio', ["chart.js"])
     $scope.toggleViews('openTransactions')
   }
 
- $ionicModal.fromTemplateUrl('/js/views/sell.html', {
+ $ionicModal.fromTemplateUrl('js/views/sell.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(sellModal) {

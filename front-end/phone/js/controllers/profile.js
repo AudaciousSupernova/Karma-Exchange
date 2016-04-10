@@ -124,7 +124,7 @@ angular.module('app.profile', [])
 
   //<h3>Buy Modal Controller</h3>
   //other than function invoked at the end of the page all following functions relate to the modal controllers.
-  $ionicModal.fromTemplateUrl('/js/views/buy.html', {
+  $ionicModal.fromTemplateUrl('js/views/buy.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(buyModal) {

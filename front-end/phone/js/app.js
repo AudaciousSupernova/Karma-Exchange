@@ -6,8 +6,6 @@
 angular.module('starter', [
   'ionic',
   'app.profile',
-  'app.buy', 
-  'app.sell', 
   'app.portfolio',
   'app.auth',
   'app.services', 
