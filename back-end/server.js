@@ -17,19 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/desktop", express.static(__dirname + '/../front-end'));
 app.use("/phone", express.static(__dirname + '/../front-end/phone'));
 app.use(cors());
-app.get('/', function(req, res){
 
-    var ua = req.header('user-agent');
-    if(/mobile/i.test(ua)) {
-        // res.render('mobile.html');
-      res.redirect("/phone")
-          
-    } else {
-      res.redirect("/desktop")
-        // res.render('desktop.html');
-      // app.use(express.static(__dirname + '/../front-end'));
-    }
-});
+
 //this listens to all socket events from socket.js on connection
 var server = app.listen(port);
 var io = require('socket.io')(server);

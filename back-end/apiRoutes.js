@@ -11,7 +11,20 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 module.exports = function (app, express) {
 
+  //redirects to desktop or mobile version, defaults to desktop
+  app.get('/', function(req, res){
 
+    var ua = req.header('user-agent');
+    if(/mobile/i.test(ua)) {
+        // res.render('mobile.html');
+      res.redirect("/phone")
+          
+    } else {
+      res.redirect("/desktop")
+        // res.render('desktop.html');
+      // app.use(express.static(__dirname + '/../front-end'));
+    }
+  });
 
   //Facebook callback. Directs users to facebook authentication
   //Additional permissions are included inside the scope array
