@@ -1,0 +1,28 @@
+<ion-modal-view>
+  <ion-header-bar class = "bar-positive">
+    <h1 class="title">Sell Shares</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    <div> 
+   		<p>I would like to sell </p> 
+      <input type="tel" ng-model="sellModal.sharesToSell" placeholder="{{investment.numberShares}}"/> shares of {{investment.name}}?
+   </div>
+
+    <div class = "button-bar">
+      <button ng-click="confirm()" class="button ion-ios-checkmark-outline" aria-label="Complete" ng-hide="sellModal.revealOptions"></button>
+
+      <button class="button ion-close-circled" ng-click="closeSellModal()" aria-label="Complete" ng-hide="sellModal.revealOptions"></button>
+    </div> 
+    <br/>
+
+    <p ng-show='sellModal.revealOptions'>There are only {{requestedShares}} shares requested:</p>
+
+    <p ng-show = "sellModal.revealOptions"><span><button class="button ion-ios-stopwatch-outline not-bar" ng-click="wait()" aria-label="Complete" ng-show="sellModal.revealOptions"></button>You may sell {{requestedShares}} shares and put the other shares on the market.</span></p>
+
+    <p ng-show = "sellModal.revealOptions"><span><button class="button ion-ios-checkmark-outline not-bar" ng-click="sellDirect()" aria-label="Complete" ng-show="sellModal.revealOptions"></button>You may sell {{requestedShares}} shares and immediately sell the rest at 90% of current market value.</span></p>
+
+    <p ng-show="sellModal.revealOptions"><span><button class="button ion-close-circled not-bar" ng-click="closeSellModal()" aria-label="Complete" ng-show="sellModal.revealOptions"></button>Or you may cancel your request</span></p>
+
+  </ion-modal-view>
+</ion-header-bar>

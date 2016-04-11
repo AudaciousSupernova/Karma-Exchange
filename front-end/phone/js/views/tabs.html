@@ -1,0 +1,18 @@
+
+<ion-tabs class= "tabs-icon-top tabs-dark">
+ <!-- Tab 1 content -->
+<ion-tab class = "tab tab-positive " title="Home" ng-href = "/profile/{{url_id}}">
+<ion-nav-view name = "profile"></ion-nav-view>
+</ion-tab>
+ 
+ <!-- Tab 2 content -->
+<ion-tab class = "tab tab-positive " title="Fortune" ui-sref = "tab.portfolio({id:url_id})">
+<ion-nav-view name = "portfolio"></ion-nav-view>
+</ion-tab>
+
+<ion-tab class = "tab tab-positive " title="Logout" ng-click = 'logout()'>
+ <!-- Tab 3 content -->
+<ion-nav-view name = "logout"></ion-nav-view>
+</ion-tab>
+
+</ion-tabs>

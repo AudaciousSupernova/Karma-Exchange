@@ -1,0 +1,29 @@
+<ion-modal-view>
+  <ion-header-bar class = "bar-positive">
+    <h1 class="title">Buy Shares</h1>
+  </ion-header-bar>
+
+  <ion-content ng-init = "checkSharesAvail()">
+   <div> 
+    <p>How many shares would you like to buy?</p> I would like to buy 
+        <input type="tel" ng-model="buyModal.sharesToBuy">shares of {{user.name}}
+    </div>
+    <div class = "button-bar">
+      <button ng-click="confirm()" class="button ion-ios-checkmark-outline" aria-label="Complete" ng-hide="revealOptions"></button>
+
+      <button class="button ion-close-circled" ng-click="closeBuyModal()" aria-label="Complete" ng-hide="revealOptions"></button>
+    </div> 
+    <br/>
+    <p ng-show = "revealOptions">There are only {{availableShares}} available:</p>
+ 
+    <p ng-show = "revealOptions"><span><button class="button ion-ios-stopwatch-outline not-bar" ng-click="wait()" aria-label="Complete" ng-show="revealOptions"></button>You may buy {{availableShares}} shares and put the other shares on the market.</span></p>
+
+
+    <p ng-show = "revealOptions"><span><button class="button ion-ios-checkmark-outline not-bar" ng-click="buyDirect()" aria-label="Complete" ng-show="revealOptions"></button>You may buy {{availableShares}} shares and immediately buy the rest at 110% of current market value.</span></p>
+      
+
+    <p ng-show="revealOptions"><span><button class="button ion-close-circled not-bar" ng-click="closeBuyModal()" aria-label="Complete" ng-show="revealOptions"></button>Or you may cancel your request</span></p>
+
+      
+  </ion-content>
+</ion-modal-view>

@@ -14,8 +14,10 @@ var cors = require('cors');
 app.use(session({secret: 'supernova', resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/../front-end'));
+app.use("/desktop", express.static(__dirname + '/../front-end'));
+app.use("/phone", express.static(__dirname + '/../front-end/phone'));
 app.use(cors());
+
 
 //this listens to all socket events from socket.js on connection
 var server = app.listen(port);

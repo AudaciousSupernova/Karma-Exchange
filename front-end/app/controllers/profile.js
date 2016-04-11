@@ -115,7 +115,7 @@ angular.module('app.profile', [])
   //Opens up the Buy Modal
   $scope.clickBuy = function() {
     $mdDialog.show({
-      templateUrl: '../app/views/buy.html',
+      templateUrl: 'app/views/buy.html',
       locals: {
         profile: $scope.user
       },
@@ -130,7 +130,7 @@ angular.module('app.profile', [])
   //Opens up the Report Modal
   $scope.clickReport = function() {
     $mdDialog.show({
-      templateUrl: '../app/views/report.html',
+      templateUrl: 'app/views/report.html',
       locals: {
         user: $scope.user,
         reportUser: $scope.reportUser

@@ -10,6 +10,22 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 
 module.exports = function (app, express) {
+
+  //redirects to desktop or mobile version, defaults to desktop
+  app.get('/', function(req, res){
+
+    var ua = req.header('user-agent');
+    if(/mobile/i.test(ua)) {
+        // res.render('mobile.html');
+      res.redirect("/phone")
+          
+    } else {
+      res.redirect("/desktop")
+        // res.render('desktop.html');
+      // app.use(express.static(__dirname + '/../front-end'));
+    }
+  });
+
   //Facebook callback. Directs users to facebook authentication
   //Additional permissions are included inside the scope array
   app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['public_profile', 'user_friends', 'email', 'user_photos', 'user_posts'] }));
@@ -39,7 +55,6 @@ module.exports = function (app, express) {
             var token = jwt.sign(userObj, 'supernova', {
               expiresIn: "1d"
             });
-            console.log("token", token)
             res.send({token: token,
                       userObj: userObj})
           }
@@ -136,7 +151,6 @@ module.exports = function (app, express) {
       if (err) {
         console.log('error on leaders/top users', err);
       } else {
-        console.log("These are my results", results);
         res.send(results);
       }
     })
@@ -174,7 +188,6 @@ module.exports = function (app, express) {
       if (err) {
         console.log(err, null);
       } else {
-        console.log('response', response);
         res.json(response);
       }
     })

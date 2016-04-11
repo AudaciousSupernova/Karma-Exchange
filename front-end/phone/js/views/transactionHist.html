@@ -1,0 +1,21 @@
+<div>
+
+  <h3> My Transaction History </h3>
+
+  <table>
+    <tr>
+      <th> Name </th>
+      <th> Type of Transaction </th>
+      <th> Number of Shares </th>
+      <th> Karma </th>
+    </tr>
+    <tr ng-repeat="transaction in transactions">
+      <td> {{transaction.target_name}} </td>
+      <td> {{transaction.type}} </td>
+      <td> {{transaction.numberShares}}</td>
+      <td> {{transaction.karma}} </td>
+    </tr>
+
+  </table>
+
+</div>

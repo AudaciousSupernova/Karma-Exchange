@@ -14,3 +14,4 @@ pids
 node_modules/
 bower_components/
 front-end/libs/
+front-end/phone/lib/

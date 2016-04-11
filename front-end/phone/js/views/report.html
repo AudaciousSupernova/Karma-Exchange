@@ -1,0 +1,15 @@
+<md-dialog>
+  <md-dialog-content>
+   <div> 
+    <p> User {{user.name}} has the following current statistics </p>
+    <p> Current score is {{user.currentScore}}. </p>
+    <p> Current social score is {{user.social}}. </p>
+    <p> Expected social score change was {{user.last_week_expected_social_change}} </p>
+    <p> Actual social score change was {{user.last_week_actual_social_change}} </p>
+    <p> Next week's expected social score change is {{user.next_week_expected_social_change}} </p>
+    </div>
+
+    <md-button ng-click="exit()" class="md-primary" aria-label="Complete"> Close Report </md-button>
+  </md-dialog-content>
+
+</md-dialog>

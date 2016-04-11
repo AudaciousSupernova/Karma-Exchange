@@ -133,7 +133,7 @@ angular.module('app.portfolio', ["chart.js"])
   $scope.clickSell = function(investment) {
     $scope.clickedInvestment = investment.id;
     $mdDialog.show({
-      templateUrl: '../app/views/sell.html',
+      templateUrl: 'app/views/sell.html',
       locals: {
         investment: investment
       },
