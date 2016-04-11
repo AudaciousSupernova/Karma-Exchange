@@ -1,4 +1,4 @@
-var url = "http://localhost:3000"; // "http://karmaexchange.io"; // 
+var url =  "http://karmaexchange.io"; // "http://localhost:3000"; //
 angular.module('app.services', [])
 
 // Questions factory handles all requests to add, retrieve, or modify questions in the database
