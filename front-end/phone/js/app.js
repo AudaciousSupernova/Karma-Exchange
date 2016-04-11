@@ -49,6 +49,12 @@ angular.module('starter', [
       enableInteractivity : false
     });
   }])
+
+  .config(function($ionicConfigProvider) {
+    // note that you can also chain configs
+    $ionicConfigProvider.tabs.position('bottom')
+  })
+
   .config(function ( $stateProvider, $sceProvider, $urlRouterProvider) {
 
   $stateProvider
