@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "angular-local-storage": "^0.2.3",
-    "ng-cordova-oauth": "^0.2.2"
+    "ng-cordova-oauth": "^0.2.2",
+    "openfb": "^0.5.0"
   }
 }

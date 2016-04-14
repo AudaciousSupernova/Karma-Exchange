@@ -13,6 +13,7 @@ angular.module('starter', [
   'app.transactionHist',
   'app.tab',
   'chart.js',
+  'ngOpenFB',
   'ngCordovaOauth',
   'LocalStorageModule'
   ])
