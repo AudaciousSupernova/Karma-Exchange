@@ -11,7 +11,7 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 module.exports = function (app, express) {
 
-  //redirects to desktop or mobile version, defaults to desktop
+  //redirects to desktop or mobile version, defaults to desk
   app.get('/', function(req, res){
 
     var ua = req.header('user-agent');
